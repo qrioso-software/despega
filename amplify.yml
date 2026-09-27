@@ -1,0 +1,70 @@
+version: 1
+applications:
+  - appRoot: apps/admin
+    frontend:
+      buildPath: /
+      phases:
+        preBuild:
+          commands:
+            - nvm install 24
+            - nvm use 24
+            - node infra/scripts/write-amplify-env.mjs apps/admin
+            - corepack enable pnpm
+            - corepack prepare pnpm@12.6.0 --activate
+            - pnpm config set store-dir .pnpm-store
+            - pnpm --filter @despega/admin... install --frozen-lockfile
+        build:
+          commands:
+            - pnpm --filter @despega/admin build
+            - rm -rf apps/admin/node_modules.amplify
+            - cp -R -L apps/admin/node_modules apps/admin/node_modules.amplify
+            - rm -rf apps/admin/node_modules
+            - mv apps/admin/node_modules.amplify apps/admin/node_modules
+            - rm -rf apps/admin/.next/node_modules
+            - node infra/scripts/prepare-amplify-next-runtime.mjs apps/admin
+            - test -d apps/admin/node_modules/next
+            - test -d node_modules/@next/env
+            - test -d node_modules/@swc/helpers
+            - test -d node_modules/styled-jsx
+      artifacts:
+        baseDirectory: apps/admin/.next
+        files:
+          - "**/*"
+      cache:
+        paths:
+          - .pnpm-store/**/*
+          - apps/admin/.next/cache/**/*
+  - appRoot: apps/web
+    frontend:
+      buildPath: /
+      phases:
+        preBuild:
+          commands:
+            - nvm install 24
+            - nvm use 24
+            - node infra/scripts/write-amplify-env.mjs apps/web
+            - corepack enable pnpm
+            - corepack prepare pnpm@12.6.0 --activate
+            - pnpm config set store-dir .pnpm-store
+            - pnpm --filter @despega/web... install --frozen-lockfile
+        build:
+          commands:
+            - pnpm --filter @despega/web build
+            - rm -rf apps/web/node_modules.amplify
+            - cp -R -L apps/web/node_modules apps/web/node_modules.amplify
+            - rm -rf apps/web/node_modules
+            - mv apps/web/node_modules.amplify apps/web/node_modules
+            - rm -rf apps/web/.next/node_modules
+            - node infra/scripts/prepare-amplify-next-runtime.mjs apps/web
+            - test -d apps/web/node_modules/next
+            - test -d node_modules/@next/env
+            - test -d node_modules/@swc/helpers
+            - test -d node_modules/styled-jsx
+      artifacts:
+        baseDirectory: apps/web/.next
+        files:
+          - "**/*"
+      cache:
+        paths:
+          - .pnpm-store/**/*
+          - apps/web/.next/cache/**/*

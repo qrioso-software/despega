@@ -1,0 +1,32 @@
+{
+  "name": "despega",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@12.6.0",
+  "engines": {
+    "node": ">=24.11.0"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel --filter @despega/web --filter @despega/admin dev",
+    "dev:web": "pnpm --filter @despega/web dev",
+    "dev:admin": "pnpm --filter @despega/admin dev",
+    "local:up": "docker compose -f infra/local/compose.yaml up -d --wait",
+    "local:down": "docker compose -f infra/local/compose.yaml down",
+    "local:tables": "pnpm --filter @despega/infra local:tables",
+    "local:setup": "pnpm local:up && pnpm local:tables",
+    "local:reset": "docker compose -f infra/local/compose.yaml down -v && pnpm local:setup",
+    "lint": "pnpm -r --filter './apps/*' --if-present lint",
+    "typecheck": "pnpm -r --filter './packages/*' --filter './apps/*' --filter './infra' --if-present typecheck",
+    "test": "pnpm -r --filter './packages/*' --filter './apps/*' --filter './infra' --if-present test",
+    "build:web": "pnpm --filter @despega/web build",
+    "build:admin": "pnpm --filter @despega/admin build",
+    "infra:synth:dev": "pnpm --filter @despega/infra synth:dev",
+    "infra:synth:prd": "pnpm --filter @despega/infra synth:prd",
+    "infra:bootstrap:dev": "pnpm --filter @despega/infra bootstrap:dev",
+    "infra:bootstrap:prd": "pnpm --filter @despega/infra bootstrap:prd",
+    "infra:diff:dev": "pnpm --filter @despega/infra diff:dev",
+    "infra:diff:prd": "pnpm --filter @despega/infra diff:prd",
+    "infra:deploy:dev": "pnpm --filter @despega/infra deploy:dev",
+    "infra:deploy:prd": "pnpm --filter @despega/infra deploy:prd"
+  }
+}

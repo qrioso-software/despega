@@ -1,0 +1,221 @@
+@import 'tailwindcss';
+
+/*
+ * DESPEGA — sistema visual de la web de estudiantes.
+ * El mundo del juego (PixelForge) usa los mismos tokens; los personajes y las
+ * herramientas de oficina son recreaciones propias, no capturas de otras apps.
+ */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-inter), ui-sans-serif, sans-serif;
+
+  --color-ink: #14123a;
+  --color-ink-soft: #3b3860;
+  --color-muted: #5d5a78;
+  --color-night: #0d0b26;
+  --color-night-soft: #1b1840;
+  --color-paper: #fbf8f3;
+  --color-surface: #ffffff;
+  --color-mist: #f3f0fb;
+  --color-line: #e7e3f1;
+
+  --color-brand: #ff5b2e;
+  --color-brand-strong: #e5461b;
+  --color-brand-soft: #ffe8df;
+  --color-violet: #5b3df5;
+  --color-violet-strong: #4327d8;
+  --color-violet-soft: #ebe6ff;
+  --color-sun: #ffb400;
+  --color-sun-soft: #fff4d6;
+  --color-good: #12966f;
+  --color-good-soft: #e0f5ee;
+  --color-bad: #e5484d;
+  --color-bad-soft: #fde8e8;
+
+  --radius-card: 1.25rem;
+  --shadow-soft: 0 18px 40px -24px rgb(20 18 58 / 0.35), 0 4px 12px -6px rgb(20 18 58 / 0.12);
+  --shadow-pop: 0 24px 60px -20px rgb(20 18 58 / 0.45);
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-blink-caret: blink-caret 1s step-end infinite;
+  --animate-pulse-ring: pulse-ring 1.6s ease-out infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes blink-caret {
+    50% { opacity: 0; }
+  }
+  @keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgb(255 91 46 / 0.45); }
+    100% { box-shadow: 0 0 0 18px rgb(255 91 46 / 0); }
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-violet);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-brand-soft);
+  }
+}
+
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1.25rem;
+    border-radius: 999px;
+    font-weight: 650;
+    font-size: 0.95rem;
+    transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    cursor: pointer;
+    user-select: none;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+  .btn-primary {
+    background: var(--color-brand);
+    color: #fff;
+    box-shadow: 0 10px 24px -12px rgb(229 70 27 / 0.8);
+  }
+  .btn-primary:hover:not(:disabled) { background: var(--color-brand-strong); }
+
+  .btn-violet {
+    background: var(--color-violet);
+    color: #fff;
+    box-shadow: 0 10px 24px -12px rgb(67 39 216 / 0.8);
+  }
+  .btn-violet:hover:not(:disabled) { background: var(--color-violet-strong); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-ink);
+    border: 1.5px solid var(--color-line);
+  }
+  .btn-ghost:hover:not(:disabled) { background: var(--color-mist); }
+
+  .btn-light {
+    background: #fff;
+    color: var(--color-ink);
+  }
+  .btn-light:hover:not(:disabled) { background: var(--color-mist); }
+
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 750;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-violet);
+  }
+
+  .field-label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.875rem;
+    font-weight: 650;
+    color: var(--color-ink);
+  }
+
+  .field-input {
+    width: 100%;
+    min-height: 2.9rem;
+    padding: 0 0.95rem;
+    border: 1.5px solid var(--color-line);
+    border-radius: 0.85rem;
+    background: #fff;
+    color: var(--color-ink);
+    font-size: 1rem;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .field-input:focus {
+    outline: none;
+    border-color: var(--color-violet);
+    box-shadow: 0 0 0 4px var(--color-violet-soft);
+  }
+  .field-input::placeholder { color: #9a97b3; }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+}
+
+/* Personajes: parpadeo, boca al hablar y leve movimiento de cabeza. */
+.avatar-eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: avatar-blink 4.6s infinite;
+}
+.avatar-talk {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: avatar-talk 0.26s ease-in-out infinite alternate;
+}
+.avatar-bob {
+  transform-origin: 60px 100px;
+  animation: avatar-bob 1.8s ease-in-out infinite;
+}
+@keyframes avatar-blink {
+  0%, 93%, 100% { transform: scaleY(1); }
+  96% { transform: scaleY(0.1); }
+}
+@keyframes avatar-talk {
+  from { transform: scaleY(0.2); }
+  to { transform: scaleY(1); }
+}
+@keyframes avatar-bob {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  50% { transform: rotate(-1.5deg) translateY(-1px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

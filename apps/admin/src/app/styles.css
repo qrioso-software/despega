@@ -1,0 +1,117 @@
+@import 'tailwindcss';
+@import '@heroui/styles';
+
+/*
+ * Backoffice DESPEGA sobre HeroUI v3. Los tokens de HeroUI (accent, surface, field…)
+ * se alinean con la marca; no se introduce otra librería de UI.
+ */
+:root,
+html.light,
+html[data-theme='light'] {
+  color-scheme: light;
+  --brand-violet: #5b3df5;
+  --brand-violet-strong: #4327d8;
+  --brand-orange: #ff5b2e;
+  --ink: #14123a;
+  --muted: #5d5a78;
+  --line: #e7e3f1;
+
+  --background: #f6f5fb;
+  --foreground: var(--ink);
+  --surface: #ffffff;
+  --surface-foreground: var(--ink);
+  --surface-secondary: #f3f0fb;
+  --surface-secondary-foreground: var(--ink);
+  --surface-tertiary: #ebe6ff;
+  --surface-tertiary-foreground: var(--ink);
+  --overlay: #ffffff;
+  --overlay-foreground: var(--ink);
+  --accent: var(--brand-violet);
+  --accent-foreground: #ffffff;
+  --accent-hover: var(--brand-violet-strong);
+  --accent-soft: #ebe6ff;
+  --accent-soft-foreground: var(--brand-violet-strong);
+  --accent-soft-hover: #ddd5ff;
+  --success: #12966f;
+  --success-foreground: #ffffff;
+  --success-soft: #e0f5ee;
+  --success-soft-foreground: #0b6e51;
+  --warning: #b77900;
+  --warning-foreground: #ffffff;
+  --warning-soft: #fff4d6;
+  --warning-soft-foreground: #6b4700;
+  --danger: #e5484d;
+  --danger-foreground: #ffffff;
+  --danger-soft: #fde8e8;
+  --danger-soft-foreground: #a1262b;
+  --border: var(--line);
+  --separator: var(--line);
+  --focus: var(--brand-violet);
+  --field-background: #ffffff;
+  --field-border: #d9d4ea;
+  --field-border-hover: #b9b2d6;
+  --field-border-focus: var(--brand-violet);
+  --radius: 0.8rem;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+@theme inline {
+  --font-display: var(--font-bricolage), var(--font-inter), ui-sans-serif, sans-serif;
+  --color-ink: var(--ink);
+  --color-muted-ink: var(--muted);
+  --color-line: var(--line);
+  --color-brand: var(--brand-orange);
+  --color-violet: var(--brand-violet);
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand-violet);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.data-table th {
+  padding: 0.65rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.data-table td {
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.data-table tbody tr:hover {
+  background: #faf9fe;
+}

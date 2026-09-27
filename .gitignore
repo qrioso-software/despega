@@ -1,0 +1,63 @@
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*~
+
+# Variables locales, secretos y material de firma
+.env
+.env.*
+!.env.example
+!.env.*.example
+.envrc.local
+.direnv/
+.aws/
+.secrets/
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# Dependencias, caches y logs de Node.js/pnpm
+node_modules/
+.pnpm-store/
+.turbo/
+.cache/
+.eslintcache
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+*.pid
+*.pid.lock
+
+# Next.js, TypeScript, pruebas y artefactos web
+.next/
+out/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+coverage/
+playwright-report/
+test-results/
+blob-report/
+.amplify-hosting/
+.vercel/
+
+# AWS CDK y herramientas locales
+cdk.out/
+.cdk.staging/
+.aws-sam/
+
+# Temporales de herramientas y parches locales
+*.tmp
+*.temp
+*.orig
+*.rej

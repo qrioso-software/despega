@@ -1,0 +1,23 @@
+# DynamoDB Local para desarrollo. Las tablas se crean con `pnpm local:tables` desde el
+# mismo esquema que usa CDK (@despega/data/schema). Los datos persisten en un volumen.
+name: despega-local
+
+services:
+  dynamodb:
+    image: amazon/dynamodb-local:latest
+    container_name: despega-dynamodb
+    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "/home/dynamodblocal/data"]
+    working_dir: /home/dynamodblocal
+    user: root
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - dynamodb-data:/home/dynamodblocal/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:8000 || exit 1"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  dynamodb-data:
