@@ -31,7 +31,7 @@ export function SummaryScreen({
   return (
     <section className="card overflow-hidden p-0">
       <div className="relative overflow-hidden bg-night px-6 py-8 text-white sm:px-10">
-        <div className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-violet/40 blur-3xl" aria-hidden />
+        <div className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-accent/40 blur-3xl" aria-hidden />
         <p className="eyebrow relative text-sun">{interaction.scope === 'module' ? 'Resultado final' : `Resumen · Sesión ${scene.session.number}`}</p>
         <h2 className="relative mt-2 text-3xl font-bold sm:text-4xl">{interaction.heading}</h2>
         <div className="relative mt-6 flex flex-wrap items-end gap-x-8 gap-y-3">
@@ -58,7 +58,7 @@ export function SummaryScreen({
           />
           <AffinityBars values={summary.affinity.normalized} unavailable={summary.affinity.unavailable} />
           {strongest.length > 0 && (
-            <p className="mt-4 rounded-2xl bg-violet-soft/60 px-4 py-3 text-sm text-ink">
+            <p className="mt-4 rounded-2xl bg-accent-soft/60 px-4 py-3 text-sm text-ink">
               Tus ejes más marcados: <strong>{strongest.map((axis) => AFFINITY_LABELS[axis].toLowerCase()).join(' y ')}</strong>.
             </p>
           )}
@@ -88,16 +88,16 @@ export function SummaryScreen({
                   <p className="text-xs font-bold uppercase tracking-wider text-muted">Escena {highlight.sceneId} · {highlight.sceneTitle}</p>
                   <p className="font-semibold text-ink">
                     {highlight.label}
-                    {highlight.timedOut && <Timer className="ml-1.5 inline size-4 text-[#8a5a00]" aria-label="Tiempo agotado" />}
+                    {highlight.timedOut && <Timer className="ml-1.5 inline size-4 text-sun-strong" aria-label="Tiempo agotado" />}
                   </p>
                   <div className="mt-1.5 flex flex-wrap gap-1.5">
                     {highlight.performanceDelta !== 0 && (
-                      <span className={`chip ${highlight.performanceDelta > 0 ? 'bg-good-soft text-[#0b6e51]' : 'bg-bad-soft text-[#a1262b]'}`}>
+                      <span className={`chip ${highlight.performanceDelta > 0 ? 'bg-good-soft text-good-strong' : 'bg-bad-soft text-bad-strong'}`}>
                         {highlight.performanceDelta > 0 ? `+${highlight.performanceDelta}` : highlight.performanceDelta} desempeño
                       </span>
                     )}
                     {(Object.entries(highlight.affinityDelta) as [AffinityAxis, number][]).filter(([, value]) => value).map(([axis, value]) => (
-                      <span key={axis} className="chip bg-violet-soft text-violet-strong">{value > 0 ? `+${value}` : value} {AFFINITY_SHORT_LABELS[axis].toLowerCase()}</span>
+                      <span key={axis} className="chip bg-accent-soft text-accent-strong">{value > 0 ? `+${value}` : value} {AFFINITY_SHORT_LABELS[axis].toLowerCase()}</span>
                     ))}
                   </div>
                 </motion.li>

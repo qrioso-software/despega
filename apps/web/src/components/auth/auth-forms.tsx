@@ -20,7 +20,7 @@ export function FormMessage({ state }: { state: AuthFormState }) {
   return (
     <p
       role={error ? 'alert' : 'status'}
-      className={`rounded-2xl px-4 py-3 text-sm font-medium ${error ? 'bg-bad-soft text-[#a1262b]' : 'bg-good-soft text-[#0b6e51]'}`}
+      className={`rounded-2xl px-4 py-3 text-sm font-medium ${error ? 'bg-bad-soft text-bad-strong' : 'bg-good-soft text-good-strong'}`}
     >
       {state.message}
     </p>
@@ -72,7 +72,7 @@ export function SignInForm({ mode, next, defaultEmail }: { mode: Mode; next: str
       <FormMessage state={state} />
       <Submit pending={pending}>Entrar <ArrowRight className="size-4" aria-hidden /></Submit>
       {mode === 'cognito' && (
-        <Link href="/recuperar" className="text-center text-sm font-semibold text-violet hover:underline">
+        <Link href="/recuperar" className="text-center text-sm font-semibold text-accent hover:underline">
           ¿Olvidaste tu contraseña?
         </Link>
       )}
@@ -109,7 +109,7 @@ export function SignUpForm({ mode }: { mode: Mode }) {
         </Field>
       </div>
       <label className="flex items-start gap-3 rounded-2xl bg-mist p-4 text-sm text-ink-soft">
-        <input type="checkbox" name="consent" required className="mt-0.5 size-5 shrink-0 accent-[#5b3df5]" />
+        <input type="checkbox" name="consent" required className="mt-0.5 size-5 shrink-0 accent-accent" />
         <span>
           Acepto que DESPEGA guarde mis decisiones en el simulador para mostrarme mis resultados y mi perfil. Si soy menor
           de edad, cuento con el permiso de mi madre, padre o tutor.
@@ -176,8 +176,8 @@ export function PasswordResetForm({ defaultEmail }: { defaultEmail?: string }) {
 
 export function LocalModeNotice() {
   return (
-    <p className="flex items-start gap-2 rounded-2xl border border-dashed border-violet/40 bg-violet-soft/60 px-4 py-3 text-xs text-ink-soft">
-      <UserRound className="mt-0.5 size-4 shrink-0 text-violet" aria-hidden />
+    <p className="flex items-start gap-2 rounded-2xl border border-dashed border-accent/40 bg-accent-soft/60 px-4 py-3 text-xs text-ink-soft">
+      <UserRound className="mt-0.5 size-4 shrink-0 text-accent" aria-hidden />
       <span>
         <strong className="text-ink">Modo local de desarrollo.</strong> Las cuentas se identifican solo por correo y viven en
         DynamoDB Local de este equipo. En los ambientes de AWS el acceso usa Amazon Cognito con contraseña.

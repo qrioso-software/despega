@@ -56,7 +56,7 @@ export function TimelineScreen({
           if (info.offset.x < -60) next();
         }}
       >
-        <ol className="relative grid gap-4 border-l-2 border-violet/30 pl-6">
+        <ol className="relative grid gap-4 border-l-2 border-accent/30 pl-6">
           {interaction.stages.map((stage, index) => (
             <AnimatePresence key={stage.id}>
               {index <= step && (
@@ -66,9 +66,9 @@ export function TimelineScreen({
                   transition={{ type: 'spring', stiffness: 220, damping: 24 }}
                   className="relative"
                 >
-                  <span className="absolute -left-[33px] top-4 grid size-4 place-items-center rounded-full bg-violet ring-4 ring-violet-soft" aria-hidden />
+                  <span className="absolute -left-[33px] top-4 grid size-4 place-items-center rounded-full bg-accent ring-4 ring-accent-soft" aria-hidden />
                   <div className="rounded-2xl border border-line bg-paper p-4">
-                    <p className="text-xs font-bold uppercase tracking-wider text-violet">{stage.period}</p>
+                    <p className="text-xs font-bold uppercase tracking-wider text-accent">{stage.period}</p>
                     <p className="font-display text-xl font-bold">{stage.title}</p>
                     <p className="mt-1 text-ink-soft">«{stage.narration}»</p>
                   </div>
@@ -80,7 +80,7 @@ export function TimelineScreen({
 
         {atFork ? (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mt-8">
-            <p className="flex items-center gap-2 font-display text-2xl font-bold"><Compass className="size-6 text-brand" aria-hidden /> {interaction.fork.title}</p>
+            <p className="flex items-center gap-2 font-display text-2xl font-bold"><Compass className="size-6 text-brand-strong" aria-hidden /> {interaction.fork.title}</p>
             <p className="mt-1 text-ink-soft">{interaction.fork.narration}</p>
             <div className="mt-5 grid gap-4 md:grid-cols-3">
               {interaction.branches.map((branch, index) => (
@@ -89,15 +89,15 @@ export function TimelineScreen({
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 + index * 0.15 }}
-                  className={`rounded-2xl border-2 p-5 ${branch.aligned ? 'border-violet bg-violet-soft shadow-soft' : 'border-line bg-white'}`}
+                  className={`rounded-2xl border-2 p-5 ${branch.aligned ? 'border-accent bg-accent-soft shadow-soft' : 'border-line bg-white'}`}
                 >
                   {branch.aligned && (
-                    <span className="chip mb-3 bg-violet text-white"><Sparkles className="size-3.5" aria-hidden /> Se parece a ti</span>
+                    <span className="chip mb-3 bg-accent text-white"><Sparkles className="size-3.5" aria-hidden /> Se parece a ti</span>
                   )}
                   <p className="text-xs font-bold uppercase tracking-wider text-muted">{branch.path}</p>
                   <p className="mt-1 font-display text-xl font-bold">{branch.title}</p>
                   <p className="mt-2 text-sm text-ink-soft">«{branch.narration}»</p>
-                  {branch.aligned && <p className="mt-3 text-sm font-semibold text-violet-strong">{interaction.alignmentNote}</p>}
+                  {branch.aligned && <p className="mt-3 text-sm font-semibold text-accent-strong">{interaction.alignmentNote}</p>}
                 </motion.article>
               ))}
             </div>
@@ -111,7 +111,7 @@ export function TimelineScreen({
               {interaction.continueLabel} <ArrowRight className="size-4" aria-hidden />
             </button>
           ) : (
-            <button type="button" className="btn btn-violet min-h-12 px-6" onClick={next}>
+            <button type="button" className="btn btn-accent min-h-12 px-6" onClick={next}>
               {step === interaction.stages.length - 1 ? 'Ver la bifurcación' : 'Siguiente etapa'} <ChevronRight className="size-4" aria-hidden />
             </button>
           )}

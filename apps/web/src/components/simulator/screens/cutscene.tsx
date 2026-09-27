@@ -9,7 +9,7 @@ import type { ScreenProps } from './types';
 export function CutsceneScreen({ scene, module, reveal, interaction }: ScreenProps) {
   return (
     <section className="relative min-h-[460px] overflow-hidden rounded-[2rem] bg-night p-6 text-white shadow-pop sm:p-10">
-      <div className="pointer-events-none absolute -right-20 -top-24 size-80 rounded-full bg-violet/40 blur-3xl" aria-hidden />
+      <div className="pointer-events-none absolute -right-20 -top-24 size-80 rounded-full bg-accent/40 blur-3xl" aria-hidden />
       <div className="pointer-events-none absolute -bottom-28 -left-16 size-80 rounded-full bg-brand/25 blur-3xl" aria-hidden />
       {scene.visual === 'complaints-chart' && <ComplaintsChart />}
       <div className="relative grid max-w-2xl gap-5" aria-live="polite">
@@ -54,8 +54,8 @@ function ComplaintsChart() {
       <figcaption className="mb-1 text-xs font-semibold text-white/70">Quejas de usuarios · últimas horas</figcaption>
       <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
         <line x1="0" y1={height - 0.5} x2={width} y2={height - 0.5} stroke="rgb(255 255 255 / 0.15)" strokeWidth="1" />
-        <motion.path d={`${path} L${width},${height} L0,${height} Z`} fill="#ff5b2e" fillOpacity={0.12} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }} />
-        <motion.path d={path} fill="none" stroke="#ff5b2e" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 2.4, ease: 'easeInOut' }} />
+        <motion.path d={`${path} L${width},${height} L0,${height} Z`} className="fill-sun" fillOpacity={0.12} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }} />
+        <motion.path d={path} fill="none" className="stroke-sun" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 2.4, ease: 'easeInOut' }} />
       </svg>
     </figure>
   );

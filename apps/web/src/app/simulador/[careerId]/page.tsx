@@ -115,7 +115,7 @@ export default async function CareerHubPage({ params }: PageProps<'/simulador/[c
                 { icon: Compass, title: 'Tu perfil al final', text: 'Desempeño, afinidad en 5 ejes y el camino que más se parece a ti.' },
               ].map((item) => (
                 <div key={item.title} className="card p-6">
-                  <item.icon className="size-6 text-violet" aria-hidden />
+                  <item.icon className="size-6 text-accent" aria-hidden />
                   <h2 className="mt-3 text-lg font-bold">{item.title}</h2>
                   <p className="mt-1 text-sm text-ink-soft">{item.text}</p>
                 </div>
@@ -152,8 +152,8 @@ function Results({ careerModule, state }: { careerModule: CareerModule; state: S
             ))}
           </ul>
           {aligned && (
-            <div className="mt-6 rounded-2xl border border-violet/30 bg-violet-soft/60 p-4">
-              <p className="text-xs font-bold uppercase tracking-wider text-violet">{aligned.path}</p>
+            <div className="mt-6 rounded-2xl border border-accent/30 bg-accent-soft/60 p-4">
+              <p className="text-xs font-bold uppercase tracking-wider text-accent">{aligned.path}</p>
               <p className="mt-1 font-display text-xl font-bold">{aligned.title}</p>
               <p className="mt-1 text-sm text-ink-soft">
                 Tu forma de decidir se parece a este camino ({aligned.axes.map((axis) => AFFINITY_SHORT_LABELS[axis].toLowerCase()).join(' y ')}).
@@ -189,12 +189,12 @@ function DeltaChips({ performance, affinity }: { performance: number; affinity: 
   return (
     <div className="flex flex-wrap gap-1.5">
       {performance !== 0 && (
-        <span className={`chip ${performance > 0 ? 'bg-good-soft text-[#0b6e51]' : 'bg-bad-soft text-[#a1262b]'}`}>
+        <span className={`chip ${performance > 0 ? 'bg-good-soft text-good-strong' : 'bg-bad-soft text-bad-strong'}`}>
           {performance > 0 ? `▲ +${performance}` : `▼ ${performance}`} desempeño
         </span>
       )}
       {axes.map(([axis, value]) => (
-        <span key={axis} className="chip bg-violet-soft text-violet-strong">
+        <span key={axis} className="chip bg-accent-soft text-accent-strong">
           {value > 0 ? `+${value}` : value} {AFFINITY_SHORT_LABELS[axis].toLowerCase()}
         </span>
       ))}

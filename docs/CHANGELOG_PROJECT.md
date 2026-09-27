@@ -1,5 +1,35 @@
 # Changelog del proyecto
 
+## 2026-09-27 — Identidad visual desde el logo
+
+- Nuevo paquete `@despega/brand`: el logo original (movido desde la raíz), su versión
+  vectorial `despega-logo.svg` (17,6 KB frente a 60 KB del JPEG, fondo transparente),
+  el isotipo, los íconos y el componente `DespegaLogo`, que reemplaza en web y admin el
+  cohete provisional dibujado en código.
+- Paleta derivada del logo en `@despega/brand/palette.css`: navy `#17233b`, verde de la
+  llama `#75be65` para la acción principal y el logro, azul `#2564d0` del tono del navy
+  para la interacción. Reemplaza la paleta provisional (naranja, violeta y crema). La
+  web la mapea en su `@theme` y el admin en las variables de HeroUI (ADR 0006).
+- Web: los tokens `violet` pasan a `accent`; nuevos `brand-hover` y `good`/`bad`/`sun`
+  `-strong` para texto sobre fondos suaves. Radar, reloj, medidor de riesgo, ventanas
+  de oficina, gráfico de quejas y degradados usan tokens en lugar de hex. Sobre el verde
+  el texto va en tinta. `good` pasa de verde azulado al verde de la marca.
+- Web y admin sirven `favicon.ico`, `icon.svg` y `apple-icon.png` (isotipo sobre navy);
+  antes no había ícono y la consola registraba un 404.
+
+## 2026-09-27 — Dominios de `dev` y preparación del primer deploy
+
+- Apps de Amplify de `dev` registradas en `infra/cdk.json`: web `dwc3j5j9ebtdk` y admin
+  `d20sgf4s7cvg7l`, `WEB_COMPUTE`, raíces monorepo `apps/web` y `apps/admin`, rama
+  `develop`.
+- Dominios `https://despega.qrioso.do` (web) y `https://despega.admin.qrioso.do` (admin):
+  zonas de Route 53 en `qrioso-dev`, delegadas por NS desde `qrioso.do`
+  (`qrioso-main`), y asociaciones de Amplify en estado `AVAILABLE`. `.env.develop` de
+  ambas apps usa esos orígenes.
+- `amplify.yml` verificado con una simulación completa del build de web y admin desde
+  una copia limpia del repositorio. Los jobs `1` fallaron en `write-amplify-env.mjs`,
+  como se esperaba, porque las variables de rama llegan con `deploy:dev`.
+
 ## 2026-09-26 — Verificación de los mini-juegos
 
 - Batería exhaustiva del motor (`packages/simulator/src/minigames.test.ts`): cada

@@ -38,7 +38,7 @@ export function OutcomeSheet({ outcome, module, onContinue }: { outcome: Applied
         <div className="flex flex-wrap items-center gap-2">
           <h2 id="outcome-title" className="text-xs font-bold uppercase tracking-wider text-muted">Consecuencia</h2>
           {outcome.timedOut && (
-            <span className="chip bg-sun-soft text-[#6b4700]"><Timer className="size-3.5" aria-hidden /> Se acabó el tiempo</span>
+            <span className="chip bg-sun-soft text-sun-strong"><Timer className="size-3.5" aria-hidden /> Se acabó el tiempo</span>
           )}
         </div>
         <div className="mt-3 grid gap-3">
@@ -58,7 +58,7 @@ export function OutcomeSheet({ outcome, module, onContinue }: { outcome: Applied
             </motion.div>
           ))}
           {outcome.narration && (
-            <p className="flex items-start gap-2 rounded-2xl bg-sun-soft px-4 py-2.5 text-sm font-semibold text-[#6b4700]">
+            <p className="flex items-start gap-2 rounded-2xl bg-sun-soft px-4 py-2.5 text-sm font-semibold text-sun-strong">
               <Sparkles className="mt-0.5 size-4 shrink-0" aria-hidden /> {outcome.narration}
             </p>
           )}
@@ -66,14 +66,14 @@ export function OutcomeSheet({ outcome, module, onContinue }: { outcome: Applied
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
           <div className="flex flex-wrap gap-1.5" aria-label="Cambios en tu puntaje">
             {outcome.performanceDelta !== 0 ? (
-              <span className={`chip ${outcome.performanceDelta > 0 ? 'bg-good-soft text-[#0b6e51]' : 'bg-bad-soft text-[#a1262b]'}`}>
+              <span className={`chip ${outcome.performanceDelta > 0 ? 'bg-good-soft text-good-strong' : 'bg-bad-soft text-bad-strong'}`}>
                 {outcome.performanceDelta > 0 ? `▲ +${outcome.performanceDelta}` : `▼ ${outcome.performanceDelta}`} desempeño
               </span>
             ) : (
               <span className="chip bg-mist text-muted">Desempeño sin cambios</span>
             )}
             {axes.map(([axis, value]) => (
-              <span key={axis} className="chip bg-violet-soft text-violet-strong">
+              <span key={axis} className="chip bg-accent-soft text-accent-strong">
                 {value > 0 ? `+${value}` : value} {AFFINITY_SHORT_LABELS[axis].toLowerCase()}
               </span>
             ))}

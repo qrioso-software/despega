@@ -28,6 +28,7 @@ flowchart LR
     SIM["@despega/simulator\nmotor puro + guiones"]
     DATA["@despega/data\nrepositorios + casos de uso"]
     AUTH["@despega/auth\nCognito + sesión local"]
+    BRAND["@despega/brand\nlogo + paleta"]
   end
   E -->|HTTPS| WEB
   S -->|HTTPS| ADMIN
@@ -35,6 +36,8 @@ flowchart LR
   ADMIN --> DATA
   WEB --> AUTH
   ADMIN --> AUTH
+  WEB --> BRAND
+  ADMIN --> BRAND
   DATA --> SIM
   WEB -. "rol SSR web" .-> DDB[("DynamoDB\ncore · simulation")]
   ADMIN -. "rol SSR admin" .-> DDB
@@ -53,6 +56,7 @@ flowchart LR
 | `packages/simulator` | Tipos del contenido, motor (`applySceneResponse`, `startSession`, `getPublicScene`), afinidad, validación y los módulos de carrera. Sin I/O. |
 | `packages/data` | Esquema DynamoDB, repositorios y casos de uso (`ensureCareerProgress`, `beginSession`, `submitSceneResponse`, `restartCareer`, `careerOverview`). |
 | `packages/auth` | Cognito del lado del servidor (login, registro, confirmación, recuperación, refresh, revocación, verificación JWT) y la sesión local firmada. |
+| `packages/brand` | Identidad visual compartida: logo (`DespegaLogo` y SVG), isotipo e íconos, y la paleta `--despega-*` que cada app traduce a sus tokens. |
 | `infra` | Stack `Despega-<stage>`: tablas, pools de Cognito, roles de Amplify y variables de rama. |
 
 ## Sin API Gateway: cómo fluye una decisión
@@ -89,6 +93,14 @@ El motor interpreta contenido declarativo: sesiones, escenas, interacciones y
 resultados. Detalles en `simulator-engine.md`. El guión del piloto y los supuestos
 tomados sobre el documento funcional están en `functional-analysis.md`.
 
+## Identidad visual
+
+La paleta sale del logo: navy `#17233b` (tinta y superficies oscuras) y verde
+`#75be65` de la llama (acción principal y logro), más un azul del mismo tono que el
+navy para la interacción. Vive una sola vez en `@despega/brand/palette.css`; la web la
+mapea al `@theme` de Tailwind y el admin a las variables de HeroUI. Los componentes usan
+esos tokens, no hex. Decisión en `docs/decisions/0006-identidad-visual-compartida.md`.
+
 ## Datos
 
 Dos tablas (`core` y `simulation`), cada una con un índice justificado. El progreso
@@ -113,5 +125,5 @@ decisión queda como evento inmutable por intento. Detalles en `data-model.md`.
 - Los agregados del backoffice paginan índices hasta un tope (1.000 registros de
   progreso, 500 estudiantes en búsqueda). Para volumen real conviene mantener contadores
   al escribir y un índice de búsqueda.
-- Las URLs de `dev`/`prd` en los `.env.develop`/`.env.production` son marcadores
-  `*.despega.example`: reemplazarlas por los dominios reales antes de desplegar.
+- Las URLs de `prd` en los `.env.production` son marcadores `*.despega.example`:
+  reemplazarlas por los dominios reales antes de desplegar `prd`.

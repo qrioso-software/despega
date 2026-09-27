@@ -64,11 +64,11 @@ export function LiveDecisionInteraction({ interaction, locked, outcome, onSubmit
     <div className="grid gap-5">
       <div className="grid gap-3 sm:grid-cols-[1fr_1fr_1.4fr]">
         <div className="rounded-2xl bg-good-soft p-4">
-          <p className="flex items-center gap-1.5 text-sm font-semibold text-[#0b6e51]"><ThumbsUp className="size-4" aria-hidden /> Me gusta</p>
+          <p className="flex items-center gap-1.5 text-sm font-semibold text-good-strong"><ThumbsUp className="size-4" aria-hidden /> Me gusta</p>
           <p className="mt-1 font-sans text-4xl font-bold text-ink">{counts.up}</p>
         </div>
         <div className="rounded-2xl bg-bad-soft p-4">
-          <p className="flex items-center gap-1.5 text-sm font-semibold text-[#a1262b]"><ThumbsDown className="size-4" aria-hidden /> No me gusta</p>
+          <p className="flex items-center gap-1.5 text-sm font-semibold text-bad-strong"><ThumbsDown className="size-4" aria-hidden /> No me gusta</p>
           <p className="mt-1 font-sans text-4xl font-bold text-ink">{counts.down}</p>
         </div>
         <div className="rounded-2xl bg-mist p-4">
@@ -119,7 +119,7 @@ export function LiveDecisionInteraction({ interaction, locked, outcome, onSubmit
                   onSubmit({ kind: 'live-decision', optionId: option.id });
                 }}
                 className={`rounded-2xl border-2 p-4 text-left transition-colors disabled:cursor-default ${
-                  selected ? 'border-violet bg-violet-soft' : locked ? 'border-line bg-white opacity-50' : 'border-line bg-white hover:border-violet/60'
+                  selected ? 'border-accent bg-accent-soft' : locked ? 'border-line bg-white opacity-50' : 'border-line bg-white hover:border-accent/60'
                 }`}
               >
                 <span className="block font-display text-lg font-bold text-ink">{option.label}</span>

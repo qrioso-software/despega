@@ -36,7 +36,7 @@ export function PlayerLine({ text, playerName }: { text: string; playerName: str
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex justify-end">
       <div className="max-w-[85%]">
         <p className="mb-1 text-right text-xs font-bold text-muted">{playerName} (tú)</p>
-        <p className="rounded-2xl rounded-br-md bg-violet px-4 py-2.5 text-[0.95rem] text-white">{text}</p>
+        <p className="rounded-2xl rounded-br-md bg-accent px-4 py-2.5 text-[0.95rem] text-white">{text}</p>
       </div>
     </motion.div>
   );

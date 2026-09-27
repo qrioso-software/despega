@@ -87,24 +87,24 @@ export function AffinityRadar({ values, unavailable = [], width = 360 }: { value
   return (
     <svg viewBox={`0 0 ${VIEW.width} ${VIEW.height}`} width={width} height={(width * VIEW.height) / VIEW.width} className="mx-auto h-auto max-w-full" role="img" aria-label={`Perfil de afinidad: ${label}`}>
       {[0.25, 0.5, 0.75, 1].map((ring) => (
-        <polygon key={ring} points={AFFINITY_AXES.map((_, index) => point(index, ring).join(',')).join(' ')} fill="none" stroke="#e7e3f1" strokeWidth={1} />
+        <polygon key={ring} points={AFFINITY_AXES.map((_, index) => point(index, ring).join(',')).join(' ')} fill="none" className="stroke-line" strokeWidth={1} />
       ))}
       {AFFINITY_AXES.map((axis, index) => {
         const [x, y] = point(index, 1);
-        return <line key={axis} x1={VIEW.cx} y1={VIEW.cy} x2={x} y2={y} stroke="#e7e3f1" strokeWidth={1} />;
+        return <line key={axis} x1={VIEW.cx} y1={VIEW.cy} x2={x} y2={y} className="stroke-line" strokeWidth={1} />;
       })}
-      <polygon points={polygon} fill="#5b3df5" fillOpacity={0.12} stroke="#5b3df5" strokeWidth={2} strokeLinejoin="round" />
+      <polygon points={polygon} className="fill-accent stroke-accent" fillOpacity={0.12} strokeWidth={2} strokeLinejoin="round" />
       {AFFINITY_AXES.map((axis, index) => {
         const [x, y] = point(index, ratio(values[axis]));
-        return <circle key={axis} cx={x} cy={y} r={4.5} fill="#5b3df5" stroke="#fff" strokeWidth={2} />;
+        return <circle key={axis} cx={x} cy={y} r={4.5} className="fill-accent" stroke="#fff" strokeWidth={2} />;
       })}
       {AFFINITY_AXES.map((axis, index) => {
         const [x, y] = point(index, 1.24);
         const anchor = Math.abs(x - VIEW.cx) < 8 ? 'middle' : x > VIEW.cx ? 'start' : 'end';
         return (
           <text key={axis} x={x} y={y} textAnchor={anchor} dominantBaseline="middle" aria-hidden="true">
-            <tspan x={x} dy="-0.45em" fontSize="13" fontWeight="700" fill="#14123a">{AFFINITY_SHORT_LABELS[axis]}</tspan>
-            <tspan x={x} dy="1.25em" fontSize="12" fill="#5d5a78">{unavailable.includes(axis) ? '—' : values[axis]}</tspan>
+            <tspan x={x} dy="-0.45em" fontSize="13" fontWeight="700" className="fill-ink">{AFFINITY_SHORT_LABELS[axis]}</tspan>
+            <tspan x={x} dy="1.25em" fontSize="12" className="fill-muted-ink">{unavailable.includes(axis) ? '—' : values[axis]}</tspan>
           </text>
         );
       })}

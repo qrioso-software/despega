@@ -172,12 +172,12 @@ export function SimulatorPlayer({
   const hud = outcome ? (nextScene?.hud ?? scene?.hud) : scene?.hud;
 
   return (
-    <div className="min-h-dvh bg-[radial-gradient(ellipse_at_top,_#ebe6ff_0%,_#fbf8f3_55%)] pb-40">
+    <div className="min-h-dvh bg-[radial-gradient(ellipse_at_top,_var(--color-accent-soft)_0%,_var(--color-paper)_55%)] pb-40">
       <PlayerHud module={module} scene={scene} hud={hud} progress={progress} frozen={Boolean(outcome && !nextScene)} />
 
       <main className="mx-auto max-w-5xl px-3 pt-5 sm:px-5 sm:pt-8">
         {error && (
-          <div role="alert" className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl bg-bad-soft px-4 py-3 text-sm text-[#a1262b]">
+          <div role="alert" className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl bg-bad-soft px-4 py-3 text-sm text-bad-strong">
             <TriangleAlert className="size-4 shrink-0" aria-hidden />
             <span className="flex-1">{error.message}</span>
             {error.retry && (

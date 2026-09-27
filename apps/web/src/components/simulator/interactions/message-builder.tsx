@@ -39,7 +39,7 @@ export function MessageBuilderInteraction({ interaction, locked, outcome, onSubm
 
   return (
     <div className="grid gap-4">
-      <div className={`rounded-2xl border-2 ${interaction.channel === 'email' ? 'border-line bg-white' : 'border-violet/30 bg-violet-soft/30'} p-4`}>
+      <div className={`rounded-2xl border-2 ${interaction.channel === 'email' ? 'border-line bg-white' : 'border-accent/30 bg-accent-soft/30'} p-4`}>
         <p className="text-xs font-bold uppercase tracking-wider text-muted">
           {interaction.channel === 'email' ? `Responder a ${recipient}` : `Mensaje para ${recipient}`} · {selected.length}/{interaction.maxBlocks} frases
         </p>
@@ -61,7 +61,7 @@ export function MessageBuilderInteraction({ interaction, locked, outcome, onSubm
                       exit={{ opacity: 0, scale: 0.95 }}
                       disabled={locked}
                       onClick={() => toggle(id)}
-                      className="flex items-start gap-2 rounded-xl bg-violet px-3 py-2 text-left text-sm font-medium text-white"
+                      className="flex items-start gap-2 rounded-xl bg-accent px-3 py-2 text-left text-sm font-medium text-white"
                       aria-label={`Quitar: ${block.text}`}
                     >
                       <span>{block.text}</span>
@@ -84,9 +84,9 @@ export function MessageBuilderInteraction({ interaction, locked, outcome, onSubm
               type="button"
               disabled={locked || selected.length >= interaction.maxBlocks}
               onClick={() => toggle(block.id)}
-              className="flex items-start gap-2 rounded-xl border-2 border-line bg-white px-3 py-2.5 text-left text-sm text-ink transition-colors hover:border-violet/60 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex items-start gap-2 rounded-xl border-2 border-line bg-white px-3 py-2.5 text-left text-sm text-ink transition-colors hover:border-accent/60 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <Plus className="mt-0.5 size-4 shrink-0 text-violet" aria-hidden />
+              <Plus className="mt-0.5 size-4 shrink-0 text-accent" aria-hidden />
               <span>{block.text}</span>
             </button>
           ))}
@@ -101,7 +101,7 @@ export function MessageBuilderInteraction({ interaction, locked, outcome, onSubm
         )}
         <button
           type="button"
-          className="btn btn-violet"
+          className="btn btn-accent"
           disabled={!canSend || locked}
           onClick={() => onSubmit({ kind: 'message-builder', blockIds: selected })}
         >

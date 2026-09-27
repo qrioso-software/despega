@@ -34,7 +34,7 @@ export default async function StudentHomePage() {
         <p className="mt-2 text-ink-soft">Elige una carrera y vive su semana. Tu progreso se guarda después de cada escena.</p>
 
         {unavailable && (
-          <p role="alert" className="mt-6 flex items-start gap-2 rounded-2xl bg-bad-soft px-4 py-3 text-sm text-[#a1262b]">
+          <p role="alert" className="mt-6 flex items-start gap-2 rounded-2xl bg-bad-soft px-4 py-3 text-sm text-bad-strong">
             <TriangleAlert className="mt-0.5 size-4 shrink-0" aria-hidden />
             No pudimos cargar tu progreso en este momento. Tus datos no se perdieron; vuelve a intentar en unos segundos.
           </p>
@@ -119,7 +119,7 @@ function CareerCard({ career, record }: { career: Career; record?: CareerProgres
             </>
           ) : (
             <div className="flex h-full flex-col items-center justify-center gap-3 py-8 text-center">
-              <Sparkles className="size-8 text-violet" aria-hidden />
+              <Sparkles className="size-8 text-accent" aria-hidden />
               <p className="font-semibold">Aquí aparecerán tu desempeño y tu perfil de afinidad.</p>
               <p className="text-sm text-muted">Empiezas con 50 puntos. Cada decisión los mueve.</p>
             </div>

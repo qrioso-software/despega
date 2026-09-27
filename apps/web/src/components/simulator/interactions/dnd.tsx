@@ -116,7 +116,7 @@ export function DraggableCard({
       onClick={onSelect}
       style={{ transform: CSS.Translate.toString(transform) }}
       className={`touch-manipulation text-left transition-shadow ${isDragging ? 'opacity-40' : ''} ${
-        selected ? 'ring-4 ring-violet/40' : ''
+        selected ? 'ring-4 ring-accent/40' : ''
       } disabled:cursor-default ${className}`}
     >
       {children}
@@ -128,7 +128,7 @@ export function DropZone({
   id,
   disabled,
   className = '',
-  activeClassName = 'ring-4 ring-violet/40',
+  activeClassName = 'ring-4 ring-accent/40',
   children,
 }: {
   id: string;

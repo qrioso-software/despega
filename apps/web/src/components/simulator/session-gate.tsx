@@ -46,9 +46,9 @@ export function SessionGate({
       </div>
       <div className="grid gap-6 p-6 sm:p-8">
         <ul className="grid gap-3 sm:grid-cols-3">
-          <li className="flex items-center gap-2 text-sm text-ink-soft"><Clock3 className="size-4 text-violet" aria-hidden /> ~{session.estimatedMinutes} minutos</li>
-          <li className="flex items-center gap-2 text-sm text-ink-soft"><Zap className="size-4 text-violet" aria-hidden /> Empieza con algo urgente</li>
-          <li className="flex items-center gap-2 text-sm text-ink-soft"><Timer className="size-4 text-violet" aria-hidden /> Habrá reloj corriendo</li>
+          <li className="flex items-center gap-2 text-sm text-ink-soft"><Clock3 className="size-4 text-accent" aria-hidden /> ~{session.estimatedMinutes} minutos</li>
+          <li className="flex items-center gap-2 text-sm text-ink-soft"><Zap className="size-4 text-accent" aria-hidden /> Empieza con algo urgente</li>
+          <li className="flex items-center gap-2 text-sm text-ink-soft"><Timer className="size-4 text-accent" aria-hidden /> Habrá reloj corriendo</li>
         </ul>
         {justCompleted && (
           <p className="rounded-2xl bg-mist px-4 py-3 text-sm text-ink-soft">
@@ -72,7 +72,7 @@ export function SessionGate({
 export function ModuleComplete({ module }: { module: ModuleView }) {
   return (
     <motion.section initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="card mx-auto max-w-2xl p-8 text-center sm:p-12">
-      <PartyPopper className="mx-auto size-12 text-brand" aria-hidden />
+      <PartyPopper className="mx-auto size-12 text-brand-strong" aria-hidden />
       <h1 className="mt-4 text-4xl font-bold">¡Terminaste {module.tagline.toLowerCase()}!</h1>
       <p className="mx-auto mt-3 max-w-md text-ink-soft">
         Tu desempeño y tu perfil de afinidad de {module.title} quedaron guardados. Míralos cuando quieras.

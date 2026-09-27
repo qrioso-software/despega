@@ -20,7 +20,8 @@ Antes de proponer arquitectura, datos, contenido o flujos:
    `packages/simulator/AGENTS.md`.
 5. Si toca datos o permisos: `docs/architecture/data-model.md`.
 6. Si toca AWS o variables: `docs/architecture/environments-and-deployment.md`.
-7. El `AGENTS.md` del workspace que se vaya a modificar.
+7. Si toca colores, logo o íconos: `packages/brand/AGENTS.md`.
+8. El `AGENTS.md` del workspace que se vaya a modificar.
 
 Separar siempre: lo que dice el documento funcional, lo que es un supuesto registrado y
 lo que es una decisión técnica nueva.
@@ -86,7 +87,7 @@ estable.**
 ## Arquitectura no negociable
 
 - Monorepo `pnpm`: `apps/web`, `apps/admin`, `packages/simulator`, `packages/data`,
-  `packages/auth` e `infra`.
+  `packages/auth`, `packages/brand` e `infra`.
 - `apps/web` y `apps/admin`: Next.js 16 App Router con SSR, desplegados en **AWS Amplify
   Hosting** (`WEB_COMPUTE`). Server Components para leer; **Server Actions** para mutar.
 - **Sin API Gateway ni Lambdas de dominio en esta etapa.** El SSR y las Server Actions
@@ -104,6 +105,8 @@ estable.**
 - El proveedor de identidad `local` existe solo con `STAGE=local` y host loopback. CDK y
   el build de Amplify lo rechazan.
 - `infra` (CDK v2) es la única fuente de infraestructura.
+- `packages/brand` es la única fuente de logo, íconos y paleta (derivada del logo). Las
+  apps traducen la paleta a sus tokens y los componentes no usan hex de marca.
 - DynamoDB por contexto acotado (`core`, `simulation`). Sin `Scan`: cada lectura usa
   `GetItem`, `Query`, `BatchGetItem` o un índice documentado. Un GSI nuevo exige
   registrar su patrón de acceso en `docs/architecture/data-model.md`.

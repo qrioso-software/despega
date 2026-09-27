@@ -2,11 +2,11 @@ import { KanbanSquare, Mail, MessagesSquare, MonitorPlay, Video } from 'lucide-r
 import type { ReactNode } from 'react';
 
 const APPS = {
-  chat: { name: 'PixelChat', icon: MessagesSquare, color: '#5b3df5' },
-  call: { name: 'PixelChat · Videollamada', icon: Video, color: '#5b3df5' },
-  mail: { name: 'PixelMail', icon: Mail, color: '#ff5b2e' },
-  board: { name: 'PixelBoard', icon: KanbanSquare, color: '#12966f' },
-  pulse: { name: 'PixelPulse', icon: MonitorPlay, color: '#e5484d' },
+  chat: { name: 'PixelChat', icon: MessagesSquare, tile: 'bg-accent text-white' },
+  call: { name: 'PixelChat · Videollamada', icon: Video, tile: 'bg-accent text-white' },
+  mail: { name: 'PixelMail', icon: Mail, tile: 'bg-sun text-ink' },
+  board: { name: 'PixelBoard', icon: KanbanSquare, tile: 'bg-good text-white' },
+  pulse: { name: 'PixelPulse', icon: MonitorPlay, tile: 'bg-bad text-white' },
 } as const;
 
 export type OfficeApp = keyof typeof APPS;
@@ -34,7 +34,7 @@ export function OfficeWindow({
     <section className={`card overflow-hidden p-0 ${className}`} aria-label={meta.name}>
       <header className="flex items-center justify-between gap-3 border-b border-line bg-mist/70 px-4 py-2.5">
         <div className="flex min-w-0 items-center gap-2.5">
-          <span className="grid size-7 shrink-0 place-items-center rounded-lg text-white" style={{ backgroundColor: meta.color }}>
+          <span className={`grid size-7 shrink-0 place-items-center rounded-lg ${meta.tile}`}>
             <Icon className="size-4" aria-hidden />
           </span>
           <span className="truncate text-sm font-bold text-ink">{meta.name}</span>

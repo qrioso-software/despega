@@ -24,7 +24,7 @@ export default async function PasswordResetPage({ searchParams }: PageProps<'/re
         )}
         {mode === 'cognito' && <PasswordResetForm defaultEmail={email} />}
         <p className="text-center text-sm text-muted">
-          <Link href="/ingresar" className="font-semibold text-violet hover:underline">Volver a ingresar</Link>
+          <Link href="/ingresar" className="font-semibold text-accent hover:underline">Volver a ingresar</Link>
         </p>
       </div>
     </>

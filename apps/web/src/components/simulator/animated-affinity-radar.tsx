@@ -3,7 +3,7 @@
 import { AFFINITY_AXES, AFFINITY_LABELS, type AffinityAxis, type AffinityVector } from '@despega/simulator';
 import { animate, motion, useMotionValue, useReducedMotion, useTransform, type MotionValue } from 'motion/react';
 import { useEffect } from 'react';
-import { RADAR_SERIES, RADAR_VIEW, RadarGrid, RadarLabels, radarPoint } from './affinity-radar';
+import { RADAR_SERIES_CLASS, RADAR_VIEW, RadarGrid, RadarLabels, radarPoint } from './affinity-radar';
 
 /** El radar crece desde el perfil anterior hasta el actual (resúmenes de sesión). */
 export function AnimatedAffinityRadar({
@@ -41,7 +41,7 @@ export function AnimatedAffinityRadar({
   return (
     <svg viewBox={`0 0 ${RADAR_VIEW.width} ${RADAR_VIEW.height}`} width={size} height={(size * RADAR_VIEW.height) / RADAR_VIEW.width} className={`h-auto max-w-full ${className}`} role="img" aria-label={`Perfil de afinidad. ${description}.`}>
       <RadarGrid center={center} radius={radius} />
-      <motion.polygon points={points} fill={RADAR_SERIES} fillOpacity={0.12} stroke={RADAR_SERIES} strokeWidth={2} strokeLinejoin="round" />
+      <motion.polygon points={points} className={RADAR_SERIES_CLASS} fillOpacity={0.12} strokeWidth={2} strokeLinejoin="round" />
       {AFFINITY_AXES.map((axis, index) => (
         <RadarVertex key={axis} index={index} fromValue={from[axis]} toValue={to[axis]} progress={progress} center={center} radius={radius} />
       ))}
@@ -67,7 +67,7 @@ function RadarVertex({
 }) {
   const x = useTransform(progress, (value) => radarPoint(index, ratio(fromValue + (toValue - fromValue) * value), center, radius)[0]);
   const y = useTransform(progress, (value) => radarPoint(index, ratio(fromValue + (toValue - fromValue) * value), center, radius)[1]);
-  return <motion.circle cx={x} cy={y} r={4.5} fill={RADAR_SERIES} stroke="#fff" strokeWidth={2} />;
+  return <motion.circle cx={x} cy={y} r={4.5} className="fill-accent" stroke="#fff" strokeWidth={2} />;
 }
 
 function ratio(value: number): number {

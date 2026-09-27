@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   devIndicators: false,
   reactStrictMode: true,
   poweredByHeader: false,
-  transpilePackages: ['@despega/simulator', '@despega/data', '@despega/auth'],
+  transpilePackages: ['@despega/brand', '@despega/simulator', '@despega/data', '@despega/auth'],
   async headers() {
     const headers = [...securityHeaders];
     if (process.env.NODE_ENV === 'production') {

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@despega/auth": "workspace:*",
+    "@despega/brand": "workspace:*",
     "@despega/data": "workspace:*",
     "@despega/simulator": "workspace:*",
     "@dnd-kit/core": "6.3.1",

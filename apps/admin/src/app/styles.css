@@ -1,67 +1,65 @@
 @import 'tailwindcss';
 @import '@heroui/styles';
+@import '@despega/brand/palette.css';
 
 /*
- * Backoffice DESPEGA sobre HeroUI v3. Los tokens de HeroUI (accent, surface, field…)
- * se alinean con la marca; no se introduce otra librería de UI.
+ * Backoffice DESPEGA sobre HeroUI v3. Las variables de HeroUI (accent, surface, field…)
+ * se mapean a la paleta del logo (`@despega/brand/palette.css`); no se introduce otra
+ * librería de UI. Acción en azul, logro en verde, tinta y bordes con el tono del navy.
  */
 :root,
 html.light,
 html[data-theme='light'] {
   color-scheme: light;
-  --brand-violet: #5b3df5;
-  --brand-violet-strong: #4327d8;
-  --brand-orange: #ff5b2e;
-  --ink: #14123a;
-  --muted: #5d5a78;
-  --line: #e7e3f1;
-
-  --background: #f6f5fb;
-  --foreground: var(--ink);
+  --background: var(--despega-paper);
+  --foreground: var(--despega-navy);
   --surface: #ffffff;
-  --surface-foreground: var(--ink);
-  --surface-secondary: #f3f0fb;
-  --surface-secondary-foreground: var(--ink);
-  --surface-tertiary: #ebe6ff;
-  --surface-tertiary-foreground: var(--ink);
+  --surface-foreground: var(--foreground);
+  --surface-secondary: var(--despega-mist);
+  --surface-secondary-foreground: var(--foreground);
+  --surface-tertiary: var(--despega-blue-soft);
+  --surface-tertiary-foreground: var(--foreground);
   --overlay: #ffffff;
-  --overlay-foreground: var(--ink);
-  --accent: var(--brand-violet);
+  --overlay-foreground: var(--foreground);
+  --muted: var(--despega-muted);
+  --default: var(--despega-mist);
+  --default-foreground: var(--foreground);
+  --accent: var(--despega-blue);
   --accent-foreground: #ffffff;
-  --accent-hover: var(--brand-violet-strong);
-  --accent-soft: #ebe6ff;
-  --accent-soft-foreground: var(--brand-violet-strong);
-  --accent-soft-hover: #ddd5ff;
-  --success: #12966f;
+  --accent-hover: var(--despega-blue-strong);
+  --accent-soft: var(--despega-blue-soft);
+  --accent-soft-foreground: var(--despega-blue-strong);
+  --accent-soft-hover: var(--despega-blue-soft-hover);
+  --success: var(--despega-green-deep);
   --success-foreground: #ffffff;
-  --success-soft: #e0f5ee;
-  --success-soft-foreground: #0b6e51;
-  --warning: #b77900;
+  --success-soft: var(--despega-green-soft);
+  --success-soft-foreground: var(--despega-green-strong);
+  --warning: var(--despega-amber);
   --warning-foreground: #ffffff;
-  --warning-soft: #fff4d6;
-  --warning-soft-foreground: #6b4700;
-  --danger: #e5484d;
+  --warning-soft: var(--despega-sun-soft);
+  --warning-soft-foreground: var(--despega-sun-strong);
+  --danger: var(--despega-bad);
   --danger-foreground: #ffffff;
-  --danger-soft: #fde8e8;
-  --danger-soft-foreground: #a1262b;
-  --border: var(--line);
-  --separator: var(--line);
-  --focus: var(--brand-violet);
+  --danger-soft: var(--despega-bad-soft);
+  --danger-soft-foreground: var(--despega-bad-strong);
+  --border: var(--despega-line);
+  --separator: var(--despega-line);
+  --focus: var(--accent);
   --field-background: #ffffff;
-  --field-border: #d9d4ea;
-  --field-border-hover: #b9b2d6;
-  --field-border-focus: var(--brand-violet);
+  --field-foreground: var(--foreground);
+  --field-border: var(--despega-line-strong);
+  --field-border-hover: var(--despega-placeholder);
+  --field-border-focus: var(--accent);
   --radius: 0.8rem;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme inline {
   --font-display: var(--font-bricolage), var(--font-inter), ui-sans-serif, sans-serif;
-  --color-ink: var(--ink);
+  --color-ink: var(--foreground);
   --color-muted-ink: var(--muted);
-  --color-line: var(--line);
-  --color-brand: var(--brand-orange);
-  --color-violet: var(--brand-violet);
+  --color-line: var(--border);
+  --color-brand: var(--despega-green);
 }
 
 html,
@@ -88,7 +86,7 @@ h3 {
   font-weight: 750;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--brand-violet);
+  color: var(--accent);
 }
 
 .data-table {
@@ -98,7 +96,7 @@ h3 {
 }
 .data-table th {
   padding: 0.65rem 0.9rem;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--border);
   color: var(--muted);
   font-size: 0.72rem;
   font-weight: 750;
@@ -109,9 +107,9 @@ h3 {
 }
 .data-table td {
   padding: 0.75rem 0.9rem;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--border);
   vertical-align: top;
 }
 .data-table tbody tr:hover {
-  background: #faf9fe;
+  background: var(--despega-paper);
 }

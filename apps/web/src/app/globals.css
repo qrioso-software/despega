@@ -1,40 +1,48 @@
 @import 'tailwindcss';
+@import '@despega/brand/palette.css';
 
 /*
- * DESPEGA — sistema visual de la web de estudiantes.
- * El mundo del juego (PixelForge) usa los mismos tokens; los personajes y las
- * herramientas de oficina son recreaciones propias, no capturas de otras apps.
+ * DESPEGA — sistema visual de la web de estudiantes. Los colores vienen de la paleta
+ * del logo (`@despega/brand/palette.css`): navy para la tinta y las superficies
+ * oscuras, verde de la llama para la acción principal y el logro, y azul del mismo
+ * tono que el navy para la interacción. El mundo del juego (PixelForge) usa los mismos
+ * tokens; los personajes y las herramientas de oficina son recreaciones propias.
  */
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-bricolage), var(--font-inter), ui-sans-serif, sans-serif;
 
-  --color-ink: #14123a;
-  --color-ink-soft: #3b3860;
-  --color-muted: #5d5a78;
-  --color-night: #0d0b26;
-  --color-night-soft: #1b1840;
-  --color-paper: #fbf8f3;
+  --color-ink: var(--despega-navy);
+  --color-ink-soft: var(--despega-ink-soft);
+  --color-muted: var(--despega-muted);
+  --color-night: var(--despega-night);
+  --color-night-soft: var(--despega-night-soft);
+  --color-paper: var(--despega-paper);
   --color-surface: #ffffff;
-  --color-mist: #f3f0fb;
-  --color-line: #e7e3f1;
+  --color-mist: var(--despega-mist);
+  --color-line: var(--despega-line);
 
-  --color-brand: #ff5b2e;
-  --color-brand-strong: #e5461b;
-  --color-brand-soft: #ffe8df;
-  --color-violet: #5b3df5;
-  --color-violet-strong: #4327d8;
-  --color-violet-soft: #ebe6ff;
-  --color-sun: #ffb400;
-  --color-sun-soft: #fff4d6;
-  --color-good: #12966f;
-  --color-good-soft: #e0f5ee;
-  --color-bad: #e5484d;
-  --color-bad-soft: #fde8e8;
+  /* Verde de la llama: el texto encima va en tinta; como texto, usar `brand-strong`. */
+  --color-brand: var(--despega-green);
+  --color-brand-hover: var(--despega-green-hover);
+  --color-brand-strong: var(--despega-green-strong);
+  --color-brand-soft: var(--despega-green-soft);
+  --color-accent: var(--despega-blue);
+  --color-accent-strong: var(--despega-blue-strong);
+  --color-accent-soft: var(--despega-blue-soft);
+  --color-sun: var(--despega-sun);
+  --color-sun-strong: var(--despega-sun-strong);
+  --color-sun-soft: var(--despega-sun-soft);
+  --color-good: var(--despega-green-deep);
+  --color-good-strong: var(--despega-green-strong);
+  --color-good-soft: var(--despega-green-soft);
+  --color-bad: var(--despega-bad);
+  --color-bad-strong: var(--despega-bad-strong);
+  --color-bad-soft: var(--despega-bad-soft);
 
   --radius-card: 1.25rem;
-  --shadow-soft: 0 18px 40px -24px rgb(20 18 58 / 0.35), 0 4px 12px -6px rgb(20 18 58 / 0.12);
-  --shadow-pop: 0 24px 60px -20px rgb(20 18 58 / 0.45);
+  --shadow-soft: 0 18px 40px -24px rgb(23 35 59 / 0.35), 0 4px 12px -6px rgb(23 35 59 / 0.12);
+  --shadow-pop: 0 24px 60px -20px rgb(23 35 59 / 0.45);
 
   --animate-float: float 6s ease-in-out infinite;
   --animate-blink-caret: blink-caret 1s step-end infinite;
@@ -48,8 +56,8 @@
     50% { opacity: 0; }
   }
   @keyframes pulse-ring {
-    0% { box-shadow: 0 0 0 0 rgb(255 91 46 / 0.45); }
-    100% { box-shadow: 0 0 0 18px rgb(255 91 46 / 0); }
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-bad) 45%, transparent); }
+    100% { box-shadow: 0 0 0 18px transparent; }
   }
 }
 
@@ -77,7 +85,7 @@
   }
 
   :focus-visible {
-    outline: 3px solid var(--color-violet);
+    outline: 3px solid var(--color-accent);
     outline-offset: 2px;
   }
 
@@ -106,17 +114,17 @@
 
   .btn-primary {
     background: var(--color-brand);
-    color: #fff;
-    box-shadow: 0 10px 24px -12px rgb(229 70 27 / 0.8);
+    color: var(--color-ink);
+    box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--color-brand-strong) 70%, transparent);
   }
-  .btn-primary:hover:not(:disabled) { background: var(--color-brand-strong); }
+  .btn-primary:hover:not(:disabled) { background: var(--color-brand-hover); }
 
-  .btn-violet {
-    background: var(--color-violet);
+  .btn-accent {
+    background: var(--color-accent);
     color: #fff;
-    box-shadow: 0 10px 24px -12px rgb(67 39 216 / 0.8);
+    box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--color-accent-strong) 80%, transparent);
   }
-  .btn-violet:hover:not(:disabled) { background: var(--color-violet-strong); }
+  .btn-accent:hover:not(:disabled) { background: var(--color-accent-strong); }
 
   .btn-ghost {
     background: transparent;
@@ -143,7 +151,7 @@
     font-weight: 750;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--color-violet);
+    color: var(--color-accent);
   }
 
   .field-label {
@@ -167,10 +175,10 @@
   }
   .field-input:focus {
     outline: none;
-    border-color: var(--color-violet);
-    box-shadow: 0 0 0 4px var(--color-violet-soft);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 4px var(--color-accent-soft);
   }
-  .field-input::placeholder { color: #9a97b3; }
+  .field-input::placeholder { color: var(--despega-placeholder); }
 
   .chip {
     display: inline-flex;

@@ -42,4 +42,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - `.env.example` es el contrato de variables. Mantener las mismas keys en `.env.local`,
   `.env.develop` y `.env.production`; CDK carga los dos últimos según el stage.
   No poner secretos en estos archivos.
-- Tailwind CSS 4: los tokens de marca están en `src/app/globals.css` (`@theme`).
+- Tailwind CSS 4: el `@theme` de `src/app/globals.css` mapea la paleta de
+  `@despega/brand`. Usar tokens (`ink`, `brand`, `accent`, `good`, `sun`, `bad` y sus
+  `soft`/`strong`), nunca hex; en SVG, clases `fill-*`/`stroke-*`. Sobre `bg-brand`
+  el texto va en tinta, y el verde como texto es `brand-strong`.
+- El logo es `DespegaLogo` de `@despega/brand` (vía `BrandLink`). `favicon.ico`,
+  `icon.svg` y `apple-icon.png` de `src/app/` son copias de
+  `packages/brand/assets/icons/`.

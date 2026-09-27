@@ -23,18 +23,18 @@ type CharacterLook = {
 export const CHARACTER_LOOKS: Readonly<Record<string, CharacterLook>> = {
   marisol: {
     name: 'Marisol',
-    background: '#ebe6ff',
+    background: '#e8f0fc',
     skin: '#c98a5e',
     skinShade: '#b1734a',
     hair: '#2b1b17',
-    shirt: '#5b3df5',
+    shirt: '#2564d0',
     accent: '#ffb400',
     style: 'curly',
     glasses: true,
   },
   andres: {
     name: 'Andrés',
-    background: '#ffe8df',
+    background: '#fff4d6',
     skin: '#e2b48c',
     skinShade: '#c99a72',
     hair: '#3a2618',
@@ -45,12 +45,12 @@ export const CHARACTER_LOOKS: Readonly<Record<string, CharacterLook>> = {
   },
   camila: {
     name: 'Camila',
-    background: '#e0f5ee',
+    background: '#e8f5e5',
     skin: '#d9a07a',
     skinShade: '#c0865f',
     hair: '#171223',
     shirt: '#13b38a',
-    accent: '#14123a',
+    accent: '#17233b',
     style: 'long',
     headphones: true,
   },
@@ -144,7 +144,7 @@ export function CharacterAvatar({
   if (!look) {
     return (
       <span
-        className={`grid shrink-0 place-items-center rounded-full bg-violet-soft font-display font-bold text-violet ${className}`}
+        className={`grid shrink-0 place-items-center rounded-full bg-accent-soft font-display font-bold text-accent ${className}`}
         style={{ width: size, height: size, fontSize: size * 0.4 }}
         aria-hidden={decorative || undefined}
       >
@@ -187,15 +187,15 @@ export function CharacterAvatar({
           <circle cx="47.5" cy="62.5" r="3.6" fill="#ff7a7a" opacity="0.22" />
           <circle cx="72.5" cy="62.5" r="3.6" fill="#ff7a7a" opacity="0.22" />
           <g className="avatar-eyes">
-            <ellipse cx="51" cy="55" rx="2.6" ry="3.3" fill="#14123a" />
-            <ellipse cx="69" cy="55" rx="2.6" ry="3.3" fill="#14123a" />
+            <ellipse cx="51" cy="55" rx="2.6" ry="3.3" fill="#17233b" />
+            <ellipse cx="69" cy="55" rx="2.6" ry="3.3" fill="#17233b" />
             <circle cx="51.9" cy="53.8" r="0.9" fill="#fff" />
             <circle cx="69.9" cy="53.8" r="0.9" fill="#fff" />
           </g>
           <path d={leftBrow} fill="none" stroke={look.hair} strokeWidth="2.4" strokeLinecap="round" />
           <path d={rightBrow} fill="none" stroke={look.hair} strokeWidth="2.4" strokeLinecap="round" />
           {look.glasses && (
-            <g fill="none" stroke="#14123a" strokeWidth="1.8">
+            <g fill="none" stroke="#17233b" strokeWidth="1.8">
               <circle cx="51" cy="55" r="6.5" />
               <circle cx="69" cy="55" r="6.5" />
               <path d="M57.5 55 Q60 53.5 62.5 55" />

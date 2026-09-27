@@ -28,7 +28,7 @@ export function DialogueInteraction({ interaction, active, locked, outcome, onSu
         <div className="flex items-center gap-4 rounded-2xl bg-sun-soft p-3 pr-4">
           <CountdownRing remaining={remaining} fraction={fraction} size={64} />
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-bold text-[#6b4700]">
+            <p className="text-sm font-bold text-sun-strong">
               {outcome?.timedOut ? 'Se acabó el tiempo.' : `Tienes ${interaction.timeLimitSeconds} segundos para decidir.`}
             </p>
             {interaction.riskMeter && (
@@ -40,7 +40,7 @@ export function DialogueInteraction({ interaction, active, locked, outcome, onSu
         </div>
       )}
       {interaction.hint && (
-        <p className="flex items-start gap-2 rounded-2xl bg-good-soft px-4 py-2.5 text-sm font-semibold text-[#0b6e51]">
+        <p className="flex items-start gap-2 rounded-2xl bg-good-soft px-4 py-2.5 text-sm font-semibold text-good-strong">
           <Lightbulb className="mt-0.5 size-4 shrink-0" aria-hidden /> {interaction.hint}
         </p>
       )}
@@ -58,10 +58,10 @@ export function DialogueInteraction({ interaction, active, locked, outcome, onSu
               animate={{ opacity: dimmed ? 0.45 : 1, y: 0 }}
               transition={{ delay: index * 0.06 }}
               className={`group flex w-full items-center gap-3 rounded-2xl border-2 px-4 py-3.5 text-left font-semibold transition-colors ${
-                chosen ? 'border-violet bg-violet-soft text-violet-strong' : 'border-line bg-white text-ink hover:border-violet/60 hover:bg-violet-soft/40'
+                chosen ? 'border-accent bg-accent-soft text-accent-strong' : 'border-line bg-white text-ink hover:border-accent/60 hover:bg-accent-soft/40'
               } disabled:cursor-default`}
             >
-              <span className={`grid size-8 shrink-0 place-items-center rounded-xl text-sm font-bold ${chosen ? 'bg-violet text-white' : 'bg-mist text-ink-soft'}`}>
+              <span className={`grid size-8 shrink-0 place-items-center rounded-xl text-sm font-bold ${chosen ? 'bg-accent text-white' : 'bg-mist text-ink-soft'}`}>
                 {OPTION_LETTERS[index]}
               </span>
               <span className="flex-1">{option.label}</span>

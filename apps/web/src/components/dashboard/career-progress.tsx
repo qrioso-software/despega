@@ -27,7 +27,7 @@ export function SessionTrack({
           >
             <span
               className={`grid size-8 shrink-0 place-items-center rounded-full ${
-                done ? 'bg-good text-white' : open ? 'bg-brand text-white' : tone === 'dark' ? 'bg-white/10 text-white/50' : 'bg-mist text-muted'
+                done ? 'bg-good text-white' : open ? 'bg-brand text-ink' : tone === 'dark' ? 'bg-white/10 text-white/50' : 'bg-mist text-muted'
               }`}
             >
               {done ? <Check className="size-4" aria-hidden /> : open ? <Play className="size-3.5" aria-hidden /> : <Lock className="size-3.5" aria-hidden />}
@@ -67,14 +67,14 @@ export function PerformanceMeter({ value, label = 'Desempeño', dark = false }: 
         <span className={`font-display text-lg font-bold ${dark ? 'text-white' : 'text-ink'}`}>{value}<span className="text-sm font-medium opacity-60"> / 100</span></span>
       </div>
       <div
-        className={`mt-1.5 h-2.5 overflow-hidden rounded-full ${dark ? 'bg-white/15' : 'bg-violet-soft'}`}
+        className={`mt-1.5 h-2.5 overflow-hidden rounded-full ${dark ? 'bg-white/15' : 'bg-accent-soft'}`}
         role="meter"
         aria-label={label}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={value}
       >
-        <div className="h-full rounded-full bg-violet transition-[width] duration-700" style={{ width: `${value}%` }} />
+        <div className="h-full rounded-full bg-accent transition-[width] duration-700" style={{ width: `${value}%` }} />
       </div>
     </div>
   );

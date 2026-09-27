@@ -41,7 +41,7 @@ export function CountdownRing({ remaining, fraction, size = 72, label = 'Tiempo 
   const secondsLeft = Math.ceil(remaining / 1_000);
   const radius = 30;
   const circumference = 2 * Math.PI * radius;
-  const color = fraction > 0.5 ? '#5b3df5' : fraction > 0.25 ? '#ffb400' : '#e5484d';
+  const stroke = fraction > 0.5 ? 'stroke-accent' : fraction > 0.25 ? 'stroke-sun' : 'stroke-bad';
   const urgent = fraction <= 0.25 && remaining > 0;
 
   return (
@@ -52,13 +52,13 @@ export function CountdownRing({ remaining, fraction, size = 72, label = 'Tiempo 
       aria-label={`${label}: ${secondsLeft} segundos`}
     >
       <svg viewBox="0 0 72 72" width={size} height={size} className="absolute inset-0 -rotate-90" aria-hidden="true">
-        <circle cx="36" cy="36" r={radius} fill="none" stroke="#ebe6ff" strokeWidth="6" />
+        <circle cx="36" cy="36" r={radius} fill="none" className="stroke-accent-soft" strokeWidth="6" />
         <circle
           cx="36"
           cy="36"
           r={radius}
           fill="none"
-          stroke={color}
+          className={stroke}
           strokeWidth="6"
           strokeLinecap="round"
           strokeDasharray={circumference}
@@ -74,7 +74,7 @@ export function CountdownRing({ remaining, fraction, size = 72, label = 'Tiempo 
 export function RiskMeter({ fraction }: { fraction: number }) {
   const risk = 1 - fraction;
   const level = risk < 0.35 ? 'Bajo' : risk < 0.65 ? 'Medio' : risk < 0.9 ? 'Alto' : 'Crítico';
-  const color = risk < 0.35 ? '#12966f' : risk < 0.65 ? '#ffb400' : '#e5484d';
+  const fill = risk < 0.35 ? 'bg-good' : risk < 0.65 ? 'bg-sun' : 'bg-bad';
   return (
     <div className="w-full">
       <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-muted">
@@ -82,7 +82,7 @@ export function RiskMeter({ fraction }: { fraction: number }) {
         <span className="text-ink">{level}</span>
       </div>
       <div className="mt-1.5 h-3 overflow-hidden rounded-full bg-mist" role="meter" aria-label="Riesgo" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(risk * 100)}>
-        <div className="h-full rounded-full transition-[width,background-color] duration-200" style={{ width: `${Math.max(4, risk * 100)}%`, backgroundColor: color }} />
+        <div className={`h-full rounded-full transition-[width,background-color] duration-200 ${fill}`} style={{ width: `${Math.max(4, risk * 100)}%` }} />
       </div>
     </div>
   );

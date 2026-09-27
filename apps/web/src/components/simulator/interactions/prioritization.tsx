@@ -70,7 +70,7 @@ export function PrioritizationInteraction({ interaction, locked, outcome, onSubm
             </div>
           </DropZone>
           <div className="rounded-2xl border-2 border-good/30 bg-good-soft/40 p-3">
-            <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#0b6e51]">
+            <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-good-strong">
               <CalendarCheck className="size-4" aria-hidden /> Tablero de esta semana ({slots.filter(Boolean).length}/{interaction.slots})
             </p>
             <div className="grid gap-2">
@@ -100,7 +100,7 @@ export function PrioritizationInteraction({ interaction, locked, outcome, onSubm
         {!reveal && (
           <button
             type="button"
-            className="btn btn-violet justify-self-end"
+            className="btn btn-accent justify-self-end"
             disabled={!full || locked}
             onClick={() => onSubmit({ kind: 'prioritization', selectedTaskIds: slots.filter((id): id is string => Boolean(id)) })}
           >
@@ -116,7 +116,7 @@ export function PrioritizationInteraction({ interaction, locked, outcome, onSubm
 function TaskCard({ task, floating = false, discarded = false }: { task: PrioritizationTask; floating?: boolean; discarded?: boolean }) {
   return (
     <div className={`rounded-2xl border border-line bg-white p-3 ${floating ? 'rotate-2 shadow-pop' : 'shadow-sm'} ${discarded ? 'opacity-70' : ''}`}>
-      {task.label && <span className="chip bg-violet-soft text-violet-strong">{task.label}</span>}
+      {task.label && <span className="chip bg-accent-soft text-accent-strong">{task.label}</span>}
       <p className={`mt-1.5 font-semibold text-ink ${discarded ? 'line-through decoration-bad/60' : ''}`}>{task.title}</p>
       <p className="mt-0.5 text-sm text-ink-soft">{task.description}</p>
     </div>

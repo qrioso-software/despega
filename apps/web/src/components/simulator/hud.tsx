@@ -32,7 +32,7 @@ export function PlayerHud({
     <header className="sticky top-0 z-30 border-b border-line/70 bg-paper/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-3 py-2.5 sm:px-5">
         <Link href={`/simulador/${module.careerId}`} className="flex items-center gap-2" aria-label="Salir al resumen de la carrera (tu progreso queda guardado)">
-          <span className="grid size-9 place-items-center rounded-xl bg-brand text-white"><Rocket className="size-5" aria-hidden /></span>
+          <span className="grid size-9 place-items-center rounded-xl bg-brand text-ink"><Rocket className="size-5" aria-hidden /></span>
         </Link>
         <div className="min-w-0 flex-1">
           <p className="truncate text-xs font-bold uppercase tracking-wider text-muted">
@@ -44,7 +44,7 @@ export function PlayerHud({
           {scene && (
             <div className="mt-1 flex h-1.5 max-w-56 gap-1" aria-label={`Escena ${scene.sceneNumber} de ${scene.sceneCount}`}>
               {Array.from({ length: scene.sceneCount }, (_, index) => (
-                <span key={index} className={`flex-1 rounded-full ${index < scene.sceneNumber ? 'bg-violet' : 'bg-line'}`} />
+                <span key={index} className={`flex-1 rounded-full ${index < scene.sceneNumber ? 'bg-accent' : 'bg-line'}`} />
               ))}
             </div>
           )}
@@ -86,7 +86,7 @@ function ComplaintsChip({ count, rising }: { count: number; rising: boolean }) {
   }, [rising]);
 
   return (
-    <span className={`chip ${rising ? 'bg-bad-soft text-[#a1262b]' : 'bg-good-soft text-[#0b6e51]'}`} aria-live="off">
+    <span className={`chip ${rising ? 'bg-bad-soft text-bad-strong' : 'bg-good-soft text-good-strong'}`} aria-live="off">
       {rising ? <TrendingUp className="size-3.5" aria-hidden /> : <CheckCircle2 className="size-3.5" aria-hidden />}
       <motion.span key={value} initial={{ scale: 1.35 }} animate={{ scale: 1 }} className="tabular-nums">{value}</motion.span>
       {rising ? 'quejas y subiendo' : 'quejas · estable'}
@@ -104,13 +104,13 @@ function LaunchWindowChip({ seconds, closed, frozen }: { seconds: number; closed
   }, [running]);
 
   if (closed) {
-    return <span className="chip bg-good-soft text-[#0b6e51]"><CheckCircle2 className="size-3.5" aria-hidden /> Lanzamiento decidido</span>;
+    return <span className="chip bg-good-soft text-good-strong"><CheckCircle2 className="size-3.5" aria-hidden /> Lanzamiento decidido</span>;
   }
   const minutes = Math.floor(value / 60);
   const rest = value % 60;
   const urgent = value <= 5 * 60;
   return (
-    <span className={`chip ${urgent ? 'bg-bad-soft text-[#a1262b]' : 'bg-sun-soft text-[#6b4700]'}`} role="timer" aria-label={`Ventana de lanzamiento: ${minutes} minutos y ${rest} segundos`}>
+    <span className={`chip ${urgent ? 'bg-bad-soft text-bad-strong' : 'bg-sun-soft text-sun-strong'}`} role="timer" aria-label={`Ventana de lanzamiento: ${minutes} minutos y ${rest} segundos`}>
       <Rocket className="size-3.5" aria-hidden /> Ventana de lanzamiento
       <span className="tabular-nums">{String(minutes).padStart(2, '0')}:{String(rest).padStart(2, '0')}</span>
     </span>
@@ -141,10 +141,10 @@ function PerformancePill({ value }: { value: number }) {
   return (
     <div className="relative flex items-center gap-2 rounded-full bg-surface py-1 pl-3 pr-1.5 ring-1 ring-line" role="meter" aria-label="Desempeño" aria-valuemin={0} aria-valuemax={100} aria-valuenow={value}>
       <span className="text-xs font-bold text-muted">Desempeño</span>
-      <span className="h-2 w-16 overflow-hidden rounded-full bg-violet-soft sm:w-24" aria-hidden>
-        <span className="block h-full rounded-full bg-violet transition-[width] duration-700" style={{ width: `${value}%` }} />
+      <span className="h-2 w-16 overflow-hidden rounded-full bg-accent-soft sm:w-24" aria-hidden>
+        <span className="block h-full rounded-full bg-accent transition-[width] duration-700" style={{ width: `${value}%` }} />
       </span>
-      <motion.span className="min-w-9 rounded-full bg-violet px-2 py-0.5 text-center text-sm font-bold text-white">{rounded}</motion.span>
+      <motion.span className="min-w-9 rounded-full bg-accent px-2 py-0.5 text-center text-sm font-bold text-white">{rounded}</motion.span>
       <AnimatePresence>
         {delta && (
           <motion.span

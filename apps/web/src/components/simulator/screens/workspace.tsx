@@ -80,7 +80,7 @@ export function InboxScreen({ scene, module, reveal, interaction }: ScreenProps)
               <li key={folder.label} className={`flex items-center gap-2 rounded-xl px-3 py-2 ${folder.active ? 'bg-brand-soft font-bold text-brand-strong' : 'text-ink-soft'}`}>
                 <folder.icon className="size-4" aria-hidden />
                 <span className="flex-1">{folder.label}</span>
-                {folder.count ? <span className="rounded-full bg-brand px-2 text-xs font-bold text-white">{folder.count}</span> : null}
+                {folder.count ? <span className="rounded-full bg-brand px-2 text-xs font-bold text-ink">{folder.count}</span> : null}
               </li>
             ))}
           </ul>
@@ -114,7 +114,7 @@ export function TaskBoardScreen({ scene, module, reveal, interaction }: ScreenPr
   return (
     <OfficeWindow app="board" subtitle="Tablero del equipo" clock={scene.clock}>
       <div className="flex items-center justify-between gap-3 border-b border-line bg-good-soft/40 px-4 py-2.5">
-        <p className="text-sm font-bold text-[#0b6e51]">Equipo {module.company}</p>
+        <p className="text-sm font-bold text-good-strong">Equipo {module.company}</p>
         <div className="flex -space-x-2">
           {Object.keys(module.characters).map((id) => (
             <CharacterAvatar key={id} characterId={id} size={30} className="rounded-full ring-2 ring-white" decorative />

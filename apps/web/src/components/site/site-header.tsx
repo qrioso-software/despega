@@ -27,7 +27,7 @@ export function SiteHeader({ student }: { student?: { givenName: string } | null
         <div className="flex items-center gap-2">
           {student ? (
             <>
-              <Link href="/inicio" className="btn btn-violet min-h-10 px-4">
+              <Link href="/inicio" className="btn btn-accent min-h-10 px-4">
                 Mi inicio
               </Link>
               <SignOutButton compact />

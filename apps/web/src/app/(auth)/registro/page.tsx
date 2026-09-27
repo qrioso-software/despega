@@ -20,7 +20,7 @@ export default function SignUpPage() {
           </>
         )}
         <p className="text-center text-sm text-muted">
-          ¿Ya tienes cuenta? <Link href="/ingresar" className="font-semibold text-violet hover:underline">Ingresar</Link>
+          ¿Ya tienes cuenta? <Link href="/ingresar" className="font-semibold text-accent hover:underline">Ingresar</Link>
         </p>
       </div>
     </>

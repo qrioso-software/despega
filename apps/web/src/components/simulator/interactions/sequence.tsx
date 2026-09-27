@@ -62,7 +62,7 @@ export function SequenceInteraction({ interaction, locked, outcome, onSubmit }: 
               label={`Paso candidato: ${item.text}`}
               className="block w-full rounded-2xl"
             >
-              <span className={`block rounded-2xl border-2 px-4 py-3 font-semibold ${candidateId === item.id ? 'border-violet bg-violet-soft text-violet-strong' : 'border-line bg-white text-ink'}`}>
+              <span className={`block rounded-2xl border-2 px-4 py-3 font-semibold ${candidateId === item.id ? 'border-accent bg-accent-soft text-accent-strong' : 'border-line bg-white text-ink'}`}>
                 {item.text}
               </span>
             </DraggableCard>
@@ -70,7 +70,7 @@ export function SequenceInteraction({ interaction, locked, outcome, onSubmit }: 
           {!reveal && (
             <button
               type="button"
-              className="btn btn-violet mt-2"
+              className="btn btn-accent mt-2"
               disabled={locked || candidateId === null || slot === null}
               onClick={() => candidateId !== null && slot !== null && onSubmit({ kind: 'sequence', candidateId, slot })}
             >
@@ -80,7 +80,7 @@ export function SequenceInteraction({ interaction, locked, outcome, onSubmit }: 
         </div>
       </div>
       <DragOverlay>
-        {draggingCandidate ? <span className="block rotate-2 rounded-2xl border-2 border-violet bg-violet-soft px-4 py-3 font-semibold text-violet-strong shadow-pop">{draggingCandidate.text}</span> : null}
+        {draggingCandidate ? <span className="block rotate-2 rounded-2xl border-2 border-accent bg-accent-soft px-4 py-3 font-semibold text-accent-strong shadow-pop">{draggingCandidate.text}</span> : null}
       </DragOverlay>
     </DragBoard>
   );
@@ -109,14 +109,14 @@ function Slot({
 }) {
   return (
     <li className="grid justify-items-center gap-1">
-      <DropZone id={`slot-${index}`} disabled={locked} className="w-full rounded-2xl" activeClassName="bg-violet-soft">
+      <DropZone id={`slot-${index}`} disabled={locked} className="w-full rounded-2xl" activeClassName="bg-accent-soft">
         {active && candidateText ? (
           <button
             type="button"
             disabled={locked}
             onClick={onClear}
             className={`flex w-full items-center gap-3 rounded-2xl border-2 border-dashed px-4 py-3 text-left font-semibold ${
-              verdict === 'correct' ? 'border-good bg-good-soft text-[#0b6e51]' : verdict === 'wrong' ? 'border-bad bg-bad-soft text-[#a1262b]' : 'border-violet bg-violet-soft text-violet-strong'
+              verdict === 'correct' ? 'border-good bg-good-soft text-good-strong' : verdict === 'wrong' ? 'border-bad bg-bad-soft text-bad-strong' : 'border-accent bg-accent-soft text-accent-strong'
             }`}
             aria-label={`Paso insertado: ${candidateText}. Toca para quitarlo`}
           >
@@ -129,7 +129,7 @@ function Slot({
             disabled={locked || !canPlace}
             onClick={onPlace}
             className={`mx-auto flex h-8 items-center justify-center gap-1 rounded-full px-3 text-xs font-bold transition-colors ${
-              canPlace && !locked ? 'bg-violet text-white hover:bg-violet-strong' : 'text-muted'
+              canPlace && !locked ? 'bg-accent text-white hover:bg-accent-strong' : 'text-muted'
             }`}
             aria-label={`Insertar el paso en la posición ${index + 1}`}
           >
@@ -138,7 +138,7 @@ function Slot({
         )}
       </DropZone>
       {expectedText && (
-        <p className="w-full rounded-2xl border-2 border-dashed border-good bg-good-soft px-4 py-2 text-sm font-semibold text-[#0b6e51]">
+        <p className="w-full rounded-2xl border-2 border-dashed border-good bg-good-soft px-4 py-2 text-sm font-semibold text-good-strong">
           Aquí faltaba: {expectedText}
         </p>
       )}

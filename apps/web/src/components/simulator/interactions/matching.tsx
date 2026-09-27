@@ -49,8 +49,8 @@ export function MatchingInteraction({ interaction, active, locked, outcome, onSu
       <div className="flex items-center gap-4 rounded-2xl bg-sun-soft p-3 pr-4">
         <CountdownRing remaining={remaining} fraction={fraction} size={64} />
         <div>
-          <p className="text-sm font-bold text-[#6b4700]">{interaction.prompt}</p>
-          <p className="mt-0.5 text-xs text-[#6b4700]/80">
+          <p className="text-sm font-bold text-sun-strong">{interaction.prompt}</p>
+          <p className="mt-0.5 text-xs text-sun-strong/80">
             {Object.keys(matches).length} de {interaction.problems.length} emparejados · Toca un error y luego la solución que lo resuelve.
           </p>
         </div>
@@ -76,10 +76,10 @@ export function MatchingInteraction({ interaction, active, locked, outcome, onSu
                     : verdict === 'wrong'
                       ? 'border-bad bg-bad-soft'
                       : selected
-                        ? 'border-violet bg-violet-soft'
+                        ? 'border-accent bg-accent-soft'
                         : paired
-                          ? 'border-violet/40 bg-white'
-                          : 'border-line bg-white hover:border-violet/50'
+                          ? 'border-accent/40 bg-white'
+                          : 'border-line bg-white hover:border-accent/50'
                 }`}
               >
                 <span className="flex items-start gap-3">
@@ -88,7 +88,7 @@ export function MatchingInteraction({ interaction, active, locked, outcome, onSu
                   {verdict === 'correct' && <CheckCircle2 className="size-5 shrink-0 text-good" aria-label="Bien emparejado" />}
                   {verdict === 'wrong' && <XCircle className="size-5 shrink-0 text-bad" aria-label="Mal emparejado" />}
                 </span>
-                {expected && <span className="mt-2 block text-sm text-[#a1262b]">Solución: {expected.text}</span>}
+                {expected && <span className="mt-2 block text-sm text-bad-strong">Solución: {expected.text}</span>}
               </button>
             );
           })}
@@ -104,7 +104,7 @@ export function MatchingInteraction({ interaction, active, locked, outcome, onSu
                 disabled={locked || !selectedProblem}
                 onClick={() => selectSolution(solution.id)}
                 className={`rounded-2xl border-2 p-3 text-left transition-colors disabled:cursor-default ${
-                  owner ? 'border-violet/40 bg-violet-soft/40' : selectedProblem && !locked ? 'border-violet/50 bg-white hover:bg-violet-soft' : 'border-line bg-white'
+                  owner ? 'border-accent/40 bg-accent-soft/40' : selectedProblem && !locked ? 'border-accent/50 bg-white hover:bg-accent-soft' : 'border-line bg-white'
                 }`}
               >
                 <span className="flex items-start gap-3">
@@ -123,7 +123,7 @@ export function MatchingInteraction({ interaction, active, locked, outcome, onSu
       ) : (
         <button
           type="button"
-          className="btn btn-violet justify-self-end"
+          className="btn btn-accent justify-self-end"
           disabled={!complete || locked}
           onClick={() => onSubmit({ kind: 'matching', matches, timedOut: false })}
         >
@@ -136,7 +136,7 @@ export function MatchingInteraction({ interaction, active, locked, outcome, onSu
 
 function PairBadge({ number }: { number?: number }) {
   return (
-    <span className={`grid size-7 shrink-0 place-items-center rounded-lg text-sm font-bold ${number ? 'bg-violet text-white' : 'border-2 border-dashed border-line text-transparent'}`} aria-label={number ? `Pareja ${number}` : undefined}>
+    <span className={`grid size-7 shrink-0 place-items-center rounded-lg text-sm font-bold ${number ? 'bg-accent text-white' : 'border-2 border-dashed border-line text-transparent'}`} aria-label={number ? `Pareja ${number}` : undefined}>
       {number ?? '·'}
     </span>
   );

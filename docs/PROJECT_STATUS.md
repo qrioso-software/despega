@@ -1,19 +1,20 @@
 # Estado del proyecto
 
-Última actualización: 2026-09-26.
+Última actualización: 2026-09-27.
 
 ## Fase
 
 **Prototipo funcional local.** El módulo piloto (Ingeniería de Software) se juega de
 principio a fin con persistencia real en DynamoDB Local. El stage `dev` apunta a la
-cuenta de desarrollo de Qrioso (`qrioso-dev`) y espera los IDs de sus Apps de Amplify y
-sus dominios para el primer deploy.
+cuenta de desarrollo de Qrioso (`qrioso-dev`): sus Apps de Amplify y dominios están
+listos (`despega.qrioso.do` y `despega.admin.qrioso.do`, `AVAILABLE`) y falta el primer
+`deploy:dev`.
 
 ## Hecho y verificado
 
 | Área | Estado | Evidencia |
 | --- | --- | --- |
-| Monorepo pnpm (web, admin, simulator, data, auth, infra) | Listo | `pnpm typecheck`, `pnpm lint` en verde |
+| Monorepo pnpm (web, admin, simulator, data, auth, brand, infra) | Listo | `pnpm typecheck`, `pnpm lint` en verde |
 | Motor del simulador + guión completo (3 sesiones, 19 escenas, 10 tipos de interacción; guión v2) | Listo | 40 pruebas: mejor camino 91 pts, peor camino 32 pts, ramificación y memoria; cada mini-juego con todas sus respuestas posibles y 600 partidas aleatorias |
 | Web: landing, registro/ingreso, `/inicio`, hub, reproductor y resultados | Listo | E2E en navegador: módulo completo en escritorio y móvil (390 px), sin errores de consola. Mini-juegos verificados con toques (de cualquier duración), arrastre con mouse y con el dedo, y solo teclado |
 | Relojes reales (45, 15, 20, 60 s) con consecuencia al vencer | Listo | E2E del peor camino dejando vencer los cuatro relojes |
@@ -24,24 +25,26 @@ sus dominios para el primer deploy.
 | CDK: tablas, dos pools, roles SSR mínimos, config de Apps Amplify, validación IAM | Sintetiza en `dev` y `prd` | 6 pruebas de plantilla, `synth` limpio con feature flags recomendadas |
 | Flujo de deploy igual al del proyecto de referencia | Listo | `validate-amplify-domains.ts` idéntico; `cdk.json` con cuenta, perfil, rama y App IDs por stage |
 | Builds de producción de web y admin | Listo | `next build` sin errores |
+| Identidad visual desde el logo (`@despega/brand`: logo vectorial, paleta, íconos) en web y admin | Listo | Contraste WCAG AA de cada par texto/fondo en uso; capturas de landing (escritorio y 390 px), ingreso, `/inicio`, hub, reproductor y backoffice; `favicon.ico`, `icon.svg` y `apple-icon.png` servidos en ambas apps |
 
 ## Pendiente / bloqueos
 
-1. **Cuentas AWS**: `dev` = `qrioso-dev` (`779926948601`). Falta `prd` y la cuenta
-   principal; registrar sus IDs en `infra/cdk.json`. Verificar el bootstrap de CDK en
-   `qrioso-dev` antes del primer deploy.
-2. **Apps Amplify** de `dev` (web y admin) conectadas al repositorio en la rama
-   `develop`, con sus IDs en `infra/cdk.json` (requiere antes el repositorio remoto).
-   Luego, deploy y primer usuario del staff.
+1. **Primer `deploy:dev`**: `synth` y `diff` limpios (solo recursos nuevos), bootstrap
+   de CDK v31 presente y dominios `AVAILABLE`. Tras el deploy, relanzar los builds de
+   Amplify (los jobs `1` fallaron, como se esperaba, por no tener aún las variables de
+   CDK) y crear el primer usuario del staff.
+2. **Cuentas AWS**: `dev` = `qrioso-dev` (`779926948601`). Falta `prd` y la cuenta
+   principal de DESPEGA; registrar sus IDs en `infra/cdk.json`.
 3. **Retirar `Despega-dev` de la cuenta de Zendo** (`746914061512`): se desplegó ahí el
    2026-09-26 antes de elegir `qrioso-dev`. Solo tablas vacías y dos pools sin usuarios;
    `cdk destroy` pendiente de autorización.
-4. **Dominios reales** en `.env.develop`/`.env.production` (hoy `*.despega.example`).
+4. **Dominios de `prd`** en `.env.production` (hoy `*.despega.example`).
 5. **Validar Cognito** en `dev` (registro, confirmación, recuperación, primer ingreso
    de staff) y configurar SES para correos.
 6. **Validación del cliente** de los supuestos de puntaje y de las preguntas abiertas
    (`docs/architecture/functional-analysis.md`).
-7. **Repositorio Git remoto**: el repositorio local está inicializado sin commits.
+7. **Repositorio Git remoto**: `qrioso-software/despega`, conectado a las Apps de
+   Amplify de `dev` sobre `develop`.
 
 ## Siguiente paso recomendado
 

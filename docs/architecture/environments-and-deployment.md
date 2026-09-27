@@ -1,8 +1,8 @@
 # Ambientes y despliegue
 
 Estado: `dev` apunta a la cuenta de desarrollo de Qrioso (`779926948601`, perfil
-`qrioso-dev`) y espera los IDs de sus Apps de Amplify y sus dominios reales para el
-primer deploy. `prd` sintetiza pero no tiene cuenta.
+`qrioso-dev`), con sus Apps de Amplify registradas en `infra/cdk.json` y sus dominios
+`AVAILABLE`; falta el primer `deploy:dev`. `prd` sintetiza pero no tiene cuenta.
 
 ## Matriz
 
@@ -58,8 +58,13 @@ Git y deben tener **exactamente** las mismas keys (el synth falla si no).
 | `DATA_REGION`, `DYNAMODB_TABLE_CORE`, `DYNAMODB_TABLE_SIMULATION` | ✔ | ✔ | CDK los reemplaza con outputs |
 | `DYNAMODB_ENDPOINT` | `http://localhost:8000` | igual | debe estar vacío |
 
-Los archivos `.env.develop` y `.env.production` actuales usan dominios de marcador
-(`*.despega.example`). **Reemplazarlos por los dominios reales antes del primer deploy.**
+Dominios de `dev`: web `https://despega.qrioso.do` (App `dwc3j5j9ebtdk`) y admin
+`https://despega.admin.qrioso.do` (App `d20sgf4s7cvg7l`), ambos sobre la rama `develop`.
+Cada uno tiene su zona pública de Route 53 en `qrioso-dev`, delegada con un registro NS
+desde la zona `qrioso.do` de la cuenta principal de Qrioso (perfil `qrioso-main`), igual
+que los demás subdominios de la cuenta. Amplify crea en esas zonas los registros de
+validación del certificado y de tráfico. `.env.production` todavía usa marcadores
+(`*.despega.example`): reemplazarlos cuando exista `prd`.
 
 En Amplify, `infra/scripts/write-amplify-env.mjs` genera `.env.production` durante el
 build solo con las keys del contrato y los valores de la rama. También rechaza

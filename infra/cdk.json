@@ -9,8 +9,8 @@
         "profile": "qrioso-dev",
         "region": "us-east-1",
         "branch": "develop",
-        "adminAmplifyAppId": "",
-        "webAmplifyAppId": ""
+        "adminAmplifyAppId": "d20sgf4s7cvg7l",
+        "webAmplifyAppId": "dwc3j5j9ebtdk"
       },
       "prd": {
         "account": "",

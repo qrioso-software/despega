@@ -28,13 +28,13 @@ export default async function SignInPage({ searchParams }: PageProps<'/ingresar'
         {mode === 'error' ? <AuthConfigError /> : (
           <>
             {mode === 'local' && <LocalModeNotice />}
-            {notice && <p role="status" className="rounded-2xl bg-good-soft px-4 py-3 text-sm font-medium text-[#0b6e51]">{notice}</p>}
+            {notice && <p role="status" className="rounded-2xl bg-good-soft px-4 py-3 text-sm font-medium text-good-strong">{notice}</p>}
             <SignInForm mode={mode} next={next} defaultEmail={email} />
           </>
         )}
         <p className="text-center text-sm text-muted">
           ¿Todavía no tienes cuenta?{' '}
-          <Link href="/registro" className="font-semibold text-violet hover:underline">Crear cuenta</Link>
+          <Link href="/registro" className="font-semibold text-accent hover:underline">Crear cuenta</Link>
         </p>
       </div>
     </>

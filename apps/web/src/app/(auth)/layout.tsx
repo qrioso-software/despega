@@ -6,7 +6,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="grid min-h-dvh lg:grid-cols-[1.05fr_1fr]">
       <aside className="relative hidden overflow-hidden bg-night p-10 text-white lg:flex lg:flex-col lg:justify-between">
-        <div className="pointer-events-none absolute -right-24 -top-24 size-96 rounded-full bg-violet/40 blur-3xl" aria-hidden />
+        <div className="pointer-events-none absolute -right-24 -top-24 size-96 rounded-full bg-accent/40 blur-3xl" aria-hidden />
         <div className="pointer-events-none absolute -bottom-32 -left-20 size-96 rounded-full bg-brand/30 blur-3xl" aria-hidden />
         <BrandLink light />
         <div className="relative">

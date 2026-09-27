@@ -38,7 +38,7 @@ export function NotificationScreen({ scene, module, reveal, interaction }: Scree
         {stage === 1 && <NarrationLine text="Tu celular vibra sobre el escritorio…" />}
       </div>
 
-      <div className="relative mx-auto h-[540px] w-[290px] overflow-hidden rounded-[2.75rem] border-[10px] border-night bg-gradient-to-b from-[#1b1840] via-[#3a2a8f] to-[#ff5b2e] shadow-pop" aria-label="Pantalla del celular">
+      <div className="relative mx-auto h-[540px] w-[290px] overflow-hidden rounded-[2.75rem] border-[10px] border-night bg-gradient-to-b from-night-soft via-accent-strong to-brand shadow-pop" aria-label="Pantalla del celular">
         <div className="flex items-center justify-between px-6 pt-3 text-xs font-semibold text-white/90">
           <span>{time}</span>
           <span className="h-5 w-20 rounded-full bg-night" aria-hidden />

@@ -35,8 +35,8 @@ export function VideoCallScreen({ scene, module, playerName, reveal, interaction
             </div>
           );
         })}
-        <div className="relative grid aspect-[4/3] place-items-center rounded-2xl bg-[#26225a]">
-          <span className="grid size-16 place-items-center rounded-full bg-violet font-display text-xl font-bold text-white">{initials}</span>
+        <div className="relative grid aspect-[4/3] place-items-center rounded-2xl bg-ink-soft">
+          <span className="grid size-16 place-items-center rounded-full bg-accent font-display text-xl font-bold text-white">{initials}</span>
           <span className="absolute bottom-2 left-2 flex items-center gap-1.5 rounded-full bg-black/50 px-2.5 py-1 text-xs font-semibold text-white">
             <VideoOff className="size-3.5 opacity-70" aria-hidden /> {playerName} (tú)
           </span>

@@ -56,14 +56,14 @@ function Hero({ primaryHref }: { primaryHref: string }) {
   return (
     <section className="relative overflow-hidden">
       <div className="pointer-events-none absolute -left-40 top-10 size-[28rem] rounded-full bg-brand/15 blur-3xl" aria-hidden />
-      <div className="pointer-events-none absolute -right-32 -top-10 size-[30rem] rounded-full bg-violet/15 blur-3xl" aria-hidden />
+      <div className="pointer-events-none absolute -right-32 -top-10 size-[30rem] rounded-full bg-accent/15 blur-3xl" aria-hidden />
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pb-16 pt-12 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:pb-24 lg:pt-20">
         <div>
-          <p className="chip bg-sun-soft text-[#8a5a00]">
+          <p className="chip bg-sun-soft text-sun-strong">
             <Sparkles className="size-3.5" aria-hidden /> Para estudiantes de 15 a 18 años
           </p>
           <h1 className="mt-5 text-5xl font-extrabold leading-[1.02] sm:text-6xl">
-            Vive una carrera <span className="text-brand">antes de elegirla.</span>
+            Vive una carrera <span className="text-brand-strong">antes de elegirla.</span>
           </h1>
           <p className="mt-6 max-w-xl text-lg text-ink-soft">
             No es un test vocacional. Es una historia jugable: entras a un equipo real, con personajes, presión y
@@ -94,11 +94,11 @@ function HeroScene() {
       <div className="card overflow-hidden p-0 shadow-pop">
         <div className="flex items-center justify-between border-b border-line bg-mist px-4 py-2.5">
           <div className="flex items-center gap-2 text-xs font-bold text-ink-soft">
-            <MessagesSquare className="size-4 text-violet" aria-hidden /> PixelChat · 9:25 a. m.
+            <MessagesSquare className="size-4 text-accent" aria-hidden /> PixelChat · 9:25 a. m.
           </div>
           <div className="flex items-center gap-2">
-            <span className="chip bg-bad-soft text-[#a1262b]"><TrendingUp className="size-3.5" aria-hidden /> 23 quejas</span>
-            <span className="chip bg-violet-soft text-violet">Desempeño 55</span>
+            <span className="chip bg-bad-soft text-bad-strong"><TrendingUp className="size-3.5" aria-hidden /> 23 quejas</span>
+            <span className="chip bg-accent-soft text-accent">Desempeño 55</span>
           </div>
         </div>
         <div className="grid gap-3 p-5 pb-20 sm:pb-24">
@@ -109,11 +109,11 @@ function HeroScene() {
             </p>
           </div>
           <div className="mt-2 flex items-center gap-3 rounded-2xl bg-sun-soft px-4 py-3">
-            <span className="grid size-11 shrink-0 place-items-center rounded-full border-4 border-brand font-display text-sm font-extrabold text-brand">12</span>
-            <p className="text-sm font-semibold text-[#6b4700]">Tienes 15 segundos para decidir.</p>
+            <span className="grid size-11 shrink-0 place-items-center rounded-full border-4 border-brand font-display text-sm font-extrabold text-brand-strong">12</span>
+            <p className="text-sm font-semibold text-sun-strong">Tienes 15 segundos para decidir.</p>
           </div>
           {['El botón no espera lo suficiente cuando la conexión es lenta.', 'El botón está mal diseñado visualmente.', 'Es problema del teléfono del usuario.'].map((option, index) => (
-            <div key={option} className={`rounded-2xl border-2 px-4 py-3 text-sm font-semibold ${index === 0 ? 'border-violet bg-violet-soft text-violet-strong' : 'border-line bg-white text-ink-soft'}`}>
+            <div key={option} className={`rounded-2xl border-2 px-4 py-3 text-sm font-semibold ${index === 0 ? 'border-accent bg-accent-soft text-accent-strong' : 'border-line bg-white text-ink-soft'}`}>
               {option}
             </div>
           ))}
@@ -183,7 +183,7 @@ function HowItWorks() {
         {steps.map((step, index) => (
           <li key={step.title} className="card relative p-7">
             <span className="absolute right-6 top-6 font-display text-5xl font-extrabold text-mist">{index + 1}</span>
-            <span className="grid size-12 place-items-center rounded-2xl bg-brand-soft text-brand">
+            <span className="grid size-12 place-items-center rounded-2xl bg-brand-soft text-brand-strong">
               <step.icon className="size-6" aria-hidden />
             </span>
             <h3 className="mt-5 text-xl font-bold">{step.title}</h3>
@@ -255,7 +255,7 @@ function Mechanics() {
       <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {mechanics.map((mechanic) => (
           <li key={mechanic.title} className="card flex gap-4 p-6">
-            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-violet-soft text-violet">
+            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-accent-soft text-accent">
               <mechanic.icon className="size-5" aria-hidden />
             </span>
             <div>
@@ -289,7 +289,7 @@ function Careers() {
               >
                 <div className="flex items-start justify-between gap-3">
                   <span className="text-3xl" aria-hidden>{career.emoji}</span>
-                  <span className={`chip ${available ? 'bg-brand text-white' : 'bg-mist text-muted'}`}>
+                  <span className={`chip ${available ? 'bg-brand text-ink' : 'bg-mist text-muted'}`}>
                     {available ? 'Disponible' : 'Próximamente'}
                   </span>
                 </div>
@@ -322,7 +322,7 @@ function Profile() {
         <ul className="mt-8 grid gap-3">
           {AFFINITY_AXES.map((axis) => (
             <li key={axis} className="flex gap-3">
-              <GitBranch className="mt-0.5 size-4 shrink-0 text-violet" aria-hidden />
+              <GitBranch className="mt-0.5 size-4 shrink-0 text-accent" aria-hidden />
               <p className="text-sm text-ink-soft"><strong className="text-ink">{AFFINITY_LABELS[axis]}.</strong> {AFFINITY_DESCRIPTIONS[axis]}</p>
             </li>
           ))}
@@ -339,7 +339,7 @@ function Profile() {
 function Schools() {
   return (
     <section id="colegios" className="scroll-mt-20 px-4 pb-20 sm:px-6">
-      <div className="mx-auto grid max-w-6xl gap-8 rounded-[2rem] bg-violet p-8 text-white sm:p-12 lg:grid-cols-[1.4fr_1fr] lg:items-center">
+      <div className="mx-auto grid max-w-6xl gap-8 rounded-[2rem] bg-accent-strong p-8 text-white sm:p-12 lg:grid-cols-[1.4fr_1fr] lg:items-center">
         <div>
           <p className="eyebrow text-sun">Para colegios y orientadores</p>
           <h2 className="mt-3 text-3xl font-bold sm:text-4xl">Conversaciones vocacionales con evidencia</h2>

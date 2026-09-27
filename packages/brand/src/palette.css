@@ -1,0 +1,42 @@
+/*
+ * Paleta DESPEGA, derivada del logo: el navy del trazo y el verde de la llama. Es la
+ * fuente única de color de web y admin; cada app la traduce a sus tokens (`@theme` de
+ * Tailwind en web, variables de HeroUI en admin). No se usa directamente en componentes.
+ */
+:root {
+  /* Logo */
+  --despega-navy: #17233b;
+  --despega-green: #75be65;
+
+  /* Neutros con el tono del navy (220°) */
+  --despega-night: #0f182a;
+  --despega-night-soft: #1e2a42;
+  --despega-ink-soft: #37445c;
+  --despega-muted: #5a657c;
+  --despega-placeholder: #929aaa;
+  --despega-line-strong: #c9d0dc;
+  --despega-line: #dde1e9;
+  --despega-mist: #eef1f6;
+  --despega-paper: #f5f7fa;
+
+  /* Verde de la llama: acción principal y logro */
+  --despega-green-hover: #61b450;
+  --despega-green-deep: #3c8131;
+  --despega-green-strong: #326827;
+  --despega-green-soft: #e8f5e5;
+
+  /* Azul de interacción, con el tono del navy */
+  --despega-blue: #2564d0;
+  --despega-blue-strong: #1a4a9e;
+  --despega-blue-soft: #e8f0fc;
+  --despega-blue-soft-hover: #d2e0f9;
+
+  /* Estados (no vienen del logo) */
+  --despega-sun: #ffb400;
+  --despega-sun-strong: #6b4700;
+  --despega-sun-soft: #fff4d6;
+  --despega-amber: #b77900;
+  --despega-bad: #e5484d;
+  --despega-bad-strong: #a1262b;
+  --despega-bad-soft: #fde8e8;
+}

@@ -21,7 +21,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 ## Reglas
 
 - **HeroUI v3 es el sistema de componentes** (`@heroui/react` + `@heroui/styles`).
-  No introducir otra librería de UI. Tokens de marca en `src/app/styles.css`.
+  No introducir otra librería de UI. Las variables de HeroUI en `src/app/styles.css`
+  mapean la paleta de `@despega/brand`; los componentes usan esos tokens, nunca hex.
+- El logo es `DespegaLogo` de `@despega/brand` (vía `Brand`). `favicon.ico`,
+  `icon.svg` y `apple-icon.png` de `src/app/` son copias de
+  `packages/brand/assets/icons/`.
 - Usar la API compuesta de v3 (`Card.Header`, `Table.Content`, `Alert.Indicator`,
   `AlertDialog.Backdrop`…). Las tablas de datos usan `Table` de HeroUI dentro de
   componentes cliente (`src/components/tables.tsx`) que reciben filas serializables.

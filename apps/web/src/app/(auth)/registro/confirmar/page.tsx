@@ -23,7 +23,7 @@ export default async function ConfirmSignUpPage({ searchParams }: PageProps<'/re
       <div className="mt-8 grid gap-5">
         {mode === 'error' ? <AuthConfigError /> : <ConfirmSignUpForm email={email ?? ''} />}
         <p className="text-center text-sm text-muted">
-          <Link href="/ingresar" className="font-semibold text-violet hover:underline">Volver a ingresar</Link>
+          <Link href="/ingresar" className="font-semibold text-accent hover:underline">Volver a ingresar</Link>
         </p>
       </div>
     </>

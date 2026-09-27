@@ -13,7 +13,7 @@ export function authMode(): 'cognito' | 'local' | 'error' {
 
 export function AuthConfigError() {
   return (
-    <p role="alert" className="flex items-start gap-2 rounded-2xl bg-bad-soft px-4 py-3 text-sm text-[#a1262b]">
+    <p role="alert" className="flex items-start gap-2 rounded-2xl bg-bad-soft px-4 py-3 text-sm text-bad-strong">
       <TriangleAlert className="mt-0.5 size-4 shrink-0" aria-hidden />
       El acceso no está configurado en este ambiente (AUTH_PROVIDER y Cognito). Avísale al equipo de DESPEGA.
     </p>

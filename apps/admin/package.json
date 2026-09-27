@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@despega/auth": "workspace:*",
+    "@despega/brand": "workspace:*",
     "@despega/data": "workspace:*",
     "@despega/simulator": "workspace:*",
     "@heroui/react": "3.2.6",

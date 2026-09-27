@@ -49,8 +49,8 @@ export function ClassificationInteraction({ interaction, active, locked, outcome
         <div className="flex items-center gap-4 rounded-2xl bg-sun-soft p-3 pr-4">
           <CountdownRing remaining={remaining} fraction={fraction} size={64} />
           <div>
-            <p className="text-sm font-bold text-[#6b4700]">{interaction.prompt}</p>
-            <p className="mt-0.5 text-xs text-[#6b4700]/80">
+            <p className="text-sm font-bold text-sun-strong">{interaction.prompt}</p>
+            <p className="mt-0.5 text-xs text-sun-strong/80">
               {Object.keys(assignments).length} de {interaction.items.length} reportes clasificados · Toca una tarjeta y luego su categoría, o arrástrala.
             </p>
           </div>
@@ -85,14 +85,14 @@ export function ClassificationInteraction({ interaction, active, locked, outcome
           {interaction.categories.map((category) => {
             const items = interaction.items.filter((item) => assignments[item.id] === category.id);
             return (
-              <DropZone key={category.id} id={category.id} disabled={locked} className="rounded-2xl border-2 border-violet/30 bg-violet-soft/40 p-3">
+              <DropZone key={category.id} id={category.id} disabled={locked} className="rounded-2xl border-2 border-accent/30 bg-accent-soft/40 p-3">
                 <button
                   type="button"
                   disabled={locked || !selected}
                   onClick={() => selected && place(selected, category.id)}
                   aria-label={`Ubicar en ${category.label} (${items.length} reportes)`}
                   className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left font-display text-lg font-bold transition-colors ${
-                    selected && !locked ? 'bg-violet text-white hover:bg-violet-strong' : 'bg-white text-ink'
+                    selected && !locked ? 'bg-accent text-white hover:bg-accent-strong' : 'bg-white text-ink'
                   } disabled:cursor-default`}
                 >
                   <span>{category.emoji} {category.label}</span>
@@ -129,7 +129,7 @@ export function ClassificationInteraction({ interaction, active, locked, outcome
         ) : (
           <button
             type="button"
-            className="btn btn-violet justify-self-end"
+            className="btn btn-accent justify-self-end"
             disabled={!complete || locked}
             onClick={() => onSubmit({ kind: 'classification', assignments, timedOut: false })}
           >

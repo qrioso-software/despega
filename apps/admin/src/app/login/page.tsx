@@ -22,7 +22,7 @@ export default async function LoginPage({ searchParams }: PageProps<'/login'>) {
   }
 
   return (
-    <main className="grid min-h-dvh place-items-center bg-[radial-gradient(ellipse_at_top,_#ebe6ff_0%,_#f6f5fb_60%)] px-4 py-10">
+    <main className="grid min-h-dvh place-items-center bg-[radial-gradient(ellipse_at_top,_var(--accent-soft)_0%,_var(--background)_60%)] px-4 py-10">
       <div className="w-full max-w-md">
         <div className="mb-6 flex justify-center">
           <Brand />
