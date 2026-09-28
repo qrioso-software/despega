@@ -1,4 +1,4 @@
-import { cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { cp, lstat, mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 
@@ -21,6 +21,7 @@ const traceFiles = ['next-server.js.nft.json', 'next-minimal-server.js.nft.json'
 const repoRoot = process.cwd();
 const appDir = path.resolve(repoRoot, appRoot);
 const nextDir = path.join(appDir, '.next');
+const nextPackageDir = path.join(appDir, 'node_modules', 'next');
 const rootNodeModules = path.join(repoRoot, 'node_modules');
 const materializedPackages = new Set();
 const pendingPackages = runtimePackages.map((packageName) => ({
@@ -32,6 +33,10 @@ const tracedFiles = [];
 
 if (!existsSync(nextDir)) {
   throw new Error(`Missing Next.js build output at ${nextDir}.`);
+}
+
+if ((await lstat(nextPackageDir)).isSymbolicLink()) {
+  throw new Error('Materialize the app node_modules before preparing the Amplify runtime.');
 }
 
 const turbopackPackageAliases = await detectTurbopackPackageAliases();
@@ -89,6 +94,33 @@ for (const traceFile of traceFiles) {
 
   manifest.files = [...files].sort();
   await writeFile(tracePath, `${JSON.stringify(manifest)}\n`);
+}
+
+await pruneNextDependencySourceMaps();
+
+async function pruneNextDependencySourceMaps() {
+  const removedPaths = new Set();
+  let removedBytes = 0;
+  for await (const filePath of walkFiles(nextPackageDir)) {
+    if (!filePath.endsWith('.map')) continue;
+    removedBytes += (await stat(filePath)).size;
+    await rm(filePath);
+    removedPaths.add(filePath);
+  }
+
+  for await (const tracePath of walkFiles(nextDir)) {
+    if (!tracePath.endsWith('.nft.json')) continue;
+    const manifest = JSON.parse(await readFile(tracePath, 'utf8'));
+    if (!Array.isArray(manifest.files)) continue;
+    const files = manifest.files.filter((filePath) =>
+      !removedPaths.has(path.resolve(path.dirname(tracePath), filePath)),
+    );
+    if (files.length === manifest.files.length) continue;
+    manifest.files = files;
+    await writeFile(tracePath, `${JSON.stringify(manifest)}\n`);
+  }
+
+  console.log(`Removed ${removedPaths.size} Next.js dependency source maps (${removedBytes} bytes).`);
 }
 
 function resolvePackageSource(packageName, options = { required: true }) {

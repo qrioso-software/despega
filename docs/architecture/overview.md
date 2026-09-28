@@ -1,7 +1,9 @@
 # Arquitectura de DESPEGA
 
-Estado: prototipo funcional local, 2026-09-26. Infraestructura AWS definida en CDK y
-validada con `synth`; sin cuentas AWS asignadas todavía.
+Estado: 2026-09-27. Prototipo funcional local e infraestructura DEV desplegada en
+`qrioso-dev` (`779926948601`, `us-east-1`); publicación de web/admin pendiente de subir
+la corrección del tamaño de los artefactos de Amplify.
+Los flujos autenticados de Cognito y del simulador en AWS aún requieren validación.
 
 ## Objetivos
 
@@ -109,8 +111,10 @@ decisión queda como evento inmutable por intento. Detalles en `data-model.md`.
 
 ## Ambientes
 
-`dev` (rama `develop`) y `prd` (rama `main`), cuentas separadas por Control Tower
-(pendientes de crear). Detalles en `environments-and-deployment.md`.
+`dev` usa la cuenta de desarrollo de Qrioso (`qrioso-dev`, rama `develop`), con las
+Apps de Amplify en `despega.qrioso.do` y `despega.admin.qrioso.do`. Las cuentas de `prd`
+(rama `main`) y principal/DNS de DESPEGA siguen pendientes. Detalles en
+`environments-and-deployment.md`.
 
 ## Costo
 

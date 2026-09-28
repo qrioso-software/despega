@@ -1,5 +1,50 @@
 # Changelog del proyecto
 
+## 2026-09-28 — Reducción del artefacto SSR sin aumentar capacidad
+
+- Comparado el empaquetado con INAP: se conserva la materialización de dependencias
+  y el filtrado después del build; no se copian exclusiones de UI específicas de INAP.
+- Verificados los artefactos de los jobs `3` de ambas Apps: los mapas de Next ocupan
+  93.715.552 bytes en cada uno. Sin esos mapas, web queda en 155.323.215 bytes y admin
+  en 156.022.644, por debajo del límite de 230.686.720.
+- Las pruebas de empaquetado se ejecutan para `apps/web` y `apps/admin`: 71 pruebas
+  totales pasan, incluido infra (12); typecheck de infra y `diff:dev` pasan.
+- Se mantiene `STANDARD_8GB` en ambas Apps. La infraestructura sigue en
+  `CREATE_COMPLETE`; publicación pendiente de commit/push y nuevos jobs exitosos.
+
+## 2026-09-27 — Infraestructura desplegada en `qrioso-dev`
+
+- Cuenta `779926948601`, bootstrap v31, dominios `AVAILABLE` y commit `8764be9` en
+  `develop` remoto verificados. `typecheck`, `lint` y las 65 pruebas previas pasaron.
+- El primer `Despega-dev` terminó en `ROLLBACK_COMPLETE`: la respuesta completa de
+  `Amplify.UpdateApp` excedió el límite de CloudFormation (`Response object is too long`).
+- `ExistingAmplifyApp` filtra con `outputPaths` las respuestas de `updateApp` y
+  `updateBranch` a sus identificadores, tanto al crear como al actualizar.
+- El siguiente intento falló con `AccessDenied` en `UpdateBranch`, aunque el ARN y
+  la política eran correctos: la dependencia entre constructs retrasaba la creación
+  de los permisos de rama hasta después de invocar el proveedor compartido. La
+  dependencia se aplica ahora solo al recurso de la llamada; la política se puede
+  crear antes. No se amplían acciones ni recursos IAM.
+- Pruebas de regresión para web/admin en `dev` y `prd`: las 8 pruebas de infra,
+  `typecheck` y ambos `synth` pasan.
+- Tras retirar con autorización los stacks revertidos, `Despega-dev` quedó en
+  `CREATE_COMPLETE`. Se verificaron las variables efectivas de ambas ramas y sus
+  roles SSR, y se lanzaron los builds `3` con el commit `8764be9`.
+- Los builds automáticos `2` de Amplify fallaron antes de compilar por no disponer
+  todavía de `AUTH_PROVIDER=cognito`. En los jobs `3`, ambos `next build` y TypeScript
+  terminaron correctamente; Amplify rechazó después los artefactos por tamaño:
+  249.038.767 bytes web y 249.738.196 admin, frente al máximo de 230.686.720 bytes.
+- `prepare-amplify-next-runtime.mjs` retira únicamente los source maps de la copia
+  materializada de Next.js y sus referencias en trazas. Conserva todos los archivos
+  ejecutables, los binarios nativos y los mapas de la aplicación. Rechaza un Next
+  enlazado para no modificar el almacén compartido de pnpm.
+- Validación contra el artefacto real de web del job `3`: 2.693 mapas retirados
+  (93.715.552 bytes), 7.670 archivos de runtime sin cambios; cómputo SSR reducido a
+  155.323.215 bytes. Dos pruebas cubren integridad, trazas, idempotencia y protección
+  del paquete enlazado. Las 10 pruebas de infra pasan; corrección pendiente de push.
+- El build local de esta sesión sigue bloqueado por `EPERM` al abrir un puerto de
+  Turbopack; no se toma como evidencia de un build exitoso ni de un defecto de la app.
+
 ## 2026-09-27 — Identidad visual desde el logo
 
 - Nuevo paquete `@despega/brand`: el logo original (movido desde la raíz), su versión

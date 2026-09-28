@@ -2,7 +2,11 @@
 
 Estado: `dev` apunta a la cuenta de desarrollo de Qrioso (`779926948601`, perfil
 `qrioso-dev`), con sus Apps de Amplify registradas en `infra/cdk.json` y sus dominios
-`AVAILABLE`; falta el primer `deploy:dev`. `prd` sintetiza pero no tiene cuenta.
+`AVAILABLE`. `Despega-dev` está en `CREATE_COMPLETE` tras corregir el configurador de
+Amplify. Los builds `3` de ambas apps (`8764be9`, rama `develop`) compilaron, pero
+fueron rechazados por superar el tamaño permitido. La reducción del artefacto está
+validada localmente, pendiente de push y de un nuevo build exitoso.
+`prd` sintetiza pero no tiene cuenta ni despliegue.
 
 ## Matriz
 
@@ -70,6 +74,31 @@ En Amplify, `infra/scripts/write-amplify-env.mjs` genera `.env.production` duran
 build solo con las keys del contrato y los valores de la rama. También rechaza
 `AUTH_PROVIDER` distinto de `cognito` y cualquier `DYNAMODB_ENDPOINT`.
 
+## Empaquetado SSR
+
+Amplify [limita el artefacto SSR a 220 MiB](https://docs.aws.amazon.com/amplify/latest/userguide/troubleshooting-SSR.html).
+Después de `next build`, `amplify.yml` materializa `apps/<app>/node_modules` y ejecuta
+`prepare-amplify-next-runtime.mjs`: resuelve los alias de Turbopack, completa las
+dependencias de runtime y las trazas, y retira los `.map` de la copia de Next.js.
+El script rechaza un paquete Next enlazado para no borrar archivos del almacén de
+pnpm; debe ejecutarse después de la materialización, nunca contra los enlaces del
+entorno de desarrollo.
+
+Solo se omiten mapas de depuración de la dependencia Next, no código ejecutable ni
+binarios como Sharp; los mapas de la aplicación se conservan. Las trazas `.nft.json`
+se limpian de referencias a los mapas eliminados. El artefacto real del job `3` de
+web pasó de 249.038.767 a 155.323.215 bytes en la verificación local; esta medición no
+sustituye un job exitoso y un smoke test del siguiente despliegue.
+
+La comparación con INAP (2026-09-28) confirma el mismo patrón de materialización y
+filtrado del runtime después del build. Sus exclusiones de HeroUI/PrimeReact son
+específicas de aquella aplicación y no se trasladan a DESPEGA. En ambos artefactos
+fallidos de DESPEGA hay 2.693 mapas de Next (93.715.552 bytes); retirarlos deja el
+cómputo en 155.323.215 bytes para web y 156.022.644 para admin. No se cambia el
+tipo de cómputo `STANDARD_8GB` ni la capacidad de las Apps. Las pruebas cubren las
+dos raíces del monorepo, preservación del runtime, trazas, idempotencia y protección
+del almacén compartido de pnpm.
+
 ## Qué crea el stack
 
 - Tablas `core` y `simulation` con sus índices.
@@ -80,6 +109,15 @@ build solo con las keys del contrato y los valores de la rama. También rechaza
 - Por cada App Amplify existente: rol de servicio (logs) y **rol de cómputo SSR** con
   los permisos DynamoDB de `data-model.md`. Un custom resource configura el App como
   `WEB_COMPUTE` y actualiza la rama y sus variables; no crea ni borra el App.
+  Sus llamadas `updateApp` y `updateBranch` devuelven a CloudFormation únicamente
+  `app.appId` y `branch.branchName` mediante `outputPaths`, en creación y actualización.
+  La respuesta completa (incluido el buildspec) puede superar el límite de 4.096 bytes
+  de los custom resources; [AWS documenta este filtro](https://docs.aws.amazon.com/cdk/api/v2/python/aws_cdk.custom_resources/README.html#restricting-the-output-of-the-custom-resource).
+  La llamada de rama depende de la configuración del App, pero su política IAM no:
+  debe poder crearse antes de la primera invocación del proveedor Lambda compartido.
+  Una dependencia sobre el construct entero retrasaba esa política y produjo un
+  `AccessDenied` por visibilidad de permisos durante el primer despliegue. Las pruebas
+  verifican este orden, sin ampliar los permisos sobre Apps, ramas o `PassRole`.
 - Validación de synth: ninguna política puede incluir `dynamodb:Scan` ni acciones fuera
   de la lista permitida.
 

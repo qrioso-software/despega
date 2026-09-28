@@ -82,6 +82,47 @@ describe('PlatformStack', () => {
     });
   });
 
+  it('limita las respuestas de Amplify al crear y actualizar cada app y rama', () => {
+    for (const stage of ['dev', 'prd'] as const) {
+      const template = synth(stage);
+      const stageLabel = stage === 'dev' ? 'Dev' : 'Prd';
+      for (const appKind of ['Web', 'Admin']) {
+        const resources = Object.values(template.findResources(`Custom::Despega${stageLabel}${appKind}AmplifyConfigurator`));
+        assert.equal(resources.length, 2);
+        for (const resource of resources) {
+          for (const lifecycle of ['Create', 'Update']) {
+            const definition = resource.Properties[lifecycle];
+            const serialized = typeof definition === 'string'
+              ? definition
+              : definition['Fn::Join'][1].map((fragment: unknown) => typeof fragment === 'string' ? fragment : 'token').join('');
+            const call = JSON.parse(serialized);
+            assert.equal(call.service, 'Amplify');
+            assert.ok(['updateApp', 'updateBranch'].includes(call.action));
+            assert.deepEqual(call.outputPaths, call.action === 'updateApp' ? ['app.appId'] : ['branch.branchName']);
+          }
+        }
+      }
+    }
+  });
+
+  it('crea los permisos de rama antes de invocar el configurador compartido', () => {
+    for (const stage of ['dev', 'prd'] as const) {
+      const template = synth(stage).toJSON();
+      for (const appKind of ['Web', 'Admin']) {
+        const resources = Object.entries(template.Resources).filter(([name]) => name.includes(`${appKind}ExistingAmplifyApp`));
+        const appResource = resources.find(([name]) => name.includes('AppConfigurator') && !name.includes('CustomResourcePolicy'));
+        const branchResource = resources.find(([name]) => name.includes('BranchConfigurator') && !name.includes('CustomResourcePolicy'));
+        const branchPolicy = resources.find(([name]) => name.includes('BranchConfiguratorCustomResourcePolicy'));
+        assert.ok(appResource && branchResource && branchPolicy);
+        const branchDefinition = branchResource[1] as { DependsOn: string[] };
+        const policyDefinition = branchPolicy[1] as { DependsOn?: string[] };
+        assert.ok(branchDefinition.DependsOn.includes(appResource[0]));
+        assert.ok(branchDefinition.DependsOn.includes(branchPolicy[0]));
+        assert.equal((policyDefinition.DependsOn ?? []).some((name) => name.includes('AppConfigurator')), false);
+      }
+    }
+  });
+
   it('permite synth sin Apps Amplify creados todavía', () => {
     const template = synth('dev', false);
     template.resourceCountIs('AWS::IAM::Role', 0);

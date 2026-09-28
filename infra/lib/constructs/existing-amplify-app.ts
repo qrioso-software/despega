@@ -86,6 +86,7 @@ export class ExistingAmplifyApp extends Construct {
           service: 'Amplify',
           action: 'updateApp',
           parameters: appParameters,
+          outputPaths: ['app.appId'],
           physicalResourceId: PhysicalResourceId.of(
             `${appId}-${props.appKind}-app-${physicalResourceSuffix}`,
           ),
@@ -94,6 +95,7 @@ export class ExistingAmplifyApp extends Construct {
           service: 'Amplify',
           action: 'updateApp',
           parameters: appParameters,
+          outputPaths: ['app.appId'],
           physicalResourceId: PhysicalResourceId.of(
             `${appId}-${props.appKind}-app-${physicalResourceSuffix}`,
           ),
@@ -124,6 +126,7 @@ export class ExistingAmplifyApp extends Construct {
           service: 'Amplify',
           action: 'updateBranch',
           parameters: branchParameters,
+          outputPaths: ['branch.branchName'],
           physicalResourceId: PhysicalResourceId.of(
             `${appId}-${branchName}-${props.appKind}-branch-${physicalResourceSuffix}`,
           ),
@@ -132,6 +135,7 @@ export class ExistingAmplifyApp extends Construct {
           service: 'Amplify',
           action: 'updateBranch',
           parameters: branchParameters,
+          outputPaths: ['branch.branchName'],
           physicalResourceId: PhysicalResourceId.of(
             `${appId}-${branchName}-${props.appKind}-branch-${physicalResourceSuffix}`,
           ),
@@ -144,7 +148,7 @@ export class ExistingAmplifyApp extends Construct {
 
     appConfigurator.node.addDependency(props.serviceRole);
     appConfigurator.node.addDependency(props.computeRole);
-    branchConfigurator.node.addDependency(appConfigurator);
+    branchConfigurator.node.findChild('Resource').node.addDependency(appConfigurator);
 
     new CfnOutput(this, logicalId(props.stage, props.appKind, 'amplify-app-id'), {
       value: appId,
