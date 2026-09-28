@@ -12,7 +12,7 @@
     "diff:prd": "cdk diff Despega-prd --no-change-set --context stage=prd --profile despega-prd",
     "deploy:dev": "tsx bin/validate-amplify-domains.ts dev && cdk deploy Despega-dev --context stage=dev --profile qrioso-dev",
     "deploy:prd": "tsx bin/validate-amplify-domains.ts prd && cdk deploy Despega-prd --context stage=prd --profile despega-prd",
-    "local:tables": "tsx bin/create-local-tables.ts",
+    "local:check": "tsx bin/check-local-aws.ts",
     "test": "tsx --test 'test/**/*.test.ts'",
     "typecheck": "tsc --noEmit"
   },

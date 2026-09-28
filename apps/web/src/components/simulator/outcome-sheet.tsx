@@ -11,8 +11,19 @@ import { speakerName } from './conversation';
 /**
  * Consecuencia visible de cada decisión: la reacción del personaje, lo que cambia en el
  * mundo y cómo se movieron el desempeño y el perfil. Nunca solo «correcto/incorrecto».
+ * `docked` la muestra al pie del panel del jugador; si no, es una hoja inferior fija.
  */
-export function OutcomeSheet({ outcome, module, onContinue }: { outcome: AppliedOutcome; module: ModuleView; onContinue: () => void }) {
+export function OutcomeSheet({
+  outcome,
+  module,
+  onContinue,
+  docked = false,
+}: {
+  outcome: AppliedOutcome;
+  module: ModuleView;
+  onContinue: () => void;
+  docked?: boolean;
+}) {
   const [talking, setTalking] = useState(true);
   const continueRef = useRef<HTMLButtonElement>(null);
   const axes = (Object.entries(outcome.affinityDelta) as [AffinityAxis, number][]).filter(([, value]) => value !== 0);
@@ -25,16 +36,23 @@ export function OutcomeSheet({ outcome, module, onContinue }: { outcome: Applied
 
   return (
     <motion.div
-      className="fixed inset-x-0 bottom-0 z-40 px-3 pb-3 sm:px-5 sm:pb-5"
-      initial={{ y: '110%' }}
-      animate={{ y: 0 }}
-      exit={{ y: '110%' }}
+      className={docked ? 'pb-[env(safe-area-inset-bottom)]' : 'fixed inset-x-0 bottom-0 z-40 sm:px-5 sm:pb-5'}
+      initial={docked ? { y: 24, opacity: 0 } : { y: '110%' }}
+      animate={docked ? { y: 0, opacity: 1 } : { y: 0 }}
+      exit={docked ? { opacity: 0 } : { y: '110%' }}
       transition={{ type: 'spring', stiffness: 260, damping: 30 }}
       role="dialog"
       aria-modal="false"
       aria-labelledby="outcome-title"
     >
-      <div className="card mx-auto max-w-3xl p-5 shadow-pop sm:p-6">
+      <div
+        className={
+          docked
+            ? 'card rounded-2xl p-5 shadow-pop'
+            : 'card mx-auto max-w-3xl rounded-b-none border-b-0 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-pop sm:rounded-2xl sm:border-b sm:p-6'
+        }
+      >
+        {!docked && <span className="mx-auto -mt-1 mb-3 block h-1 w-10 rounded-full bg-line-strong sm:hidden" aria-hidden />}
         <div className="flex flex-wrap items-center gap-2">
           <h2 id="outcome-title" className="text-xs font-bold uppercase tracking-wider text-muted">Consecuencia</h2>
           {outcome.timedOut && (
@@ -53,12 +71,12 @@ export function OutcomeSheet({ outcome, module, onContinue }: { outcome: Applied
               <CharacterAvatar characterId={reaction.speaker} mood={reaction.mood} talking={talking && index === 0} size={56} decorative />
               <div>
                 <p className="text-xs font-bold text-muted">{speakerName(module, reaction.speaker)}</p>
-                <p className="mt-0.5 rounded-2xl rounded-bl-md bg-mist px-4 py-2.5 text-ink">{reaction.text}</p>
+                <p className="mt-0.5 rounded-xl rounded-bl-md bg-mist px-4 py-2.5 text-ink">{reaction.text}</p>
               </div>
             </motion.div>
           ))}
           {outcome.narration && (
-            <p className="flex items-start gap-2 rounded-2xl bg-sun-soft px-4 py-2.5 text-sm font-semibold text-sun-strong">
+            <p className="flex items-start gap-2 rounded-xl bg-sun-soft px-4 py-2.5 text-sm font-semibold text-sun-strong">
               <Sparkles className="mt-0.5 size-4 shrink-0" aria-hidden /> {outcome.narration}
             </p>
           )}
@@ -78,7 +96,7 @@ export function OutcomeSheet({ outcome, module, onContinue }: { outcome: Applied
               </span>
             ))}
           </div>
-          <button ref={continueRef} type="button" className="btn btn-primary" onClick={onContinue}>
+          <button ref={continueRef} type="button" className={`btn btn-primary btn-lg ${docked ? 'w-full @md:w-auto' : 'max-sm:w-full'}`} onClick={onContinue}>
             Continuar <ArrowRight className="size-4" aria-hidden />
           </button>
         </div>

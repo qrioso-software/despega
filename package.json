@@ -7,14 +7,10 @@
     "node": ">=24.11.0"
   },
   "scripts": {
-    "dev": "pnpm -r --parallel --filter @despega/web --filter @despega/admin dev",
-    "dev:web": "pnpm --filter @despega/web dev",
-    "dev:admin": "pnpm --filter @despega/admin dev",
-    "local:up": "docker compose -f infra/local/compose.yaml up -d --wait",
-    "local:down": "docker compose -f infra/local/compose.yaml down",
-    "local:tables": "pnpm --filter @despega/infra local:tables",
-    "local:setup": "pnpm local:up && pnpm local:tables",
-    "local:reset": "docker compose -f infra/local/compose.yaml down -v && pnpm local:setup",
+    "dev": "pnpm local:setup && pnpm -r --parallel --filter @despega/web --filter @despega/admin dev",
+    "dev:web": "pnpm local:setup && pnpm --filter @despega/web dev",
+    "dev:admin": "pnpm local:setup && pnpm --filter @despega/admin dev",
+    "local:setup": "pnpm --filter @despega/infra local:check",
     "lint": "pnpm -r --filter './apps/*' --if-present lint",
     "typecheck": "pnpm -r --filter './packages/*' --filter './apps/*' --filter './infra' --if-present typecheck",
     "test": "pnpm -r --filter './packages/*' --filter './apps/*' --filter './infra' --if-present test",

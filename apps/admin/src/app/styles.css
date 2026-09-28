@@ -6,6 +6,10 @@
  * Backoffice DESPEGA sobre HeroUI v3. Las variables de HeroUI (accent, surface, field…)
  * se mapean a la paleta del logo (`@despega/brand/palette.css`); no se introduce otra
  * librería de UI. Acción en azul, logro en verde, tinta y bordes con el tono del navy.
+ *
+ * Misma escala de radios que la web de estudiantes: piezas pequeñas 8 px (`rounded-lg`),
+ * controles 12 px (`rounded-xl`), tarjetas y tablas 16 px (`rounded-2xl`). HeroUI deriva
+ * sus radios de `--radius`; lo anidado nunca tiene más radio que su contenedor.
  */
 :root,
 html.light,
@@ -50,16 +54,28 @@ html[data-theme='light'] {
   --field-border: var(--despega-line-strong);
   --field-border-hover: var(--despega-placeholder);
   --field-border-focus: var(--accent);
-  --radius: 0.8rem;
+  --surface-shadow: 0 1px 2px rgb(23 35 59 / 0.04);
+  --overlay-shadow: 0 24px 56px -20px rgb(23 35 59 / 0.4), 0 2px 6px rgb(23 35 59 / 0.06);
+  --radius: 0.5rem;
+  --field-radius: 0.75rem;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme inline {
   --font-display: var(--font-bricolage), var(--font-inter), ui-sans-serif, sans-serif;
   --color-ink: var(--foreground);
+  --color-ink-soft: var(--despega-ink-soft);
   --color-muted-ink: var(--muted);
   --color-line: var(--border);
+  --color-line-strong: var(--despega-line-strong);
+  --color-placeholder: var(--despega-placeholder);
+  --color-paper: var(--despega-paper);
+  --color-night: var(--despega-night);
   --color-brand: var(--despega-green);
+  --color-brand-soft: var(--despega-green-soft);
+  --color-brand-strong: var(--despega-green-strong);
+  --color-sun: var(--despega-sun);
+  --shadow-pop: var(--overlay-shadow);
 }
 
 html,
@@ -78,15 +94,162 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display);
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: var(--despega-green-soft);
 }
 
 .eyebrow {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 750;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--accent);
+}
+
+/* Etiqueta compacta de sección o de dato (mayúsculas, gris). */
+.label-caps {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/*
+ * Ajustes de HeroUI a la escala del sistema. Van en la capa `components` (la misma de
+ * HeroUI) para que las utilidades de Tailwind sigan pudiendo sobrescribirlos.
+ */
+@layer components {
+  .card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-2xl);
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+  .card--secondary {
+    border-color: transparent;
+  }
+  .card__title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .button,
+  .toggle-button {
+    border-radius: var(--radius-xl);
+    font-weight: 600;
+  }
+
+  .alert {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: none;
+  }
+
+  /* Tabla plana: una sola tarjeta con cabecera gris y filas divididas. */
+  .table-root--primary {
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-2xl);
+    background: var(--surface);
+    box-shadow: var(--surface-shadow);
+  }
+  .table-root--primary .table__body tr:is(:first-child, :last-child) td:is(:first-child, :last-child) {
+    border-radius: 0;
+  }
+  .table-root--primary .table__column {
+    padding-block: 0.75rem;
+    white-space: nowrap;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .table-root--primary .table__column::after {
+    content: none;
+  }
+  .table-root--primary .table__cell {
+    border-bottom: 1px solid var(--border);
+    padding-block: 0.875rem;
+  }
+  .table-root--primary .table__row:last-child .table__cell {
+    border-bottom: 0;
+  }
+  @media (hover: hover) {
+    .table-root--primary .table__row:hover .table__cell {
+      background: var(--despega-paper);
+    }
+  }
+
+  .accordion__trigger {
+    border-radius: 0;
+  }
+}
+
+/* Navegación de la app: lateral en escritorio y pestañas inferiores en móvil. */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.5rem;
+  padding: 0 0.75rem;
+  border-radius: 0.625rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--despega-ink-soft);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.nav-item:hover {
+  background: var(--despega-mist);
+  color: var(--foreground);
+}
+.nav-item[aria-current='page'] {
+  background: var(--accent-soft);
+  color: var(--accent-soft-foreground);
+}
+
+.tab-item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-height: 3.5rem;
+  font-size: 0.6875rem;
+  font-weight: 650;
+  color: var(--muted);
+}
+.tab-item[aria-current='page'] {
+  color: var(--accent);
+}
+
+/* Texturas de fondo: grilla sobre `night` y puntos sobre `paper`. */
+.bg-grid {
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .data-table {
@@ -95,20 +258,24 @@ h3 {
   font-size: 0.9rem;
 }
 .data-table th {
-  padding: 0.65rem 0.9rem;
+  padding: 0.625rem 0.875rem;
   border-bottom: 1px solid var(--border);
+  background: var(--despega-paper);
   color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 750;
+  font-size: 0.6875rem;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-align: left;
   text-transform: uppercase;
   white-space: nowrap;
 }
 .data-table td {
-  padding: 0.75rem 0.9rem;
+  padding: 0.75rem 0.875rem;
   border-bottom: 1px solid var(--border);
   vertical-align: top;
+}
+.data-table tbody tr:last-child td {
+  border-bottom: 0;
 }
 .data-table tbody tr:hover {
   background: var(--despega-paper);

@@ -1,13 +1,14 @@
 import { getStudent, listProgressForStudent, listRunEvents, type CareerProgressRecord, type DecisionEvent } from '@despega/data';
 import { CAREERS, findModule, progressSnapshot, scoreBranches } from '@despega/simulator';
 import { Card, Chip, Meter, Label } from '@heroui/react';
-import { ArrowLeft } from 'lucide-react';
+import { CircleCheck, CircleDashed, Clock3, Compass, Lock, Route } from 'lucide-react';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { CareerIcon } from '@/components/career-icon';
+import { Initials } from '@/components/initials';
 import { RestartCareerButton } from '@/components/restart-career-button';
 import { DecisionsTable } from '@/components/tables';
-import { AffinityBars, AffinityRadar, DataUnavailable, PageHeader, ProgressChip } from '@/components/ui';
+import { AffinityBars, AffinityRadar, DataUnavailable, EmptyState, PageHeader, ProgressChip, SectionHeader } from '@/components/ui';
 import { requireStaff } from '@/lib/auth';
 import { dataConfig } from '@/lib/data';
 import { decisionRows } from '@/lib/decisions';
@@ -43,30 +44,23 @@ export default async function StudentDetailPage({ params }: PageProps<'/estudian
 
   return (
     <>
-      <Link href="/estudiantes" className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-muted-ink hover:text-ink">
-        <ArrowLeft className="size-4" aria-hidden /> Estudiantes
-      </Link>
-      <PageHeader eyebrow="Estudiante" title={name} description={profile.email} />
+      <PageHeader leading={<Initials name={name} size="lg" tone="soft" />} title={name} description={profile.email} />
 
-      <div className="grid gap-6">
-        <Card>
-          <Card.Content>
-            <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <Detail label="Curso" value={profile.grade || '—'} />
-              <Detail label="Colegio" value={profile.school || '—'} />
-              <Detail label="Registro" value={formatDate(profile.createdAt)} />
-              <Detail label="Acceso" value={profile.authProvider === 'local' ? 'Local (desarrollo)' : 'Cognito'} />
-            </dl>
-          </Card.Content>
+      <div className="grid gap-8">
+        <Card className="p-0">
+          <dl className="grid grid-cols-2 divide-line max-lg:[&>*:nth-child(-n+2)]:border-b max-lg:[&>*:nth-child(odd)]:border-r lg:grid-cols-4 lg:divide-x">
+            <Detail label="Curso" value={profile.grade || '—'} />
+            <Detail label="Colegio" value={profile.school || '—'} />
+            <Detail label="Registro" value={formatDate(profile.createdAt)} />
+            <Detail label="Acceso" value={profile.authProvider === 'local' ? 'Local (desarrollo)' : 'Cognito'} />
+          </dl>
         </Card>
 
         {failed ? (
           <DataUnavailable what="el progreso" />
         ) : records.length === 0 ? (
           <Card>
-            <Card.Content>
-              <p className="py-6 text-center text-muted-ink">{profile.givenName} todavía no empezó ninguna carrera.</p>
-            </Card.Content>
+            <EmptyState icon={Compass} title="Sin carreras iniciadas">{profile.givenName} todavía no empezó ninguna carrera.</EmptyState>
           </Card>
         ) : (
           records.map((record) => {
@@ -76,25 +70,30 @@ export default async function StudentDetailPage({ params }: PageProps<'/estudian
             const snapshot = progressSnapshot(careerModule, record.state);
             const aligned = snapshot.status === 'completed' ? scoreBranches(careerModule, record.state).find((branch) => branch.aligned) : undefined;
             return (
-              <section key={record.careerId} className="grid gap-6" aria-labelledby={`career-${record.careerId}`}>
+              <section key={record.careerId} className="grid gap-4 sm:gap-6" aria-labelledby={`career-${record.careerId}`}>
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <h2 id={`career-${record.careerId}`} className="text-2xl font-bold text-ink">{career?.emoji} {careerModule.title}</h2>
-                    <ProgressChip status={snapshot.status} session={snapshot.currentSessionNumber} />
-                    <Chip size="sm" variant="soft"><Chip.Label>Intento {record.attempt}</Chip.Label></Chip>
+                  <div className="flex min-w-0 items-center gap-3">
+                    <CareerIcon careerId={record.careerId} />
+                    <div className="min-w-0">
+                      <h2 id={`career-${record.careerId}`} className="text-xl font-bold text-ink">{career?.name ?? careerModule.title}</h2>
+                      <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                        <ProgressChip status={snapshot.status} session={snapshot.currentSessionNumber} />
+                        <Chip size="sm" variant="soft"><Chip.Label>Intento {record.attempt}</Chip.Label></Chip>
+                      </div>
+                    </div>
                   </div>
                   {canManageProgress(staff.groups) && (
                     <RestartCareerButton studentId={profile.studentId} careerId={record.careerId} studentName={profile.givenName} />
                   )}
                 </div>
 
-                <div className="grid gap-6 xl:grid-cols-[1fr_1.3fr]">
+                <div className="grid gap-4 sm:gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
                   <Card>
                     <Card.Header>
                       <Card.Title>Desempeño</Card.Title>
                       <Card.Description>Empieza en {careerModule.initialPerformance}; sube o baja con cada decisión.</Card.Description>
                     </Card.Header>
-                    <Card.Content className="grid gap-5">
+                    <Card.Content className="grid content-start gap-5">
                       <Meter value={snapshot.performance} minValue={0} maxValue={100} valueLabel={`${snapshot.performance} / 100`} color="accent" aria-label="Desempeño">
                         <div className="flex items-baseline justify-between">
                           <Label>Desempeño actual</Label>
@@ -104,30 +103,48 @@ export default async function StudentDetailPage({ params }: PageProps<'/estudian
                           <Meter.Fill />
                         </Meter.Track>
                       </Meter>
-                      <ul className="grid gap-2">
-                        {snapshot.sessions.map((session) => (
-                          <li key={session.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-surface-secondary px-4 py-2.5 text-sm">
-                            <span className="font-semibold text-ink">Sesión {session.number} · {session.title}</span>
-                            <span className="text-muted-ink">
-                              {session.status === 'completed'
-                                ? `${session.performanceStart} → ${session.performanceEnd} · ${formatDuration(session.elapsedMs)}`
-                                : session.status === 'in_progress'
-                                  ? 'En curso'
-                                  : session.status === 'available'
-                                    ? 'Disponible'
-                                    : 'Bloqueada'}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
+                      <ol className="divide-y divide-line overflow-hidden rounded-xl border border-line">
+                        {snapshot.sessions.map((session) => {
+                          const Icon = session.status === 'completed' ? CircleCheck : session.status === 'locked' ? Lock : session.status === 'in_progress' ? Clock3 : CircleDashed;
+                          return (
+                            <li key={session.id} className="flex items-center gap-3 px-3.5 py-3 text-sm">
+                              <Icon
+                                className={`size-4 shrink-0 ${session.status === 'completed' ? 'text-success-soft-foreground' : session.status === 'in_progress' ? 'text-accent' : 'text-placeholder'}`}
+                                aria-hidden
+                              />
+                              <span className="min-w-0 flex-1">
+                                <span className="label-caps block">Sesión {session.number}</span>
+                                <span className={`font-semibold ${session.status === 'locked' ? 'text-muted-ink' : 'text-ink'}`}>{session.title}</span>
+                              </span>
+                              <span className="shrink-0 text-right text-xs text-muted-ink">
+                                {session.status === 'completed' ? (
+                                  <>
+                                    <span className="block font-semibold tabular-nums text-ink">{session.performanceStart} → {session.performanceEnd}</span>
+                                    {formatDuration(session.elapsedMs)}
+                                  </>
+                                ) : session.status === 'in_progress' ? (
+                                  'En curso'
+                                ) : session.status === 'available' ? (
+                                  'Disponible'
+                                ) : (
+                                  'Bloqueada'
+                                )}
+                              </span>
+                            </li>
+                          );
+                        })}
+                      </ol>
                       {aligned && (
-                        <div className="rounded-2xl border border-accent/30 bg-accent-soft p-4">
-                          <p className="text-xs font-bold uppercase tracking-wider text-accent">Camino que más se parece a su perfil</p>
-                          <p className="mt-1 font-display text-lg font-bold text-ink">{aligned.title}</p>
-                          <p className="text-sm text-muted-ink">{aligned.path}. Es una pista para conversar, no una predicción.</p>
+                        <div className="flex gap-3 rounded-xl border border-accent/20 bg-accent-soft p-4">
+                          <Route className="mt-0.5 size-5 shrink-0 text-accent" aria-hidden />
+                          <div>
+                            <p className="label-caps text-accent-soft-foreground">Camino que más se parece a su perfil</p>
+                            <p className="mt-1 font-display text-lg font-bold text-ink">{aligned.title}</p>
+                            <p className="text-sm text-muted-ink">{aligned.path}. Es una pista para conversar, no una predicción.</p>
+                          </div>
                         </div>
                       )}
-                      <p className="text-xs text-muted-ink">Inició: {formatDateTime(record.startedAt)} · Última actividad: {formatDateTime(record.updatedAt)}</p>
+                      <p className="text-xs text-muted-ink">Inició el {formatDateTime(record.startedAt)} · Última actividad: {formatDateTime(record.updatedAt)}</p>
                     </Card.Content>
                   </Card>
 
@@ -136,15 +153,17 @@ export default async function StudentDetailPage({ params }: PageProps<'/estudian
                       <Card.Title>Perfil de afinidad</Card.Title>
                       <Card.Description>Normalizado contra lo que podía ganar en las sesiones jugadas. Sin bien ni mal.</Card.Description>
                     </Card.Header>
-                    <Card.Content className="grid items-center gap-6 md:grid-cols-2">
-                      <AffinityRadar values={snapshot.affinity.normalized} unavailable={snapshot.affinity.unavailable} width={340} />
-                      <AffinityBars values={snapshot.affinity.normalized} unavailable={snapshot.affinity.unavailable} />
+                    <Card.Content className="@container">
+                      <div className="grid items-center gap-6 @2xl:grid-cols-2">
+                        <AffinityRadar values={snapshot.affinity.normalized} unavailable={snapshot.affinity.unavailable} width={440} />
+                        <AffinityBars values={snapshot.affinity.normalized} unavailable={snapshot.affinity.unavailable} />
+                      </div>
                     </Card.Content>
                   </Card>
                 </div>
 
                 <div className="grid gap-3">
-                  <h3 className="text-xl font-bold text-ink">Decisiones, escena por escena</h3>
+                  <SectionHeader level={3} title="Decisiones, escena por escena" description="Lo que eligió en cada escena, cuánto tardó y cómo movió su desempeño y su perfil." />
                   <DecisionsTable rows={decisionRows(careerModule, events.get(record.careerId) ?? [])} />
                 </div>
               </section>
@@ -158,9 +177,9 @@ export default async function StudentDetailPage({ params }: PageProps<'/estudian
 
 function Detail({ label, value }: { label: string; value: string }) {
   return (
-    <div>
-      <dt className="text-xs font-bold uppercase tracking-wider text-muted-ink">{label}</dt>
-      <dd className="mt-1 font-semibold text-ink">{value}</dd>
+    <div className="min-w-0 border-line px-4 py-3.5 sm:px-5">
+      <dt className="label-caps">{label}</dt>
+      <dd className="mt-1 truncate font-semibold text-ink">{value}</dd>
     </div>
   );
 }

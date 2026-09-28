@@ -58,7 +58,7 @@ export function SummaryScreen({
           />
           <AffinityBars values={summary.affinity.normalized} unavailable={summary.affinity.unavailable} />
           {strongest.length > 0 && (
-            <p className="mt-4 rounded-2xl bg-accent-soft/60 px-4 py-3 text-sm text-ink">
+            <p className="mt-4 rounded-xl bg-accent-soft/60 px-4 py-3 text-sm text-ink">
               Tus ejes más marcados: <strong>{strongest.map((axis) => AFFINITY_LABELS[axis].toLowerCase()).join(' y ')}</strong>.
             </p>
           )}
@@ -70,7 +70,7 @@ export function SummaryScreen({
               <CharacterAvatar characterId={summary.closing.speaker} mood="happy" size={64} decorative />
               <div>
                 <p className="text-xs font-bold text-muted">{speakerName(module, summary.closing.speaker)}</p>
-                <p className="mt-1 rounded-2xl rounded-bl-md bg-mist px-4 py-3 text-ink">{summary.closing.text}</p>
+                <p className="mt-1 rounded-xl rounded-bl-md bg-mist px-4 py-3 text-ink">{summary.closing.text}</p>
               </div>
             </div>
           )}
@@ -83,7 +83,7 @@ export function SummaryScreen({
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 + index * 0.12 }}
-                  className="rounded-2xl border border-line bg-paper px-4 py-3"
+                  className="rounded-xl border border-line bg-paper px-4 py-3"
                 >
                   <p className="text-xs font-bold uppercase tracking-wider text-muted">Escena {highlight.sceneId} · {highlight.sceneTitle}</p>
                   <p className="font-semibold text-ink">
@@ -105,7 +105,7 @@ export function SummaryScreen({
             </ol>
           </div>
           {summary.nextSession && (
-            <div className="flex items-start gap-3 rounded-2xl border-2 border-dashed border-brand/40 bg-brand-soft/50 p-4">
+            <div className="flex items-start gap-3 rounded-xl border-2 border-dashed border-brand/40 bg-brand-soft/50 p-4">
               <CalendarClock className="mt-0.5 size-5 shrink-0 text-brand-strong" aria-hidden />
               <p className="text-sm text-ink">
                 <strong>Sesión {summary.nextSession.number} desbloqueada: «{summary.nextSession.title}».</strong> Puedes jugarla ahora u
@@ -117,7 +117,7 @@ export function SummaryScreen({
       </div>
 
       <div className="flex justify-end border-t border-line bg-paper px-6 py-4">
-        <button type="button" className="btn btn-primary min-h-12 px-6" disabled={locked} onClick={onContinue}>
+        <button type="button" className="btn btn-primary btn-lg" disabled={locked} onClick={onContinue}>
           {interaction.continueLabel} <ArrowRight className="size-4" aria-hidden />
         </button>
       </div>

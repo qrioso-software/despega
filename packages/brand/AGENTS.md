@@ -1,6 +1,7 @@
 # @despega/brand
 
-Identidad visual compartida por `apps/web` y `apps/admin`: logo y paleta.
+Identidad visual compartida por `apps/web` y `apps/admin`: logo, paleta e íconos de
+carrera.
 
 ## Contenido
 
@@ -15,6 +16,10 @@ Identidad visual compartida por `apps/web` y `apps/admin`: logo y paleta.
 - `src/logo.tsx` (`DespegaLogo`): el mismo trazo como componente. El navy es
   `currentColor` (`text-ink` sobre fondos claros, `text-white` sobre `night`); la
   llama conserva su verde. `tagline` agrega «Decide tu futuro» solo en tamaños grandes.
+- `src/career-icons.ts` (`CAREER_ICONS`, `DEFAULT_CAREER_ICON`): ícono de
+  `lucide-react` por `careerId`. Cada app lo envuelve en su `CareerIcon` con sus
+  tokens. Se exporta como mapa, no como función, para cumplir
+  `react-hooks/static-components`. Una carrera nueva agrega aquí su ícono.
 - `src/palette.css` (`@despega/brand/palette.css`): variables `--despega-*`, fuente
   única de color. Web la mapea en el `@theme` de `globals.css` y admin en las variables
   de HeroUI de `styles.css`.
@@ -30,3 +35,4 @@ Identidad visual compartida por `apps/web` y `apps/admin`: logo y paleta.
   Si llega un vector original del diseñador, reemplaza todos los trazos (SVG,
   isotipo, `logo.tsx` e íconos).
 - Sin clases de Tailwind dentro del paquete: las apps no lo escanean.
+- `lucide-react` es dependencia par (misma versión exacta que las apps).

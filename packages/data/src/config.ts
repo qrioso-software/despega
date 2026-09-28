@@ -1,7 +1,8 @@
+import { physicalTableName } from './schema.ts';
+
 export type DataConfig = {
   readonly region: string;
-  /** Solo en local: DynamoDB Local. En AWS queda vacío y se usa el endpoint regional. */
-  readonly endpoint?: string;
+  readonly profile?: string;
   readonly tables: { readonly core: string; readonly simulation: string };
 };
 
@@ -17,11 +18,6 @@ export class DataConfigurationError extends Error {
   }
 }
 
-/**
- * Lee la configuración de datos del entorno de la aplicación. Las credenciales nunca
- * vienen de aquí: en Amplify las aporta el rol de cómputo SSR y en local DynamoDB
- * Local acepta cualquier credencial.
- */
 export function dataConfigFromEnv(env: Environment = process.env): DataConfig {
   const region = env.DATA_REGION?.trim() ?? '';
   const endpoint = env.DYNAMODB_ENDPOINT?.trim() || undefined;
@@ -33,16 +29,14 @@ export function dataConfigFromEnv(env: Environment = process.env): DataConfig {
     throw new DataConfigurationError('Faltan los nombres de tablas DynamoDB (DYNAMODB_TABLE_CORE, DYNAMODB_TABLE_SIMULATION).');
   }
   if (endpoint) {
-    let url: URL;
-    try {
-      url = new URL(endpoint);
-    } catch {
-      throw new DataConfigurationError('DYNAMODB_ENDPOINT no es una URL válida.');
+    throw new DataConfigurationError('DYNAMODB_ENDPOINT debe estar vacío: se usa DynamoDB de AWS, también en local.');
+  }
+  if (env.STAGE === 'local') {
+    if (region !== 'us-east-1' || core !== physicalTableName('dev', 'core') || simulation !== physicalTableName('dev', 'simulation')) {
+      throw new DataConfigurationError('El entorno local solo puede usar las tablas de DESPEGA dev en us-east-1.');
     }
-    if (!['localhost', '127.0.0.1', '::1', '[::1]'].includes(url.hostname)) {
-      throw new DataConfigurationError('DYNAMODB_ENDPOINT solo se permite hacia DynamoDB Local.');
-    }
+    return { region, profile: 'qrioso-dev', tables: { core, simulation } };
   }
 
-  return { region, endpoint, tables: { core, simulation } };
+  return { region, tables: { core, simulation } };
 }

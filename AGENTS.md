@@ -111,7 +111,7 @@ estable.**
   `GetItem`, `Query`, `BatchGetItem` o un índice documentado. Un GSI nuevo exige
   registrar su patrón de acceso en `docs/architecture/data-model.md`.
 - El esquema de tablas vive una sola vez en `packages/data/src/schema.ts`; CDK y
-  DynamoDB Local lo consumen.
+  los repositorios lo consumen. Local usa las tablas DEV de `qrioso-dev`, sin Docker.
 
 ## Ambientes AWS
 
@@ -150,9 +150,15 @@ estable.**
 
 ```sh
 pnpm install
-pnpm local:setup   # DynamoDB Local en Docker + tablas
+aws sso login --profile qrioso-dev
+pnpm local:setup   # verifica cuenta y tablas DEV; no crea ni borra datos
 pnpm dev           # web :3000 y admin :3001
 ```
+
+`STAGE=local` conserva el acceso local por correo y fija el perfil `qrioso-dev`,
+región `us-east-1` y tablas `despega_dev_core`/`despega_dev_simulation`.
+`DYNAMODB_ENDPOINT` queda vacío. Las escrituras locales afectan datos compartidos
+de DEV; no hay reset automático ni importación de los antiguos datos de Docker.
 
 ## Contenido del simulador
 

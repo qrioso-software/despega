@@ -16,6 +16,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import Link from 'next/link';
+import { CareerIcon } from '@/components/careers/career-icon';
 import { CharacterAvatar } from '@/components/characters/character-avatar';
 import { AffinityRadar } from '@/components/simulator/affinity-radar';
 import { SiteFooter, SiteHeader } from '@/components/site/site-header';
@@ -70,10 +71,10 @@ function Hero({ primaryHref }: { primaryHref: string }) {
             decisiones que cambian lo que pasa después. Al final, descubres cómo decides tú.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href={primaryHref} className="btn btn-primary min-h-12 px-6 text-base">
+            <Link href={primaryHref} className="btn btn-primary btn-lg">
               Empieza gratis <ArrowRight className="size-5" aria-hidden />
             </Link>
-            <Link href="#como-funciona" className="btn btn-ghost min-h-12 px-6 text-base">
+            <Link href="#como-funciona" className="btn btn-ghost btn-lg">
               Ver cómo funciona
             </Link>
           </div>
@@ -218,13 +219,13 @@ function PilotModule({ primaryHref }: { primaryHref: string }) {
               </li>
             ))}
           </ul>
-          <Link href={primaryHref} className="btn btn-primary mt-8 min-h-12 px-6">
+          <Link href={primaryHref} className="btn btn-primary mt-8 btn-lg">
             Empezar la semana <ArrowRight className="size-5" aria-hidden />
           </Link>
         </div>
         <ol className="grid gap-4">
           {ingenieriaSoftware.sessions.map((session) => (
-            <li key={session.id} className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
+            <li key={session.id} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
               <p className="text-xs font-bold uppercase tracking-widest text-sun">Sesión {session.number} · ~{session.estimatedMinutes} min</p>
               <h3 className="mt-2 text-2xl font-bold">{session.title}</h3>
               <p className="mt-2 text-white/70">{session.synopsis}</p>
@@ -285,10 +286,10 @@ function Careers() {
             return (
               <li
                 key={career.id}
-                className={`rounded-3xl border p-5 ${available ? 'border-brand/40 bg-brand-soft/60 shadow-soft sm:col-span-2' : 'border-line bg-paper'}`}
+                className={`rounded-2xl border p-5 ${available ? 'border-brand bg-surface shadow-soft ring-1 ring-brand sm:col-span-2' : 'border-line bg-paper'}`}
               >
                 <div className="flex items-start justify-between gap-3">
-                  <span className="text-3xl" aria-hidden>{career.emoji}</span>
+                  <CareerIcon careerId={career.id} tone={available ? 'brand' : 'muted'} />
                   <span className={`chip ${available ? 'bg-brand text-ink' : 'bg-mist text-muted'}`}>
                     {available ? 'Disponible' : 'Próximamente'}
                   </span>
@@ -339,7 +340,7 @@ function Profile() {
 function Schools() {
   return (
     <section id="colegios" className="scroll-mt-20 px-4 pb-20 sm:px-6">
-      <div className="mx-auto grid max-w-6xl gap-8 rounded-[2rem] bg-accent-strong p-8 text-white sm:p-12 lg:grid-cols-[1.4fr_1fr] lg:items-center">
+      <div className="mx-auto grid max-w-6xl gap-8 rounded-3xl bg-accent-strong p-8 text-white sm:p-12 lg:grid-cols-[1.4fr_1fr] lg:items-center">
         <div>
           <p className="eyebrow text-sun">Para colegios y orientadores</p>
           <h2 className="mt-3 text-3xl font-bold sm:text-4xl">Conversaciones vocacionales con evidencia</h2>
@@ -373,7 +374,7 @@ function FinalCta({ primaryHref }: { primaryHref: string }) {
         <p className="mt-4 max-w-xl text-ink-soft">
           Tu primer día en PixelForge empieza en cuanto creas tu cuenta. Marisol ya está llamando.
         </p>
-        <Link href={primaryHref} className="btn btn-primary mt-8 min-h-12 px-8 text-base">
+        <Link href={primaryHref} className="btn btn-primary mt-8 btn-lg px-8">
           Empieza gratis <ArrowRight className="size-5" aria-hidden />
         </Link>
       </div>

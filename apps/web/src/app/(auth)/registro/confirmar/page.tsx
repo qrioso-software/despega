@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { MailCheck } from 'lucide-react';
+import { AuthCard } from '@/components/auth/auth-card';
 import { ConfirmSignUpForm } from '@/components/auth/auth-forms';
 import { AuthConfigError, authMode } from '../../auth-mode';
 
@@ -13,19 +15,19 @@ export default async function ConfirmSignUpPage({ searchParams }: PageProps<'/re
   if (mode === 'local') redirect('/inicio');
 
   return (
-    <>
-      <p className="eyebrow">Un paso más</p>
-      <h1 className="mt-2 text-3xl font-bold">Revisa tu correo</h1>
-      <p className="mt-2 text-muted">
-        Te enviamos un código de verificación{email ? <> a <strong className="text-ink">{email}</strong></> : null}. Escríbelo aquí para
-        activar tu cuenta.
-      </p>
-      <div className="mt-8 grid gap-5">
-        {mode === 'error' ? <AuthConfigError /> : <ConfirmSignUpForm email={email ?? ''} />}
-        <p className="text-center text-sm text-muted">
-          <Link href="/ingresar" className="font-semibold text-accent hover:underline">Volver a ingresar</Link>
-        </p>
-      </div>
-    </>
+    <AuthCard
+      icon={MailCheck}
+      badge="Un paso más"
+      title="Revisa tu correo"
+      description={
+        <>
+          Te enviamos un código de verificación{email ? <> a <strong className="text-ink">{email}</strong></> : null}. Escríbelo aquí
+          para activar tu cuenta.
+        </>
+      }
+      footer={<Link href="/ingresar" className="font-semibold text-accent hover:underline">Volver a ingresar</Link>}
+    >
+      {mode === 'error' ? <AuthConfigError /> : <ConfirmSignUpForm email={email ?? ''} />}
+    </AuthCard>
   );
 }

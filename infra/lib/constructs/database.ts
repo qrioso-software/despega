@@ -10,8 +10,8 @@ export interface DatabaseProps {
 }
 
 /**
- * Tablas por contexto acotado, definidas desde `@despega/data/schema` para que CDK,
- * DynamoDB Local y los repositorios compartan el mismo contrato.
+ * Tablas por contexto acotado, definidas desde `@despega/data/schema` para que CDK
+ * y los repositorios compartan el mismo contrato.
  */
 export class Database extends Construct {
   readonly core: dynamodb.Table;

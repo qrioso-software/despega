@@ -1,10 +1,38 @@
 'use client';
 
-import { Alert, Button, Input, Label, TextField, ToggleButton, ToggleButtonGroup } from '@heroui/react';
-import { KeyRound, LogIn } from 'lucide-react';
+import { Alert, Button, InputGroup, Label, TextField, ToggleButton, ToggleButtonGroup } from '@heroui/react';
+import { Eye, EyeOff, KeyRound, LockKeyhole, LogIn, Mail } from 'lucide-react';
 import { useActionState, useState } from 'react';
 import { staffNewPasswordAction, staffSignInAction, type LoginState } from '@/app/login/actions';
 import { STAFF_ROLE_LABELS, type StaffGroup } from '@/lib/staff';
+
+/** Campo de contraseña con ícono y botón para mostrarla u ocultarla. */
+function PasswordField({ name, label, autoComplete }: { name: string; label: string; autoComplete: 'current-password' | 'new-password' }) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <TextField name={name} type={visible ? 'text' : 'password'} isRequired autoComplete={autoComplete} fullWidth>
+      <Label className="label-caps">{label}</Label>
+      <InputGroup fullWidth className="h-12">
+        <InputGroup.Prefix>
+          <LockKeyhole className="size-[1.125rem]" aria-hidden />
+        </InputGroup.Prefix>
+        <InputGroup.Input />
+        <InputGroup.Suffix className="pr-1.5">
+          <Button
+            isIconOnly
+            size="sm"
+            variant="ghost"
+            onPress={() => setVisible((value) => !value)}
+            aria-label={visible ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+            aria-pressed={visible}
+          >
+            {visible ? <EyeOff className="size-4" aria-hidden /> : <Eye className="size-4" aria-hidden />}
+          </Button>
+        </InputGroup.Suffix>
+      </InputGroup>
+    </TextField>
+  );
+}
 
 export function LoginForm({ mode, notice }: { mode: 'cognito' | 'local'; notice?: string }) {
   const [signInState, signIn, signingIn] = useActionState(staffSignInAction, { status: 'idle', step: 'credentials' } satisfies LoginState);
@@ -33,36 +61,32 @@ export function LoginForm({ mode, notice }: { mode: 'cognito' | 'local'; notice?
       )}
 
       {needsNewPassword ? (
-        <form action={setPassword} className="grid gap-4">
+        <form action={setPassword} className="grid gap-5">
           <p className="text-sm text-muted-ink">
             Es tu primer ingreso: reemplaza la contraseña temporal. Usa al menos 12 caracteres con mayúsculas, minúsculas y números.
           </p>
-          <TextField name="password" type="password" isRequired autoComplete="new-password" fullWidth>
-            <Label>Contraseña nueva</Label>
-            <Input />
-          </TextField>
-          <TextField name="confirmation" type="password" isRequired autoComplete="new-password" fullWidth>
-            <Label>Confirmar contraseña</Label>
-            <Input />
-          </TextField>
-          <Button type="submit" variant="primary" fullWidth isPending={savingPassword}>
+          <PasswordField name="password" label="Contraseña nueva" autoComplete="new-password" />
+          <PasswordField name="confirmation" label="Confirmar contraseña" autoComplete="new-password" />
+          <Button type="submit" variant="primary" size="lg" fullWidth isPending={savingPassword}>
             {!savingPassword && <KeyRound className="size-4" aria-hidden />} Guardar y entrar
           </Button>
         </form>
       ) : (
-        <form action={signIn} className="grid gap-4">
+        <form action={signIn} className="grid gap-5">
           <TextField name="email" type="email" isRequired autoComplete="email" defaultValue={signInState.email} fullWidth>
-            <Label>Correo</Label>
-            <Input placeholder="nombre@despega.app" />
+            <Label className="label-caps">Correo</Label>
+            <InputGroup fullWidth className="h-12">
+              <InputGroup.Prefix>
+                <Mail className="size-[1.125rem]" aria-hidden />
+              </InputGroup.Prefix>
+              <InputGroup.Input placeholder="nombre@despega.app" />
+            </InputGroup>
           </TextField>
           {mode === 'cognito' ? (
-            <TextField name="password" type="password" isRequired autoComplete="current-password" fullWidth>
-              <Label>Contraseña</Label>
-              <Input />
-            </TextField>
+            <PasswordField name="password" label="Contraseña" autoComplete="current-password" />
           ) : (
             <div className="grid gap-2">
-              <span id="local-role" className="text-sm font-medium text-ink">Rol para esta sesión local</span>
+              <span id="local-role" className="label-caps">Rol para esta sesión local</span>
               <ToggleButtonGroup
                 aria-labelledby="local-role"
                 selectionMode="single"
@@ -81,7 +105,7 @@ export function LoginForm({ mode, notice }: { mode: 'cognito' | 'local'; notice?
               <input type="hidden" name="role" value={role} />
             </div>
           )}
-          <Button type="submit" variant="primary" fullWidth isPending={signingIn}>
+          <Button type="submit" variant="primary" size="lg" fullWidth isPending={signingIn} className="mt-1">
             {!signingIn && <LogIn className="size-4" aria-hidden />} Entrar al backoffice
           </Button>
         </form>

@@ -3,9 +3,8 @@
 Estado: `dev` apunta a la cuenta de desarrollo de Qrioso (`779926948601`, perfil
 `qrioso-dev`), con sus Apps de Amplify registradas en `infra/cdk.json` y sus dominios
 `AVAILABLE`. `Despega-dev` está en `CREATE_COMPLETE` tras corregir el configurador de
-Amplify. Los builds `3` de ambas apps (`8764be9`, rama `develop`) compilaron, pero
-fueron rechazados por superar el tamaño permitido. La reducción del artefacto está
-validada localmente, pendiente de push y de un nuevo build exitoso.
+Amplify. Tras el rechazo por tamaño de los jobs `3`, los jobs `4` de ambas apps
+(`9cbd877`, rama `develop`) terminaron `SUCCEED`, sin aumentar capacidad.
 `prd` sintetiza pero no tiene cuenta ni despliegue.
 
 ## Matriz
@@ -25,20 +24,32 @@ El perfil de cada stage vive en `infra/cdk.json` y en los scripts de `infra/pack
 proyecto de referencia. Los recursos de DESPEGA se distinguen por el stack
 `Despega-<stage>`, el prefijo `despega_<stage>_` y la etiqueta `Project=despega`.
 
-## Desarrollo local (sin AWS)
+## Desarrollo local con DynamoDB de DEV
 
 | Pieza | Local |
 | --- | --- |
-| Datos | DynamoDB Local en Docker (`infra/local/compose.yaml`, volumen persistente, puerto `127.0.0.1:8000`) |
-| Tablas | `pnpm local:tables` las crea desde `@despega/data/schema` (idempotente) |
+| Datos | DynamoDB administrado en `qrioso-dev` (`779926948601`, `us-east-1`) |
+| Tablas | `despega_dev_core` y `despega_dev_simulation`, existentes y administradas por CDK |
+| Credenciales | Perfil SSO `qrioso-dev` fijado por el cliente de datos con `STAGE=local` |
 | Identidad | `AUTH_PROVIDER=local`: correo sin contraseña (web) y correo + rol (admin), cookies firmadas, solo desde localhost |
 
 ```sh
 pnpm install
-pnpm local:setup      # docker compose up + tablas
+aws sso login --profile qrioso-dev
+pnpm local:setup      # prepara .env.local si falta y verifica cuenta/tablas
 pnpm dev              # http://localhost:3000 (web) y http://localhost:3001 (admin)
-pnpm local:down       # detiene DynamoDB Local (los datos quedan en el volumen)
 ```
+
+`pnpm dev`, `dev:web` y `dev:admin` ejecutan la verificación antes de arrancar; no
+crean ni borran tablas. `DYNAMODB_ENDPOINT` debe estar vacío. La configuración de
+datos rechaza tablas ajenas a DESPEGA DEV y otras regiones cuando `STAGE=local`.
+El SDK resuelve las credenciales SSO; nunca se copian claves a `.env.local`.
+
+Las escrituras y reinicios de intentos desde localhost afectan **datos compartidos
+de DEV**. El acceso local por correo sigue limitado a loopback y crea identidades
+`local-<hash>` distintas de Cognito. No se migran registros del contenedor anterior.
+Se retira el contenedor y su red, conservando el volumen `despega-local_dynamodb-data`
+como respaldo inactivo. Decisión técnica solicitada: [ADR 0007](../decisions/0007-local-con-dynamodb-dev.md).
 
 ## Variables de aplicación
 
@@ -60,7 +71,7 @@ Git y deben tener **exactamente** las mismas keys (el synth falla si no).
 | `AUTH_PROVIDER` | ✔ | ✔ | debe ser `cognito` |
 | `COGNITO_USER_POOL_ID`, `COGNITO_CLIENT_ID` | pool de estudiantes | pool de staff | CDK los reemplaza con outputs |
 | `DATA_REGION`, `DYNAMODB_TABLE_CORE`, `DYNAMODB_TABLE_SIMULATION` | ✔ | ✔ | CDK los reemplaza con outputs |
-| `DYNAMODB_ENDPOINT` | `http://localhost:8000` | igual | debe estar vacío |
+| `DYNAMODB_ENDPOINT` | vacío | vacío | debe estar vacío |
 
 Dominios de `dev`: web `https://despega.qrioso.do` (App `dwc3j5j9ebtdk`) y admin
 `https://despega.admin.qrioso.do` (App `d20sgf4s7cvg7l`), ambos sobre la rama `develop`.

@@ -101,26 +101,29 @@ export function AffinityBars({
   values,
   unavailable = [],
   deltas,
+  compact = false,
 }: {
   values: AffinityVector;
   unavailable?: readonly AffinityAxis[];
   deltas?: Partial<Record<AffinityAxis, number>>;
+  /** Etiquetas cortas para paneles angostos. */
+  compact?: boolean;
 }) {
   return (
-    <ul className="grid gap-3">
+    <ul className={`grid ${compact ? 'gap-2.5' : 'gap-3'}`}>
       {AFFINITY_AXES.map((axis) => {
         const missing = unavailable.includes(axis);
         const delta = deltas?.[axis];
         return (
           <li key={axis}>
             <div className="flex items-baseline justify-between gap-3 text-sm">
-              <span className="font-semibold text-ink">{AFFINITY_LABELS[axis]}</span>
+              <span className="font-semibold text-ink">{compact ? AFFINITY_SHORT_LABELS[axis] : AFFINITY_LABELS[axis]}</span>
               <span className="shrink-0 whitespace-nowrap tabular-nums text-muted">
                 {missing ? 'Sin datos aún' : `${values[axis]} / 100`}
                 {delta ? <span className="ml-2 font-semibold text-ink">{delta > 0 ? `+${delta}` : delta} pts</span> : null}
               </span>
             </div>
-            <div className="mt-1.5 h-2.5 overflow-hidden rounded-full bg-accent-soft" aria-hidden="true">
+            <div className={`overflow-hidden rounded-full bg-accent-soft ${compact ? 'mt-1 h-1.5' : 'mt-1.5 h-2'}`} aria-hidden="true">
               <div className="h-full rounded-full bg-accent transition-[width] duration-700" style={{ width: `${missing ? 0 : values[axis]}%` }} />
             </div>
           </li>

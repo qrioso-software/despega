@@ -48,8 +48,8 @@ export function PrioritizationInteraction({ interaction, locked, outcome, onSubm
     <DragBoard id="prioritization-board" onDragStart={(event) => setDragging(String(event.active.id))} onDragEnd={onDragEnd} onDragCancel={() => setDragging(null)}>
       <div className="grid gap-4">
         <p className="text-sm font-semibold text-ink-soft">{interaction.prompt} Toca una tarea para moverla o arrástrala.</p>
-        <div className="grid gap-4 md:grid-cols-2">
-          <DropZone id={POOL} disabled={locked} className="rounded-2xl bg-mist p-3">
+        <div className="grid gap-4 @2xl:grid-cols-2">
+          <DropZone id={POOL} disabled={locked} className="rounded-xl bg-mist p-3">
             <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted">
               {reveal ? <CircleSlash className="size-4" aria-hidden /> : <ListTodo className="size-4" aria-hidden />}
               {reveal ? 'Queda fuera esta semana' : `Pendientes (${pending.length})`}
@@ -62,14 +62,14 @@ export function PrioritizationInteraction({ interaction, locked, outcome, onSubm
                   disabled={locked}
                   onSelect={() => addToBoard(task.id)}
                   label={`${task.title}. Toca para agregarla al tablero`}
-                  className="block w-full rounded-2xl"
+                  className="block w-full rounded-xl"
                 >
                   <TaskCard task={task} discarded={Boolean(reveal)} />
                 </DraggableCard>
               ))}
             </div>
           </DropZone>
-          <div className="rounded-2xl border-2 border-good/30 bg-good-soft/40 p-3">
+          <div className="rounded-xl border-2 border-good/30 bg-good-soft/40 p-3">
             <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-good-strong">
               <CalendarCheck className="size-4" aria-hidden /> Tablero de esta semana ({slots.filter(Boolean).length}/{interaction.slots})
             </p>
@@ -77,14 +77,14 @@ export function PrioritizationInteraction({ interaction, locked, outcome, onSubm
               {slots.map((taskId, index) => {
                 const task = interaction.tasks.find((item) => item.id === taskId);
                 return (
-                  <DropZone key={index} id={`slot-${index}`} disabled={locked} className="min-h-20 rounded-2xl border-2 border-dashed border-good/30 bg-white/70">
+                  <DropZone key={index} id={`slot-${index}`} disabled={locked} className="min-h-20 rounded-xl border-2 border-dashed border-good/30 bg-white/70">
                     {task ? (
                       <DraggableCard
                         id={task.id}
                         disabled={locked}
                         onSelect={() => removeFromBoard(task.id)}
                         label={`${task.title} está en el tablero. Toca para devolverla a pendientes`}
-                        className="block w-full rounded-2xl"
+                        className="block w-full rounded-xl"
                       >
                         <TaskCard task={task} />
                       </DraggableCard>
@@ -115,7 +115,7 @@ export function PrioritizationInteraction({ interaction, locked, outcome, onSubm
 
 function TaskCard({ task, floating = false, discarded = false }: { task: PrioritizationTask; floating?: boolean; discarded?: boolean }) {
   return (
-    <div className={`rounded-2xl border border-line bg-white p-3 ${floating ? 'rotate-2 shadow-pop' : 'shadow-sm'} ${discarded ? 'opacity-70' : ''}`}>
+    <div className={`rounded-xl border border-line bg-white p-3 ${floating ? 'rotate-2 shadow-pop' : 'shadow-sm'} ${discarded ? 'opacity-70' : ''}`}>
       {task.label && <span className="chip bg-accent-soft text-accent-strong">{task.label}</span>}
       <p className={`mt-1.5 font-semibold text-ink ${discarded ? 'line-through decoration-bad/60' : ''}`}>{task.title}</p>
       <p className="mt-0.5 text-sm text-ink-soft">{task.description}</p>

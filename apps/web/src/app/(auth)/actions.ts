@@ -52,7 +52,7 @@ export async function signInAction(_previous: AuthFormState, formData: FormData)
     try {
       await assertLocalRequest();
       const profile = await getStudent(dataConfig(), localSubject(email));
-      if (!profile) return failure('No hay una cuenta con ese correo en este equipo. Créala en «Crear cuenta».', email);
+      if (!profile) return failure('No hay una cuenta de acceso local con ese correo en DEV. Créala en «Crear cuenta».', email);
       await storeLocalSession({ subject: profile.studentId, email: profile.email, givenName: profile.givenName, familyName: profile.familyName });
     } catch (error) {
       return failure(describe(error), email);
@@ -113,7 +113,7 @@ export async function signUpAction(_previous: AuthFormState, formData: FormData)
       await assertLocalRequest();
       const studentId = localSubject(email);
       if (await getStudent(dataConfig(), studentId)) {
-        return failure('Ya existe una cuenta con ese correo en este equipo. Ingresa con ella.', email);
+        return failure('Ya existe una cuenta de acceso local con ese correo en DEV. Ingresa con ella.', email);
       }
       await ensureStudent(
         dataConfig(),
@@ -238,7 +238,7 @@ function describe(error: unknown): string {
   const authError = toAuthError(error);
   if (authError.code !== 'PROVIDER_ERROR') return authError.message;
   console.error('Fallo en el acceso local.', error);
-  return 'No pudimos conectar con la base de datos local. ¿Está corriendo DynamoDB Local (`pnpm local:up`)?';
+  return 'No pudimos conectar con DynamoDB de DEV. Renueva la sesión con `aws sso login --profile qrioso-dev` y verifica `pnpm local:setup`.';
 }
 
 function normalizeEmail(value: FormDataEntryValue | null): string {

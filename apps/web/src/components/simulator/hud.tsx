@@ -1,7 +1,7 @@
 'use client';
 
 import { COMPLAINT_INTERVAL_MS, type HudState, type PublicScene } from '@despega/simulator';
-import { BarChart3, CheckCircle2, Clock, LogOut, Rocket, TrendingUp, X } from 'lucide-react';
+import { BarChart3, CheckCircle2, Clock, Rocket, TrendingUp, X } from 'lucide-react';
 import { AnimatePresence, animate, motion, useMotionValue, useTransform } from 'motion/react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -28,48 +28,62 @@ export function PlayerHud({
   const [profileOpen, setProfileOpen] = useState(false);
   const session = progress.sessions.find((item) => item.number === (scene?.session.number ?? progress.currentSessionNumber));
 
+  const hasWorld = Boolean(scene?.clock || hud?.complaints || hud?.launchWindow);
+
   return (
-    <header className="sticky top-0 z-30 border-b border-line/70 bg-paper/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-3 py-2.5 sm:px-5">
-        <Link href={`/simulador/${module.careerId}`} className="flex items-center gap-2" aria-label="Salir al resumen de la carrera (tu progreso queda guardado)">
-          <span className="grid size-9 place-items-center rounded-xl bg-brand text-ink"><Rocket className="size-5" aria-hidden /></span>
+    <header className="sticky top-0 z-30 border-b border-line bg-surface/90 backdrop-blur-md">
+      <div className="flex min-h-16 flex-wrap items-center gap-x-3 gap-y-2 px-2 py-2.5 sm:px-3.5">
+        <Link
+          href={`/simulador/${module.careerId}`}
+          className="btn btn-quiet btn-icon"
+          aria-label="Salir al resumen de la carrera (tu progreso queda guardado)"
+          title="Salir (tu progreso queda guardado)"
+        >
+          <X className="size-5" aria-hidden />
         </Link>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-xs font-bold uppercase tracking-wider text-muted">
-            {module.company} · {session ? `Sesión ${session.number}` : module.tagline}
+          <p className="truncate text-xs font-semibold text-muted">
+            <span className={session ? 'max-sm:hidden' : undefined}>{module.company} · </span>
+            {session ? `Sesión ${session.number}` : module.tagline}
+            {scene && ` · Escena ${scene.sceneNumber} de ${scene.sceneCount}`}
           </p>
           <p className="truncate font-display text-base font-bold text-ink">
             {scene ? scene.title : session?.title ?? module.tagline}
           </p>
-          {scene && (
-            <div className="mt-1 flex h-1.5 max-w-56 gap-1" aria-label={`Escena ${scene.sceneNumber} de ${scene.sceneCount}`}>
-              {Array.from({ length: scene.sceneCount }, (_, index) => (
-                <span key={index} className={`flex-1 rounded-full ${index < scene.sceneNumber ? 'bg-accent' : 'bg-line'}`} />
-              ))}
-            </div>
-          )}
         </div>
 
-        <div className="order-3 flex w-full flex-wrap items-center gap-2 sm:order-none sm:w-auto">
-          {scene?.clock && (
-            <span className="chip bg-surface text-ink-soft ring-1 ring-line"><Clock className="size-3.5" aria-hidden /> {scene.clock}</span>
-          )}
-          {hud?.complaints && <ComplaintsChip key={`${scene?.id}-${hud.complaints.count}`} count={hud.complaints.count} rising={hud.complaints.rising && !frozen} />}
-          {hud?.launchWindow && (
-            <LaunchWindowChip key={`${scene?.id}-${hud.launchWindow.seconds}`} seconds={hud.launchWindow.seconds} closed={hud.launchWindow.closed} frozen={frozen} />
-          )}
-        </div>
+        {hasWorld && (
+          <div className="order-last flex w-full items-center gap-2 overflow-x-auto md:order-none md:w-auto">
+            {scene?.clock && (
+              <span className="chip bg-mist text-ink-soft"><Clock className="size-3.5" aria-hidden /> {scene.clock}</span>
+            )}
+            {hud?.complaints && <ComplaintsChip key={`${scene?.id}-${hud.complaints.count}`} count={hud.complaints.count} rising={hud.complaints.rising && !frozen} />}
+            {hud?.launchWindow && (
+              <LaunchWindowChip key={`${scene?.id}-${hud.launchWindow.seconds}`} seconds={hud.launchWindow.seconds} closed={hud.launchWindow.closed} frozen={frozen} />
+            )}
+          </div>
+        )}
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <PerformancePill value={progress.performance} />
-          <button type="button" className="btn btn-ghost min-h-10 px-3" onClick={() => setProfileOpen(true)} aria-haspopup="dialog">
-            <BarChart3 className="size-4" aria-hidden /> <span className="hidden sm:inline">Perfil</span>
+          <button type="button" className="btn btn-quiet btn-icon sm:w-auto sm:px-3" onClick={() => setProfileOpen(true)} aria-haspopup="dialog">
+            <BarChart3 className="size-4.5" aria-hidden /> <span className="sr-only sm:not-sr-only">Perfil</span>
           </button>
-          <Link href={`/simulador/${module.careerId}`} className="btn btn-ghost min-h-10 px-3" title="Salir (tu progreso queda guardado)">
-            <LogOut className="size-4" aria-hidden /> <span className="sr-only">Salir del simulador</span>
-          </Link>
         </div>
       </div>
+      {scene && (
+        <div
+          className="h-1 bg-mist"
+          role="progressbar"
+          aria-label="Avance de la sesión"
+          aria-valuemin={0}
+          aria-valuemax={scene.sceneCount}
+          aria-valuenow={scene.sceneNumber}
+          aria-valuetext={`Escena ${scene.sceneNumber} de ${scene.sceneCount}`}
+        >
+          <div className="h-full bg-accent transition-[width] duration-500 ease-out" style={{ width: `${(scene.sceneNumber / scene.sceneCount) * 100}%` }} />
+        </div>
+      )}
       <AnimatePresence>
         {profileOpen && <ProfileDialog progress={progress} onClose={() => setProfileOpen(false)} />}
       </AnimatePresence>
@@ -139,12 +153,12 @@ function PerformancePill({ value }: { value: number }) {
   }, [shown, value]);
 
   return (
-    <div className="relative flex items-center gap-2 rounded-full bg-surface py-1 pl-3 pr-1.5 ring-1 ring-line" role="meter" aria-label="Desempeño" aria-valuemin={0} aria-valuemax={100} aria-valuenow={value}>
-      <span className="text-xs font-bold text-muted">Desempeño</span>
-      <span className="h-2 w-16 overflow-hidden rounded-full bg-accent-soft sm:w-24" aria-hidden>
+    <div className="relative flex h-9 items-center gap-2 rounded-full bg-mist pl-3 pr-1" role="meter" aria-label="Desempeño" aria-valuemin={0} aria-valuemax={100} aria-valuenow={value}>
+      <span className="hidden text-xs font-semibold text-muted sm:inline">Desempeño</span>
+      <span className="h-1.5 w-12 overflow-hidden rounded-full bg-accent-soft sm:w-20" aria-hidden>
         <span className="block h-full rounded-full bg-accent transition-[width] duration-700" style={{ width: `${value}%` }} />
       </span>
-      <motion.span className="min-w-9 rounded-full bg-accent px-2 py-0.5 text-center text-sm font-bold text-white">{rounded}</motion.span>
+      <motion.span className="min-w-9 rounded-full bg-accent px-2 py-1 text-center text-sm font-bold tabular-nums text-white">{rounded}</motion.span>
       <AnimatePresence>
         {delta && (
           <motion.span
@@ -183,7 +197,7 @@ function ProfileDialog({ progress, onClose }: { progress: ProgressView; onClose:
         role="dialog"
         aria-modal="true"
         aria-labelledby="profile-title"
-        className="card max-h-[90dvh] w-full max-w-2xl overflow-y-auto p-6"
+        className="card max-h-[90dvh] w-full max-w-2xl overflow-y-auto rounded-2xl p-6 shadow-pop"
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 30, opacity: 0 }}
@@ -195,7 +209,7 @@ function ProfileDialog({ progress, onClose }: { progress: ProgressView; onClose:
             <h2 id="profile-title" className="text-2xl font-bold">Tu perfil de afinidad</h2>
             <p className="mt-1 text-sm text-muted">Sin bien ni mal: muestra cómo estás decidiendo.</p>
           </div>
-          <button type="button" className="btn btn-ghost min-h-10 px-3" onClick={onClose} autoFocus>
+          <button type="button" className="btn btn-quiet btn-icon" onClick={onClose} autoFocus>
             <X className="size-4" aria-hidden /> <span className="sr-only">Cerrar</span>
           </button>
         </div>

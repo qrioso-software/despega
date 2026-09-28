@@ -62,16 +62,16 @@ export function LiveDecisionInteraction({ interaction, locked, outcome, onSubmit
 
   return (
     <div className="grid gap-5">
-      <div className="grid gap-3 sm:grid-cols-[1fr_1fr_1.4fr]">
-        <div className="rounded-2xl bg-good-soft p-4">
+      <div className="grid gap-3 @xl:grid-cols-[1fr_1fr_1.4fr]">
+        <div className="rounded-xl bg-good-soft p-4">
           <p className="flex items-center gap-1.5 text-sm font-semibold text-good-strong"><ThumbsUp className="size-4" aria-hidden /> Me gusta</p>
           <p className="mt-1 font-sans text-4xl font-bold text-ink">{counts.up}</p>
         </div>
-        <div className="rounded-2xl bg-bad-soft p-4">
+        <div className="rounded-xl bg-bad-soft p-4">
           <p className="flex items-center gap-1.5 text-sm font-semibold text-bad-strong"><ThumbsDown className="size-4" aria-hidden /> No me gusta</p>
           <p className="mt-1 font-sans text-4xl font-bold text-ink">{counts.down}</p>
         </div>
-        <div className="rounded-2xl bg-mist p-4">
+        <div className="rounded-xl bg-mist p-4">
           <p className="flex items-center justify-between text-sm font-semibold text-ink-soft">
             <span className="flex items-center gap-1.5"><Activity className="size-4" aria-hidden /> Reacciones positivas</span>
             <span className="text-ink">{share}%</span>
@@ -83,7 +83,7 @@ export function LiveDecisionInteraction({ interaction, locked, outcome, onSubmit
         </div>
       </div>
 
-      <div className="rounded-2xl border border-line bg-paper p-3" aria-label="Reacciones recientes de usuarios">
+      <div className="rounded-xl border border-line bg-paper p-3" aria-label="Reacciones recientes de usuarios">
         <p className="px-1 text-xs font-bold uppercase tracking-wider text-muted">En vivo</p>
         <ul className="mt-2 grid gap-1.5">
           <AnimatePresence initial={false}>
@@ -94,7 +94,7 @@ export function LiveDecisionInteraction({ interaction, locked, outcome, onSubmit
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-sm"
+                className="flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm"
               >
                 {reaction.positive ? <ThumbsUp className="size-4 shrink-0 text-good" aria-label="Positiva" /> : <ThumbsDown className="size-4 shrink-0 text-bad" aria-label="Negativa" />}
                 <span className="text-ink-soft">{reaction.text}</span>
@@ -106,7 +106,7 @@ export function LiveDecisionInteraction({ interaction, locked, outcome, onSubmit
 
       <div>
         <p className="font-display text-lg font-bold">{interaction.prompt}</p>
-        <div className="mt-3 grid gap-3 md:grid-cols-3" role="group" aria-label="Decisión de lanzamiento">
+        <div className="mt-3 grid gap-3 @2xl:grid-cols-3" role="group" aria-label="Decisión de lanzamiento">
           {interaction.options.map((option) => {
             const selected = chosen === option.id;
             return (
@@ -118,7 +118,7 @@ export function LiveDecisionInteraction({ interaction, locked, outcome, onSubmit
                   setChoice(option.id);
                   onSubmit({ kind: 'live-decision', optionId: option.id });
                 }}
-                className={`rounded-2xl border-2 p-4 text-left transition-colors disabled:cursor-default ${
+                className={`rounded-xl border-2 p-4 text-left transition-colors disabled:cursor-default ${
                   selected ? 'border-accent bg-accent-soft' : locked ? 'border-line bg-white opacity-50' : 'border-line bg-white hover:border-accent/60'
                 }`}
               >

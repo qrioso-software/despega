@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { KeyRound } from 'lucide-react';
+import { AuthCard } from '@/components/auth/auth-card';
 import { PasswordResetForm } from '@/components/auth/auth-forms';
 import { AuthConfigError, authMode } from '../auth-mode';
 
@@ -11,22 +13,20 @@ export default async function PasswordResetPage({ searchParams }: PageProps<'/re
   const mode = authMode();
 
   return (
-    <>
-      <p className="eyebrow">Recuperar acceso</p>
-      <h1 className="mt-2 text-3xl font-bold">¿Olvidaste tu contraseña?</h1>
-      <p className="mt-2 text-muted">Te enviamos un código a tu correo para crear una nueva.</p>
-      <div className="mt-8 grid gap-5">
-        {mode === 'error' && <AuthConfigError />}
-        {mode === 'local' && (
-          <p className="rounded-2xl bg-mist px-4 py-3 text-sm text-ink-soft">
-            En el modo local de desarrollo las cuentas no tienen contraseña: entra solo con tu correo.
-          </p>
-        )}
-        {mode === 'cognito' && <PasswordResetForm defaultEmail={email} />}
-        <p className="text-center text-sm text-muted">
-          <Link href="/ingresar" className="font-semibold text-accent hover:underline">Volver a ingresar</Link>
+    <AuthCard
+      icon={KeyRound}
+      badge="Recuperar acceso"
+      title="¿Olvidaste tu contraseña?"
+      description="Te enviamos un código a tu correo para crear una nueva."
+      footer={<Link href="/ingresar" className="font-semibold text-accent hover:underline">Volver a ingresar</Link>}
+    >
+      {mode === 'error' && <AuthConfigError />}
+      {mode === 'local' && (
+        <p className="rounded-xl bg-mist px-4 py-3 text-sm text-ink-soft">
+          En el modo local de desarrollo las cuentas no tienen contraseña: entra solo con tu correo.
         </p>
-      </div>
-    </>
+      )}
+      {mode === 'cognito' && <PasswordResetForm defaultEmail={email} />}
+    </AuthCard>
   );
 }

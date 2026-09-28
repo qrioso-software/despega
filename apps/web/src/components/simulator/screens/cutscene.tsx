@@ -8,33 +8,40 @@ import type { ScreenProps } from './types';
 /** Cinemática: narración sobre fondo oscuro (cliffhanger 2.5, apertura 3.1). */
 export function CutsceneScreen({ scene, module, reveal, interaction }: ScreenProps) {
   return (
-    <section className="relative min-h-[460px] overflow-hidden rounded-[2rem] bg-night p-6 text-white shadow-pop sm:p-10">
-      <div className="pointer-events-none absolute -right-20 -top-24 size-80 rounded-full bg-accent/40 blur-3xl" aria-hidden />
-      <div className="pointer-events-none absolute -bottom-28 -left-16 size-80 rounded-full bg-brand/25 blur-3xl" aria-hidden />
+    <section className="relative flex flex-1 flex-col overflow-hidden bg-night text-white lg:min-h-0">
+      <div className="bg-grid pointer-events-none absolute inset-0" aria-hidden />
+      <div className="pointer-events-none absolute -right-24 -top-24 size-96 rounded-full bg-accent/35 blur-3xl" aria-hidden />
+      <div className="pointer-events-none absolute -bottom-32 -left-20 size-96 rounded-full bg-brand/20 blur-3xl" aria-hidden />
       {scene.visual === 'complaints-chart' && <ComplaintsChart />}
-      <div className="relative grid max-w-2xl gap-5" aria-live="polite">
-        <p className="eyebrow text-sun">{scene.clock ?? `Sesión ${scene.session.number}`}</p>
-        {reveal.visibleLines.map((line, index) =>
-          line.speaker === 'narrator' ? (
-            <motion.p key={index} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="font-display text-xl font-semibold leading-snug sm:text-2xl">
-              {line.text}
-            </motion.p>
-          ) : (
-            <motion.div key={index} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex items-end gap-3">
-              <CharacterAvatar characterId={line.speaker} mood={line.mood} talking={!reveal.done && index === reveal.visibleLines.length - 1} size={56} decorative />
-              <p className="rounded-2xl rounded-bl-md bg-white/10 px-4 py-3 text-lg">
-                <strong className="block text-sm text-sun">{speakerName(module, line.speaker)}</strong>
+      <div className="relative flex flex-1 flex-col lg:min-h-0 lg:overflow-y-auto">
+        <div className="m-auto grid w-full max-w-2xl gap-5 px-6 py-12 sm:px-10 sm:py-16" aria-live="polite">
+          <p className="eyebrow text-sun">{scene.clock ?? `Sesión ${scene.session.number}`}</p>
+          {reveal.visibleLines.map((line, index) =>
+            line.speaker === 'narrator' ? (
+              <motion.p key={index} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="font-display text-xl font-semibold leading-snug sm:text-3xl">
                 {line.text}
-              </p>
+              </motion.p>
+            ) : (
+              <motion.div key={index} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex items-end gap-3">
+                <CharacterAvatar characterId={line.speaker} mood={line.mood} talking={!reveal.done && index === reveal.visibleLines.length - 1} size={56} decorative />
+                <p className="rounded-xl rounded-bl-md bg-white/10 px-4 py-3 text-lg">
+                  <strong className="block text-sm text-sun">{speakerName(module, line.speaker)}</strong>
+                  {line.text}
+                </p>
+              </motion.div>
+            ),
+          )}
+          {!reveal.done && (
+            <div>
+              <SkipButton onSkip={reveal.skip} dark />
+            </div>
+          )}
+          {reveal.done && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="pt-2">
+              {interaction}
             </motion.div>
-          ),
-        )}
-        {!reveal.done && <SkipButton onSkip={reveal.skip} dark />}
-        {reveal.done && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-            {interaction}
-          </motion.div>
-        )}
+          )}
+        </div>
       </div>
     </section>
   );
@@ -50,7 +57,7 @@ function ComplaintsChart() {
     .map((value, index) => `${index === 0 ? 'M' : 'L'}${(index / (points.length - 1)) * width},${height - (value / max) * height}`)
     .join(' ');
   return (
-    <figure className="absolute bottom-5 right-5 hidden rounded-2xl bg-white/5 p-3 sm:block" aria-label="Gráfico de quejas de usuarios subiendo levemente">
+    <figure className="absolute bottom-6 right-6 hidden rounded-xl border border-white/10 bg-white/5 p-3 xl:block" aria-label="Gráfico de quejas de usuarios subiendo levemente">
       <figcaption className="mb-1 text-xs font-semibold text-white/70">Quejas de usuarios · últimas horas</figcaption>
       <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
         <line x1="0" y1={height - 0.5} x2={width} y2={height - 0.5} stroke="rgb(255 255 255 / 0.15)" strokeWidth="1" />

@@ -30,14 +30,14 @@ export function SequenceInteraction({ interaction, locked, outcome, onSubmit }: 
 
   return (
     <DragBoard id="sequence-review" onDragStart={(event) => setDragging(String(event.active.id))} onDragEnd={onDragEnd} onDragCancel={() => setDragging(null)}>
-      <div className="grid gap-5 lg:grid-cols-[1.2fr_1fr]">
-        <div className="rounded-2xl bg-mist p-4">
+      <div className="grid gap-5 @2xl:grid-cols-[1.2fr_1fr]">
+        <div className="rounded-xl bg-mist p-4">
           <p className="text-xs font-bold uppercase tracking-wider text-muted">Flujo de Camila · botón «Confirmar pedido»</p>
           <ol className="mt-3 grid gap-1">
             {interaction.steps.map((step, index) => (
               <Fragment key={step.id}>
                 <Slot index={index} active={slot === index} candidateText={slot === index ? candidate?.text : undefined} locked={locked} canPlace={Boolean(candidateId)} onPlace={() => place(index)} onClear={() => setSlot(null)} verdict={slot === index && reveal ? (reveal.correct ? 'correct' : 'wrong') : undefined} expectedText={reveal && !reveal.correct && reveal.expected.slot === index ? expected?.text : undefined} />
-                <li className="flex items-center gap-3 rounded-2xl border border-line bg-white px-4 py-3 shadow-sm">
+                <li className="flex items-center gap-3 rounded-xl border border-line bg-white px-4 py-3 shadow-sm">
                   <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-night text-xs font-bold text-white">{index + 1}</span>
                   <span className="font-semibold text-ink">{step.text}</span>
                 </li>
@@ -60,9 +60,9 @@ export function SequenceInteraction({ interaction, locked, outcome, onSubmit }: 
                 setSlot(null);
               }}
               label={`Paso candidato: ${item.text}`}
-              className="block w-full rounded-2xl"
+              className="block w-full rounded-xl"
             >
-              <span className={`block rounded-2xl border-2 px-4 py-3 font-semibold ${candidateId === item.id ? 'border-accent bg-accent-soft text-accent-strong' : 'border-line bg-white text-ink'}`}>
+              <span className={`block rounded-xl border-2 px-4 py-3 font-semibold ${candidateId === item.id ? 'border-accent bg-accent-soft text-accent-strong' : 'border-line bg-white text-ink'}`}>
                 {item.text}
               </span>
             </DraggableCard>
@@ -80,7 +80,7 @@ export function SequenceInteraction({ interaction, locked, outcome, onSubmit }: 
         </div>
       </div>
       <DragOverlay>
-        {draggingCandidate ? <span className="block rotate-2 rounded-2xl border-2 border-accent bg-accent-soft px-4 py-3 font-semibold text-accent-strong shadow-pop">{draggingCandidate.text}</span> : null}
+        {draggingCandidate ? <span className="block rotate-2 rounded-xl border-2 border-accent bg-accent-soft px-4 py-3 font-semibold text-accent-strong shadow-pop">{draggingCandidate.text}</span> : null}
       </DragOverlay>
     </DragBoard>
   );
@@ -109,13 +109,13 @@ function Slot({
 }) {
   return (
     <li className="grid justify-items-center gap-1">
-      <DropZone id={`slot-${index}`} disabled={locked} className="w-full rounded-2xl" activeClassName="bg-accent-soft">
+      <DropZone id={`slot-${index}`} disabled={locked} className="w-full rounded-xl" activeClassName="bg-accent-soft">
         {active && candidateText ? (
           <button
             type="button"
             disabled={locked}
             onClick={onClear}
-            className={`flex w-full items-center gap-3 rounded-2xl border-2 border-dashed px-4 py-3 text-left font-semibold ${
+            className={`flex w-full items-center gap-3 rounded-xl border-2 border-dashed px-4 py-3 text-left font-semibold ${
               verdict === 'correct' ? 'border-good bg-good-soft text-good-strong' : verdict === 'wrong' ? 'border-bad bg-bad-soft text-bad-strong' : 'border-accent bg-accent-soft text-accent-strong'
             }`}
             aria-label={`Paso insertado: ${candidateText}. Toca para quitarlo`}
@@ -138,7 +138,7 @@ function Slot({
         )}
       </DropZone>
       {expectedText && (
-        <p className="w-full rounded-2xl border-2 border-dashed border-good bg-good-soft px-4 py-2 text-sm font-semibold text-good-strong">
+        <p className="w-full rounded-xl border-2 border-dashed border-good bg-good-soft px-4 py-2 text-sm font-semibold text-good-strong">
           Aquí faltaba: {expectedText}
         </p>
       )}

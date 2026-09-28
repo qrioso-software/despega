@@ -1,8 +1,8 @@
 # Arquitectura de DESPEGA
 
-Estado: 2026-09-27. Prototipo funcional local e infraestructura DEV desplegada en
-`qrioso-dev` (`779926948601`, `us-east-1`); publicación de web/admin pendiente de subir
-la corrección del tamaño de los artefactos de Amplify.
+Estado: 2026-09-28. Prototipo funcional local e infraestructura DEV desplegada en
+`qrioso-dev` (`779926948601`, `us-east-1`); jobs `4` de web/admin `SUCCEED` con `9cbd877`.
+Las apps locales comparten DynamoDB de DEV mediante SSO, sin contenedor Docker.
 Los flujos autenticados de Cognito y del simulador en AWS aún requieren validación.
 
 ## Objetivos
@@ -58,7 +58,7 @@ flowchart LR
 | `packages/simulator` | Tipos del contenido, motor (`applySceneResponse`, `startSession`, `getPublicScene`), afinidad, validación y los módulos de carrera. Sin I/O. |
 | `packages/data` | Esquema DynamoDB, repositorios y casos de uso (`ensureCareerProgress`, `beginSession`, `submitSceneResponse`, `restartCareer`, `careerOverview`). |
 | `packages/auth` | Cognito del lado del servidor (login, registro, confirmación, recuperación, refresh, revocación, verificación JWT) y la sesión local firmada. |
-| `packages/brand` | Identidad visual compartida: logo (`DespegaLogo` y SVG), isotipo e íconos, y la paleta `--despega-*` que cada app traduce a sus tokens. |
+| `packages/brand` | Identidad visual compartida: logo (`DespegaLogo` y SVG), isotipo e íconos de la app, íconos de carrera (`CAREER_ICONS`) y la paleta `--despega-*` que cada app traduce a sus tokens. |
 | `infra` | Stack `Despega-<stage>`: tablas, pools de Cognito, roles de Amplify y variables de rama. |
 
 ## Sin API Gateway: cómo fluye una decisión
@@ -108,6 +108,11 @@ esos tokens, no hex. Decisión en `docs/decisions/0006-identidad-visual-comparti
 Dos tablas (`core` y `simulation`), cada una con un índice justificado. El progreso
 guarda el estado completo del motor más un resumen proyectado para el backoffice. Cada
 decisión queda como evento inmutable por intento. Detalles en `data-model.md`.
+
+Con `STAGE=local`, el cliente fija el perfil `qrioso-dev` y las tablas DEV en
+`us-east-1`; no hay endpoint emulado ni credenciales ficticias. La identidad local
+sigue limitada a loopback, pero sus escrituras afectan datos compartidos en AWS.
+Decisión: [ADR 0007](../decisions/0007-local-con-dynamodb-dev.md).
 
 ## Ambientes
 

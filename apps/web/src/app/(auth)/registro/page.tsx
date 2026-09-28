@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Rocket } from 'lucide-react';
+import { AuthCard } from '@/components/auth/auth-card';
 import { LocalModeNotice, SignUpForm } from '@/components/auth/auth-forms';
 import { AuthConfigError, authMode } from '../auth-mode';
 
@@ -8,21 +10,19 @@ export const metadata: Metadata = { title: 'Crear cuenta' };
 export default function SignUpPage() {
   const mode = authMode();
   return (
-    <>
-      <p className="eyebrow">Empieza gratis</p>
-      <h1 className="mt-2 text-3xl font-bold">Crea tu cuenta y despega</h1>
-      <p className="mt-2 text-muted">Tu nombre será el del protagonista. Tus decisiones construyen tu perfil.</p>
-      <div className="mt-8 grid gap-5">
-        {mode === 'error' ? <AuthConfigError /> : (
-          <>
-            {mode === 'local' && <LocalModeNotice />}
-            <SignUpForm mode={mode} />
-          </>
-        )}
-        <p className="text-center text-sm text-muted">
-          ¿Ya tienes cuenta? <Link href="/ingresar" className="font-semibold text-accent hover:underline">Ingresar</Link>
-        </p>
-      </div>
-    </>
+    <AuthCard
+      icon={Rocket}
+      badge="Empieza gratis"
+      title="Crea tu cuenta y despega"
+      description="Tu nombre será el del protagonista. Tus decisiones construyen tu perfil."
+      footer={<>¿Ya tienes cuenta? <Link href="/ingresar" className="font-semibold text-accent hover:underline">Ingresar</Link></>}
+    >
+      {mode === 'error' ? <AuthConfigError /> : (
+        <>
+          {mode === 'local' && <LocalModeNotice />}
+          <SignUpForm mode={mode} />
+        </>
+      )}
+    </AuthCard>
   );
 }

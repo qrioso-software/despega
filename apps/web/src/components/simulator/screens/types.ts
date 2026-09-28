@@ -16,4 +16,6 @@ export type ScreenProps = {
   readonly reveal: LineReveal;
   /** La interacción de la escena; la pantalla decide dónde y cuándo mostrarla. */
   readonly interaction: ReactNode;
+  /** Consecuencia de la decisión, para mostrarla junto a la interacción. */
+  readonly outcome?: ReactNode;
 };

@@ -18,8 +18,9 @@ necesita además trazabilidad de cada decisión.
   abre un intento nuevo y conserva el historial.
 - Tabla `core` para perfiles de estudiantes. Contraseñas y tokens solo en Cognito.
 - Un índice por tabla, cada uno con su patrón de acceso documentado; sin `Scan`.
-- El esquema vive una sola vez en `packages/data/src/schema.ts` y lo consumen CDK,
-  DynamoDB Local y los repositorios.
+- El esquema vive una sola vez en `packages/data/src/schema.ts` y lo consumen CDK
+  y los repositorios. Desde el [ADR 0007](0007-local-con-dynamodb-dev.md), localhost
+  comparte las tablas DEV en AWS y deja de usar DynamoDB Local.
 
 ## Alternativas consideradas
 

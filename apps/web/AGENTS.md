@@ -46,6 +46,27 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   `@despega/brand`. Usar tokens (`ink`, `brand`, `accent`, `good`, `sun`, `bad` y sus
   `soft`/`strong`), nunca hex; en SVG, clases `fill-*`/`stroke-*`. Sobre `bg-brand`
   el texto va en tinta, y el verde como texto es `brand-strong`.
+- Las páginas autenticadas (`/inicio`, hub de carrera) usan `AppShell`
+  (`src/components/app/`): barra lateral fija en escritorio, barra superior con migas
+  y menú de cuenta (popover nativo) en móvil, contenido a todo el ancho. El
+  reproductor (`/jugar`) es inmersivo y no usa el shell; la landing conserva
+  `SiteHeader`. Una carrera nueva aparece sola en la navegación desde `CAREERS`.
+- Sistema visual (`globals.css`): radios de 12 px para controles e ítems internos
+  (`rounded-xl`), 16 px para tarjetas (`.card`, `rounded-2xl`) y 8 px para piezas
+  pequeñas; un elemento anidado nunca tiene más radio que su contenedor. Botones
+  `.btn` + variante (`btn-primary`, `btn-accent`, `btn-ghost`, `btn-quiet`) y tamaño
+  (`btn-sm`, `btn-lg`, `btn-icon`), sin alturas sueltas. Campos con `.field-*`
+  (etiqueta, ícono inicial y acción final); el texto del input es de 16 px.
+- Reproductor a pantalla completa (`h-dvh` en escritorio). Las pantallas de oficina
+  (chat, correo, tablero, dashboard, videollamada) usan `SceneWorkspace` de
+  `stage.tsx`: panel del mundo (`OfficeWindow`) y panel del jugador con la
+  interacción y la consecuencia acoplada; cada panel desplaza por separado y en móvil
+  se apilan. Resúmenes, proyección y entrada a sesión van en `ScrollStage`. Dentro
+  de los paneles, las columnas de los mini-juegos usan container queries (`@lg:`,
+  `@xl:`, `@2xl:`), no cortes de viewport.
+- Íconos: solo `lucide-react`. Las carreras usan `CareerIcon`, que toma el ícono de
+  `CAREER_ICONS` de `@despega/brand` (el mismo mapa del backoffice); el emoji del
+  catálogo del motor no se muestra en la interfaz.
 - El logo es `DespegaLogo` de `@despega/brand` (vía `BrandLink`). `favicon.ico`,
   `icon.svg` y `apple-icon.png` de `src/app/` son copias de
   `packages/brand/assets/icons/`.

@@ -12,7 +12,7 @@ export function ContinueInteraction({
   return (
     <button
       type="button"
-      className={`btn ${variant === 'light' ? 'btn-light' : 'btn-primary'} min-h-12 px-6`}
+      className={`btn ${variant === 'light' ? 'btn-light' : 'btn-primary'} btn-lg`}
       disabled={locked}
       onClick={() => onSubmit({ kind: 'continue' })}
     >

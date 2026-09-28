@@ -46,7 +46,7 @@ export function MatchingInteraction({ interaction, active, locked, outcome, onSu
 
   return (
     <div className="grid gap-4">
-      <div className="flex items-center gap-4 rounded-2xl bg-sun-soft p-3 pr-4">
+      <div className="flex items-center gap-4 rounded-xl bg-sun-soft p-3 pr-4">
         <CountdownRing remaining={remaining} fraction={fraction} size={64} />
         <div>
           <p className="text-sm font-bold text-sun-strong">{interaction.prompt}</p>
@@ -55,7 +55,7 @@ export function MatchingInteraction({ interaction, active, locked, outcome, onSu
           </p>
         </div>
       </div>
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 @xl:grid-cols-2">
         <div className="grid content-start gap-2" role="group" aria-label="Errores">
           <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted"><Bug className="size-4" aria-hidden /> Errores</p>
           {interaction.problems.map((problem) => {
@@ -70,7 +70,7 @@ export function MatchingInteraction({ interaction, active, locked, outcome, onSu
                 disabled={locked}
                 onClick={() => selectProblem(problem.id)}
                 aria-pressed={selected}
-                className={`rounded-2xl border-2 p-3 text-left transition-colors disabled:cursor-default ${
+                className={`rounded-xl border-2 p-3 text-left transition-colors disabled:cursor-default ${
                   verdict === 'correct'
                     ? 'border-good bg-good-soft'
                     : verdict === 'wrong'
@@ -103,7 +103,7 @@ export function MatchingInteraction({ interaction, active, locked, outcome, onSu
                 type="button"
                 disabled={locked || !selectedProblem}
                 onClick={() => selectSolution(solution.id)}
-                className={`rounded-2xl border-2 p-3 text-left transition-colors disabled:cursor-default ${
+                className={`rounded-xl border-2 p-3 text-left transition-colors disabled:cursor-default ${
                   owner ? 'border-accent/40 bg-accent-soft/40' : selectedProblem && !locked ? 'border-accent/50 bg-white hover:bg-accent-soft' : 'border-line bg-white'
                 }`}
               >
@@ -117,7 +117,7 @@ export function MatchingInteraction({ interaction, active, locked, outcome, onSu
         </div>
       </div>
       {reveal ? (
-        <p className="rounded-2xl bg-mist px-4 py-3 text-sm font-semibold text-ink">
+        <p className="rounded-xl bg-mist px-4 py-3 text-sm font-semibold text-ink">
           Emparejaste bien {reveal.correctCount} de {reveal.total} errores.
         </p>
       ) : (

@@ -25,7 +25,7 @@ export function ChatLine({ line, module, talking = false }: { line: ResolvedLine
         <p className="mb-1 text-xs font-bold text-muted">
           {speakerName(module, line.speaker)} <span className="font-medium">· {module.characters[line.speaker]?.role}</span>
         </p>
-        <p className="rounded-2xl rounded-bl-md bg-mist px-4 py-2.5 text-[0.95rem] text-ink">{line.text}</p>
+        <p className="rounded-xl rounded-bl-md bg-mist px-4 py-2.5 text-[0.95rem] text-ink">{line.text}</p>
       </div>
     </motion.div>
   );
@@ -36,7 +36,7 @@ export function PlayerLine({ text, playerName }: { text: string; playerName: str
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex justify-end">
       <div className="max-w-[85%]">
         <p className="mb-1 text-right text-xs font-bold text-muted">{playerName} (tú)</p>
-        <p className="rounded-2xl rounded-br-md bg-accent px-4 py-2.5 text-[0.95rem] text-white">{text}</p>
+        <p className="rounded-xl rounded-br-md bg-accent px-4 py-2.5 text-[0.95rem] text-white">{text}</p>
       </div>
     </motion.div>
   );
@@ -64,7 +64,7 @@ export function TypingIndicator({ speaker, module }: { speaker: string; module: 
     <div className="flex items-end gap-2.5" aria-live="polite">
       <CharacterAvatar characterId={speaker} size={32} decorative />
       <span className="sr-only">{speakerName(module, speaker)} está escribiendo…</span>
-      <span className="flex gap-1 rounded-2xl rounded-bl-md bg-mist px-4 py-3" aria-hidden>
+      <span className="flex gap-1 rounded-xl rounded-bl-md bg-mist px-4 py-3" aria-hidden>
         {[0, 1, 2].map((dot) => (
           <motion.span
             key={dot}

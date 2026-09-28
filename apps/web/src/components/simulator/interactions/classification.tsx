@@ -46,7 +46,7 @@ export function ClassificationInteraction({ interaction, active, locked, outcome
   return (
     <DragBoard id={`classification-${interaction.items.map((item) => item.id).join('-')}`} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragCancel={() => setDragging(null)}>
       <div className="grid gap-4">
-        <div className="flex items-center gap-4 rounded-2xl bg-sun-soft p-3 pr-4">
+        <div className="flex items-center gap-4 rounded-xl bg-sun-soft p-3 pr-4">
           <CountdownRing remaining={remaining} fraction={fraction} size={64} />
           <div>
             <p className="text-sm font-bold text-sun-strong">{interaction.prompt}</p>
@@ -56,14 +56,14 @@ export function ClassificationInteraction({ interaction, active, locked, outcome
           </div>
         </div>
 
-        <DropZone id={POOL} disabled={locked} className="rounded-2xl border-2 border-dashed border-line bg-paper p-3">
+        <DropZone id={POOL} disabled={locked} className="rounded-xl border-2 border-dashed border-line bg-paper p-3">
           <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted">
             <Inbox className="size-4" aria-hidden /> Bandeja de entrada ({pool.length})
           </p>
           {pool.length === 0 ? (
             <p className="px-1 py-2 text-sm text-muted">Todos los reportes están clasificados.</p>
           ) : (
-            <div className="grid gap-2 sm:grid-cols-2">
+            <div className="grid gap-2 @lg:grid-cols-2">
               {pool.map((item) => (
                 <DraggableCard
                   key={item.id}
@@ -72,7 +72,7 @@ export function ClassificationInteraction({ interaction, active, locked, outcome
                   selected={selected === item.id}
                   onSelect={() => setSelected((current) => (current === item.id ? null : item.id))}
                   label={`Reporte de ${item.from}: ${item.title}. ${selected === item.id ? 'Seleccionado' : 'Toca para seleccionar'}`}
-                  className="block w-full rounded-2xl"
+                  className="block w-full rounded-xl"
                 >
                   <ReportCard item={item} />
                 </DraggableCard>
@@ -81,17 +81,17 @@ export function ClassificationInteraction({ interaction, active, locked, outcome
           )}
         </DropZone>
 
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-3 @lg:grid-cols-2">
           {interaction.categories.map((category) => {
             const items = interaction.items.filter((item) => assignments[item.id] === category.id);
             return (
-              <DropZone key={category.id} id={category.id} disabled={locked} className="rounded-2xl border-2 border-accent/30 bg-accent-soft/40 p-3">
+              <DropZone key={category.id} id={category.id} disabled={locked} className="rounded-xl border-2 border-accent/30 bg-accent-soft/40 p-3">
                 <button
                   type="button"
                   disabled={locked || !selected}
                   onClick={() => selected && place(selected, category.id)}
                   aria-label={`Ubicar en ${category.label} (${items.length} reportes)`}
-                  className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left font-display text-lg font-bold transition-colors ${
+                  className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left font-display text-lg font-bold transition-colors ${
                     selected && !locked ? 'bg-accent text-white hover:bg-accent-strong' : 'bg-white text-ink'
                   } disabled:cursor-default`}
                 >
@@ -108,7 +108,7 @@ export function ClassificationInteraction({ interaction, active, locked, outcome
                         disabled={locked}
                         onSelect={() => place(item.id, POOL)}
                         label={`${item.title} está en ${category.label}. Toca para devolverlo a la bandeja`}
-                        className="block w-full rounded-2xl"
+                        className="block w-full rounded-xl"
                       >
                         <ReportCard item={item} compact verdict={reveal ? (correct ? 'correct' : 'wrong') : undefined} />
                       </DraggableCard>
@@ -122,7 +122,7 @@ export function ClassificationInteraction({ interaction, active, locked, outcome
         </div>
 
         {reveal ? (
-          <p className="rounded-2xl bg-mist px-4 py-3 text-sm font-semibold text-ink">
+          <p className="rounded-xl bg-mist px-4 py-3 text-sm font-semibold text-ink">
             Clasificaste bien {reveal.correctCount} de {reveal.total} reportes.
             {pool.length > 0 && ' Los que quedaron en la bandeja no alcanzaste a clasificarlos.'}
           </p>
@@ -154,7 +154,7 @@ function ReportCard({
   verdict?: 'correct' | 'wrong';
 }) {
   return (
-    <div className={`rounded-2xl border bg-white p-3 ${floating ? 'rotate-2 shadow-pop' : 'shadow-sm'} ${verdict === 'wrong' ? 'border-bad/50' : verdict === 'correct' ? 'border-good/50' : 'border-line'}`}>
+    <div className={`rounded-xl border bg-white p-3 ${floating ? 'rotate-2 shadow-pop' : 'shadow-sm'} ${verdict === 'wrong' ? 'border-bad/50' : verdict === 'correct' ? 'border-good/50' : 'border-line'}`}>
       <div className="flex items-start justify-between gap-2">
         <p className="text-xs font-bold uppercase tracking-wider text-muted">Soporte · {item.from}</p>
         {verdict === 'correct' && <CheckCircle2 className="size-4 shrink-0 text-good" aria-label="Bien clasificado" />}

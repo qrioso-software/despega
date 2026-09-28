@@ -60,21 +60,33 @@ export default async function StudentsPage({ searchParams }: PageProps<'/estudia
   return (
     <>
       <PageHeader
-        eyebrow="Estudiantes"
-        title="Estudiantes registrados"
+        title="Estudiantes"
         description="Progreso en la carrera piloto. Abre un estudiante para ver su perfil, sus sesiones y cada decisión."
       />
-      <form method="get" className="mb-6 flex flex-wrap items-end gap-3" role="search">
-        <SearchField name="q" defaultValue={query} aria-label="Buscar estudiantes" className="w-full max-w-md">
-          <SearchField.Group>
-            <SearchField.SearchIcon />
-            <SearchField.Input placeholder="Nombre, correo, curso o colegio" />
-            <SearchField.ClearButton />
-          </SearchField.Group>
-        </SearchField>
-        <Button type="submit" variant="secondary">Buscar</Button>
-        {query && <Link href="/estudiantes" className="text-sm font-semibold text-accent hover:underline">Limpiar búsqueda</Link>}
-      </form>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <form method="get" className="flex w-full items-center gap-2 sm:w-auto" role="search">
+          <SearchField name="q" defaultValue={query} aria-label="Buscar estudiantes" className="min-w-0 flex-1 sm:w-80 sm:flex-none">
+            <SearchField.Group>
+              <SearchField.SearchIcon />
+              <SearchField.Input placeholder="Nombre, correo o colegio" />
+              <SearchField.ClearButton />
+            </SearchField.Group>
+          </SearchField>
+          <Button type="submit" variant="secondary">Buscar</Button>
+        </form>
+        {!failed && (
+          <p className="text-sm text-muted-ink" aria-live="polite">
+            {query ? (
+              <>
+                {rows.length === 1 ? '1 resultado' : `${rows.length} resultados`} para «{query}» ·{' '}
+                <Link href="/estudiantes" className="font-semibold text-accent hover:underline">Limpiar</Link>
+              </>
+            ) : (
+              `${rows.length === 1 ? '1 estudiante' : `${rows.length} estudiantes`}${cursor || nextCursor ? ' en esta página' : ''}`
+            )}
+          </p>
+        )}
+      </div>
 
       {failed ? (
         <DataUnavailable what="los estudiantes" />
@@ -85,11 +97,18 @@ export default async function StudentsPage({ searchParams }: PageProps<'/estudia
             label="Estudiantes"
             empty={query ? `Ningún estudiante coincide con «${query}».` : 'Todavía no hay estudiantes registrados.'}
           />
-          {nextCursor && (
-            <div className="flex justify-end">
-              <Link href={`/estudiantes?cursor=${encodeURIComponent(nextCursor)}`} className="flex items-center gap-1 text-sm font-semibold text-accent hover:underline">
-                Siguientes {PAGE_SIZE} <ArrowRight className="size-4" aria-hidden />
-              </Link>
+          {(cursor || nextCursor) && (
+            <div className="flex items-center justify-between gap-3">
+              {cursor ? (
+                <Link href="/estudiantes" className="text-sm font-semibold text-accent hover:underline">Volver al inicio</Link>
+              ) : (
+                <span />
+              )}
+              {nextCursor && (
+                <Link href={`/estudiantes?cursor=${encodeURIComponent(nextCursor)}`} className="flex items-center gap-1 text-sm font-semibold text-accent hover:underline">
+                  Siguientes {PAGE_SIZE} <ArrowRight className="size-4" aria-hidden />
+                </Link>
+              )}
             </div>
           )}
         </div>

@@ -1,30 +1,114 @@
 import { Alert, Card, Chip } from '@heroui/react';
 import { AFFINITY_AXES, AFFINITY_LABELS, AFFINITY_SHORT_LABELS, type AffinityAxis, type AffinityVector } from '@despega/simulator';
+import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 
-export function PageHeader({ eyebrow, title, description, actions }: { eyebrow?: string; title: string; description?: string; actions?: ReactNode }) {
+/**
+ * Encabezado de cada pantalla. La sección ya aparece en las migas de la barra superior,
+ * así que el título va directo; `leading` admite un avatar o el ícono de la carrera.
+ */
+export function PageHeader({
+  eyebrow,
+  title,
+  description,
+  actions,
+  leading,
+}: {
+  eyebrow?: string;
+  title: string;
+  description?: ReactNode;
+  actions?: ReactNode;
+  leading?: ReactNode;
+}) {
   return (
-    <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-      <div className="max-w-3xl">
-        {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-        <h1 className="mt-1 text-3xl font-bold text-ink sm:text-4xl">{title}</h1>
-        {description && <p className="mt-2 text-muted-ink">{description}</p>}
+    <div className="mb-6 flex flex-wrap items-center justify-between gap-4 lg:mb-8">
+      <div className="flex min-w-0 items-center gap-4">
+        {leading}
+        <div className="min-w-0">
+          {eyebrow && <p className="eyebrow mb-1">{eyebrow}</p>}
+          <h1 className="text-2xl font-bold leading-tight text-ink sm:text-[1.75rem]">{title}</h1>
+          {description && <p className="mt-1 max-w-3xl text-sm text-muted-ink sm:text-[0.9375rem]">{description}</p>}
+        </div>
       </div>
-      {actions}
+      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
     </div>
   );
 }
 
-/** Ficha de indicador: etiqueta, valor con cifras proporcionales y una nota opcional. */
-export function StatTile({ label, value, hint }: { label: string; value: string | number; hint?: string }) {
+/** Título de un bloque dentro de la página, con enlace o acción opcional a la derecha. */
+export function SectionHeader({
+  id,
+  title,
+  description,
+  action,
+  level = 2,
+}: {
+  id?: string;
+  title: string;
+  description?: string;
+  action?: ReactNode;
+  level?: 2 | 3;
+}) {
+  const Heading = level === 2 ? 'h2' : 'h3';
+  return (
+    <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-1">
+      <div className="min-w-0">
+        <Heading id={id} className="text-lg font-bold text-ink">{title}</Heading>
+        {description && <p className="text-sm text-muted-ink">{description}</p>}
+      </div>
+      {action}
+    </div>
+  );
+}
+
+const STAT_TONES = {
+  accent: 'bg-accent-soft text-accent-soft-foreground',
+  brand: 'bg-brand-soft text-brand-strong',
+  sun: 'bg-warning-soft text-warning-soft-foreground',
+} as const;
+
+/** Ficha de indicador: ícono, etiqueta, valor con cifras tabulares y una nota opcional. */
+export function StatTile({
+  icon: Icon,
+  label,
+  value,
+  hint,
+  tone = 'accent',
+}: {
+  icon: LucideIcon;
+  label: string;
+  value: string | number;
+  hint?: string;
+  tone?: keyof typeof STAT_TONES;
+}) {
   return (
     <Card>
-      <Card.Content className="grid gap-1">
-        <p className="text-sm font-semibold text-muted-ink">{label}</p>
-        <p className="font-sans text-4xl font-bold text-ink">{value}</p>
-        {hint && <p className="text-xs text-muted-ink">{hint}</p>}
+      <Card.Content className="gap-3">
+        <div className="flex items-start justify-between gap-3">
+          <p className="text-sm font-semibold leading-5 text-muted-ink">{label}</p>
+          <span className={`grid size-9 shrink-0 place-items-center rounded-lg ${STAT_TONES[tone]}`} aria-hidden>
+            <Icon className="size-[1.125rem]" />
+          </span>
+        </div>
+        <div>
+          <p className="font-display text-3xl font-bold leading-none tabular-nums text-ink">{value}</p>
+          {hint && <p className="mt-2 text-xs text-muted-ink">{hint}</p>}
+        </div>
       </Card.Content>
     </Card>
+  );
+}
+
+/** Estado vacío dentro de una tarjeta: ícono, título y una línea de contexto. */
+export function EmptyState({ icon: Icon, title, children }: { icon: LucideIcon; title: string; children?: ReactNode }) {
+  return (
+    <div className="grid justify-items-center gap-2 px-4 py-10 text-center">
+      <span className="grid size-11 place-items-center rounded-xl bg-surface-secondary text-muted-ink" aria-hidden>
+        <Icon className="size-5" />
+      </span>
+      <p className="font-semibold text-ink">{title}</p>
+      {children && <p className="max-w-sm text-sm text-muted-ink">{children}</p>}
+    </div>
   );
 }
 
@@ -62,7 +146,7 @@ export function AffinityBars({ values, unavailable = [] }: { values: AffinityVec
               <span className="font-semibold text-ink">{AFFINITY_LABELS[axis]}</span>
               <span className="shrink-0 whitespace-nowrap tabular-nums text-muted-ink">{missing ? 'Sin datos aún' : `${values[axis]} / 100`}</span>
             </div>
-            <div className="mt-1.5 h-2.5 overflow-hidden rounded-full bg-surface-tertiary" aria-hidden="true">
+            <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-surface-secondary" aria-hidden="true">
               <div className="h-full rounded-full bg-accent" style={{ width: `${missing ? 0 : values[axis]}%` }} />
             </div>
           </li>

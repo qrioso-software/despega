@@ -23,6 +23,25 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - **HeroUI v3 es el sistema de componentes** (`@heroui/react` + `@heroui/styles`).
   No introducir otra librería de UI. Las variables de HeroUI en `src/app/styles.css`
   mapean la paleta de `@despega/brand`; los componentes usan esos tokens, nunca hex.
+- Mismo sistema visual que la web: `styles.css` fija `--radius: 0.5rem`, por lo que
+  `rounded-lg` = 8 px (piezas pequeñas), `rounded-xl` = 12 px (campos, botones, ítems
+  internos) y `rounded-2xl` = 16 px (tarjetas y tablas). Los ajustes a componentes de
+  HeroUI (`.card`, `.button`, `.table-root--primary`…) van en `@layer components` para
+  que las utilidades de Tailwind sigan pudiendo sobrescribirlos. Un elemento anidado
+  nunca tiene más radio que su contenedor.
+- Las páginas del panel usan `AdminShell` (`src/components/shell/`, desde
+  `(panel)/layout.tsx`): barra lateral fija con secciones, guiones y cuenta al pie en
+  escritorio; barra superior con migas derivadas de la ruta; en móvil, «atrás», menú de
+  cuenta (`Popover`) y pestañas inferiores. Una ruta nueva agrega su miga en
+  `crumbsFor` (`nav.tsx`). Las páginas no repiten enlaces de «volver».
+- Encabezados con `PageHeader` (título directo; la sección ya está en las migas),
+  bloques con `SectionHeader`, indicadores con `StatTile` (ícono + tono) y vacíos con
+  `EmptyState` (`src/components/ui.tsx`).
+- Las tablas de `tables.tsx` se muestran como lista de filas en móvil (`md:hidden`) y
+  como `Table` desde `md`; ambas reciben las mismas filas.
+- Íconos: solo `lucide-react`. Las carreras usan `CareerIcon`, que toma el ícono de
+  `CAREER_ICONS` de `@despega/brand`; el emoji del catálogo del motor no se muestra.
+  Las personas sin foto usan `Initials`.
 - El logo es `DespegaLogo` de `@despega/brand` (vía `Brand`). `favicon.ico`,
   `icon.svg` y `apple-icon.png` de `src/app/` son copias de
   `packages/brand/assets/icons/`.

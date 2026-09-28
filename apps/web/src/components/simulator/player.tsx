@@ -4,7 +4,7 @@ import type { AppliedOutcome, PublicScene, SceneResponse } from '@despega/simula
 import { RotateCcw, TriangleAlert } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { beginSessionAction, reloadProgressAction, submitSceneAction } from '@/app/simulador/[careerId]/actions';
 import type { ActionFailure, ModuleView, ProgressView, SubmitResult } from '@/lib/simulation-types';
 import { PlayerHud } from './hud';
@@ -18,9 +18,13 @@ import type { ScreenProps } from './screens/types';
 import { VideoCallScreen } from './screens/video-call';
 import { ChatScreen, DashboardScreen, InboxScreen, TaskBoardScreen } from './screens/workspace';
 import { ModuleComplete, SessionGate } from './session-gate';
+import { ScrollStage } from './stage';
 import { useLineReveal } from './use-line-reveal';
 
 type Phase = 'gate' | 'scene' | 'complete';
+
+/** Pantallas de herramienta de oficina: se dibujan como espacio de trabajo de dos paneles. */
+const WORKSPACE_SCREENS: ReadonlySet<PublicScene['screen']> = new Set(['chat', 'inbox', 'task-board', 'dashboard', 'video-call']);
 
 const BLACKOUT_MS = 1_700;
 
@@ -170,18 +174,23 @@ export function SimulatorPlayer({
   // Mientras se muestra la consecuencia, el HUD refleja el mundo que viene (p. ej. las
   // quejas dejan de subir tras el diagnóstico correcto).
   const hud = outcome ? (nextScene?.hud ?? scene?.hud) : scene?.hud;
+  // En las herramientas de oficina la consecuencia se acopla al panel del jugador.
+  const docked = Boolean(phase === 'scene' && scene && WORKSPACE_SCREENS.has(scene.screen));
+  const outcomeSheet = outcome ? (
+    <OutcomeSheet key={outcome.sceneId} outcome={outcome} module={module} onContinue={continueAfterOutcome} docked={docked} />
+  ) : null;
 
   return (
-    <div className="min-h-dvh bg-[radial-gradient(ellipse_at_top,_var(--color-accent-soft)_0%,_var(--color-paper)_55%)] pb-40">
+    <div className="bg-dots flex min-h-dvh flex-col bg-paper lg:h-dvh lg:overflow-hidden">
       <PlayerHud module={module} scene={scene} hud={hud} progress={progress} frozen={Boolean(outcome && !nextScene)} />
 
-      <main className="mx-auto max-w-5xl px-3 pt-5 sm:px-5 sm:pt-8">
+      <main className={`flex flex-1 flex-col lg:min-h-0 ${outcome && !docked ? 'pb-64' : ''}`}>
         {error && (
-          <div role="alert" className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl bg-bad-soft px-4 py-3 text-sm text-bad-strong">
+          <div role="alert" className="mx-3 mt-3 flex shrink-0 flex-wrap items-center gap-3 rounded-xl border border-bad/20 bg-bad-soft px-4 py-3 text-sm text-bad-strong sm:mx-6">
             <TriangleAlert className="size-4 shrink-0" aria-hidden />
             <span className="flex-1">{error.message}</span>
             {error.retry && (
-              <button type="button" className="btn btn-ghost min-h-9 bg-white px-3" onClick={error.retry} disabled={busy}>
+              <button type="button" className="btn btn-ghost btn-sm" onClick={error.retry} disabled={busy}>
                 <RotateCcw className="size-4" aria-hidden /> Reintentar
               </button>
             )}
@@ -190,18 +199,23 @@ export function SimulatorPlayer({
 
         <AnimatePresence mode="wait">
           {phase === 'gate' && (
-            <motion.div key="gate" exit={{ opacity: 0 }}>
-              <SessionGate module={module} progress={progress} justCompleted={justCompleted} busy={busy} onStart={() => void begin()} />
+            <motion.div key="gate" exit={{ opacity: 0 }} className="flex flex-1 flex-col lg:min-h-0">
+              <ScrollStage center>
+                <SessionGate module={module} progress={progress} justCompleted={justCompleted} busy={busy} onStart={() => void begin()} />
+              </ScrollStage>
             </motion.div>
           )}
           {phase === 'complete' && (
-            <motion.div key="complete">
-              <ModuleComplete module={module} />
+            <motion.div key="complete" className="flex flex-1 flex-col lg:min-h-0">
+              <ScrollStage center>
+                <ModuleComplete module={module} />
+              </ScrollStage>
             </motion.div>
           )}
           {phase === 'scene' && scene && (
             <motion.div
               key={`${scene.id}-${sceneRun}`}
+              className="flex flex-1 flex-col lg:min-h-0"
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -214,6 +228,7 @@ export function SimulatorPlayer({
                 reveal={reveal}
                 locked={locked}
                 outcome={outcome}
+                outcomeCard={docked ? outcomeSheet : undefined}
                 onSubmit={(response) => void submit(response)}
               />
             </motion.div>
@@ -221,9 +236,7 @@ export function SimulatorPlayer({
         </AnimatePresence>
       </main>
 
-      <AnimatePresence>
-        {outcome && <OutcomeSheet key={outcome.sceneId} outcome={outcome} module={module} onContinue={continueAfterOutcome} />}
-      </AnimatePresence>
+      <AnimatePresence>{!docked && outcomeSheet}</AnimatePresence>
 
       <AnimatePresence>
         {blackout && (
@@ -248,17 +261,27 @@ function SceneStage({
   reveal,
   locked,
   outcome,
+  outcomeCard,
   onSubmit,
-}: Omit<ScreenProps, 'interaction'> & {
+}: Omit<ScreenProps, 'interaction' | 'outcome'> & {
   locked: boolean;
   outcome: AppliedOutcome | null;
+  outcomeCard?: ReactNode;
   onSubmit: (response: SceneResponse) => void;
 }) {
   if (scene.screen === 'summary') {
-    return <SummaryScreen scene={scene} module={module} locked={locked} onContinue={() => onSubmit({ kind: 'continue' })} />;
+    return (
+      <ScrollStage>
+        <SummaryScreen scene={scene} module={module} locked={locked} onContinue={() => onSubmit({ kind: 'continue' })} />
+      </ScrollStage>
+    );
   }
   if (scene.screen === 'timeline') {
-    return <TimelineScreen scene={scene} module={module} reveal={reveal} locked={locked} onContinue={() => onSubmit({ kind: 'continue' })} />;
+    return (
+      <ScrollStage>
+        <TimelineScreen scene={scene} module={module} reveal={reveal} locked={locked} onContinue={() => onSubmit({ kind: 'continue' })} />
+      </ScrollStage>
+    );
   }
 
   const interaction = (
@@ -273,7 +296,7 @@ function SceneStage({
       continueVariant={scene.screen === 'cutscene' ? 'light' : 'primary'}
     />
   );
-  const props: ScreenProps = { scene, module, playerName, reveal, interaction };
+  const props: ScreenProps = { scene, module, playerName, reveal, interaction, outcome: outcomeCard };
 
   switch (scene.screen) {
     case 'notification':

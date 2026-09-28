@@ -8,29 +8,53 @@ import { recordFromState } from './progress.ts';
 import { TABLES, physicalTableName } from './schema.ts';
 
 const VALID_ENV = {
+  STAGE: 'local',
   DATA_REGION: 'us-east-1',
-  DYNAMODB_ENDPOINT: 'http://localhost:8000',
-  DYNAMODB_TABLE_CORE: 'despega_local_core',
-  DYNAMODB_TABLE_SIMULATION: 'despega_local_simulation',
+  DYNAMODB_ENDPOINT: '',
+  DYNAMODB_TABLE_CORE: 'despega_dev_core',
+  DYNAMODB_TABLE_SIMULATION: 'despega_dev_simulation',
 };
 
 describe('configuración de datos', () => {
-  it('acepta DynamoDB Local y tablas explícitas', () => {
+  it('usa el perfil qrioso-dev y las tablas DEV en local', () => {
     assert.deepEqual(dataConfigFromEnv(VALID_ENV), {
       region: 'us-east-1',
-      endpoint: 'http://localhost:8000',
-      tables: { core: 'despega_local_core', simulation: 'despega_local_simulation' },
+      profile: 'qrioso-dev',
+      tables: { core: 'despega_dev_core', simulation: 'despega_dev_simulation' },
     });
   });
 
-  it('usa el endpoint regional cuando no hay endpoint local', () => {
-    assert.equal(dataConfigFromEnv({ ...VALID_ENV, DYNAMODB_ENDPOINT: '' }).endpoint, undefined);
+  it('deja las credenciales al rol SSR en los stages desplegados', () => {
+    for (const stage of ['dev', 'prd']) {
+      assert.deepEqual(dataConfigFromEnv({
+        ...VALID_ENV,
+        STAGE: stage,
+        DYNAMODB_TABLE_CORE: physicalTableName(stage, 'core'),
+        DYNAMODB_TABLE_SIMULATION: physicalTableName(stage, 'simulation'),
+      }), {
+        region: 'us-east-1',
+        tables: { core: physicalTableName(stage, 'core'), simulation: physicalTableName(stage, 'simulation') },
+      });
+    }
   });
 
-  it('rechaza endpoints remotos y configuraciones incompletas', () => {
+  it('rechaza endpoints personalizados y configuraciones incompletas', () => {
+    assert.throws(() => dataConfigFromEnv({ ...VALID_ENV, DYNAMODB_ENDPOINT: 'http://localhost:8000' }), DataConfigurationError);
     assert.throws(() => dataConfigFromEnv({ ...VALID_ENV, DYNAMODB_ENDPOINT: 'https://evil.example' }), DataConfigurationError);
     assert.throws(() => dataConfigFromEnv({ ...VALID_ENV, DATA_REGION: 'nowhere' }), DataConfigurationError);
     assert.throws(() => dataConfigFromEnv({ ...VALID_ENV, DYNAMODB_TABLE_CORE: '' }), DataConfigurationError);
+  });
+
+  it('impide apuntar el entorno local a producción, otras tablas u otra región', () => {
+    for (const invalid of [
+      { DYNAMODB_TABLE_CORE: 'despega_prd_core' },
+      { DYNAMODB_TABLE_SIMULATION: 'despega_prd_simulation' },
+      { DYNAMODB_TABLE_CORE: 'otro_dev_core' },
+      { DATA_REGION: 'us-west-2' },
+    ]) {
+      assert.throws(() => dataConfigFromEnv({ ...VALID_ENV, ...invalid }), DataConfigurationError);
+    }
+    assert.equal(dataConfigFromEnv({ ...VALID_ENV, AWS_PROFILE: 'despega-prd' }).profile, 'qrioso-dev');
   });
 });
 

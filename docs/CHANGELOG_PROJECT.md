@@ -1,5 +1,83 @@
 # Changelog del proyecto
 
+## 2026-09-28 — Rediseño del backoffice como app
+
+- El admin adopta el sistema visual de la web de estudiantes sobre HeroUI v3: radio
+  base de 8 px (`--radius`), campos y botones de 12 px, tarjetas y tablas de 16 px
+  con borde fino y sombra mínima. Los ajustes a componentes de HeroUI viven en
+  `@layer components` de `styles.css`; no se agrega otra librería de UI.
+- `AdminShell` a pantalla completa: barra lateral con secciones, acceso directo al
+  guion de cada módulo y cuenta al pie; barra superior con migas derivadas de la ruta
+  y aviso «Modo local · datos de DEV». En móvil: «atrás», menú de cuenta y pestañas
+  inferiores. Las páginas ya no repiten enlaces de «volver».
+- Acceso en pantalla dividida (panel oscuro con los usos del backoffice y tarjeta del
+  formulario); campos con ícono y botón para mostrar u ocultar la contraseña
+  (`InputGroup` de HeroUI), también en el cambio de contraseña del primer ingreso.
+- Panel: indicadores con ícono, avance por sesión y estados vacíos. Estudiantes:
+  buscador compacto con conteo, paginación con regreso al inicio y lista de filas en
+  móvil. Ficha: avatar de iniciales, datos en una franja, sesiones con estado e
+  íconos, radar más grande y decisiones como tarjetas en móvil. Módulos: jugables y
+  «Próximamente» separados. Guion: personajes, saltos a cada sesión y escenas con
+  número, pantalla e interacción.
+- Íconos de carrera compartidos: `CAREER_ICONS` pasa de la web a `@despega/brand`
+  (dependencia par `lucide-react` 1.48.0); web y admin lo usan en su `CareerIcon` y
+  el admin deja de mostrar emojis.
+- Sin cambios de rutas, datos, permisos, puntajes ni guion. Validación: `typecheck`,
+  `lint`, 72 pruebas y `build:web`/`build:admin` pasan. Capturas del admin en
+  1440 px y 390 px (acceso, panel, estudiantes, ficha, módulos y guion), menú de
+  cuenta en móvil, escena desplegada, diálogo de reinicio abierto y cancelado, y rol
+  de orientación sin botón de reinicio; todo en solo lectura, con los POST
+  bloqueados salvo el ingreso local, que solo firma una cookie. El campo de
+  contraseña (solo Cognito) no se vio en pantalla: el entorno local no lo muestra.
+
+## 2026-09-28 — Rediseño de la web de estudiantes como app
+
+- `/inicio` y el hub de carrera usan un shell a pantalla completa (`AppShell`):
+  barra lateral con inicio y carreras, migas en la barra superior, cuenta y cierre
+  de sesión; en móvil, barra superior con «atrás» y menú de cuenta. La navegación de
+  la landing ya no aparece dentro de la app.
+- Sistema visual unificado en `globals.css`: escala de radios (8/12/16 px), sombras
+  más suaves, botones con variantes y tamaños, campos con ícono y botón para mostrar
+  la contraseña. Íconos de carrera de línea (`CareerIcon`) en lugar de emojis.
+- Inicio: tarjeta de carrera con sesiones sin textos truncados, panel de desempeño y
+  afinidad en barras, y grilla de próximas carreras. Hub: portada, equipo, sesiones con
+  sinopsis y progreso en una sola tarjeta; resultados con el recorrido en lista.
+- Acceso: tarjeta con cabecera e insignia, enlace «¿La olvidaste?» junto a la
+  contraseña, panel lateral con los tres ejes del juego. Saludo sin género.
+- Reproductor a pantalla completa: HUD de una fila (salir, escena, estado del mundo,
+  desempeño, perfil) con barra de avance de escenas. Las escenas de oficina son un
+  espacio de trabajo de dos paneles (herramienta de PixelForge | «Tu respuesta/tarea»)
+  con desplazamiento propio y la consecuencia acoplada al panel del jugador; en móvil
+  se apilan. Cinemática y notificación ocupan todo el escenario. Mini-juegos con
+  container queries para adaptarse al ancho del panel.
+- Sin cambios de rutas, datos, puntajes ni guion. Validación: `typecheck` y `lint` de
+  web; capturas en escritorio (1440 px) y móvil (390 px) de acceso, inicio, hub,
+  reproductor y landing. El reproductor se revisó en solo lectura (POST bloqueados).
+
+## 2026-09-28 — Local conectado a DynamoDB DEV, sin contenedor
+
+- Decisión solicitada: localhost usa las tablas existentes `despega_dev_core` y
+  `despega_dev_simulation` en `qrioso-dev` (`779926948601`, `us-east-1`). Se conserva
+  `STAGE=local` y la identidad local por correo. ADR 0007 documenta alternativas y
+  el efecto de las escrituras locales sobre datos compartidos de DEV.
+- Actualizados `.env.example` y los `.env.local` ignorados de ambas apps. El SDK
+  fija el perfil SSO local; Amplify conserva los roles SSR. Se rechazan endpoints
+  personalizados y, en local, tablas de producción/ajenas a DEV u otras regiones.
+- `local:setup` prepara los archivos locales que falten y valida cuenta/tablas,
+  sin crear ni borrar registros. Los comandos `dev` lo ejecutan antes de arrancar.
+- Eliminados Compose, creación de tablas locales y comandos Docker/reset. Retirados
+  únicamente el contenedor `despega-dynamodb` y su red; volumen
+  `despega-local_dynamodb-data` conservado, sin migración automática.
+- Mensajes del acceso local actualizados para indicar DynamoDB DEV y renovación SSO.
+- Validación: `typecheck`, `lint`, 72 pruebas y synth de ambos stages pasan. Lecturas
+  reales `GetItem` en las dos tablas desde las configuraciones de web/admin, sin
+  escrituras de prueba. Apps locales reiniciadas en puertos 3000/3001.
+- Navegador: el ingreso con un correo sintético inexistente devuelve cuenta no
+  registrada en DEV, no fallo de conexión; el panel admin carga su estado vacío
+  real sin `DataUnavailable`. No se crea ningún usuario ni registro de prueba.
+- Al revisar AWS se verificó que los jobs `4` de web/admin ya están `SUCCEED` en
+  `9cbd877`. Esta tarea no inicia otro deploy, no hace commit/push ni modifica PRD.
+
 ## 2026-09-28 — Reducción del artefacto SSR sin aumentar capacidad
 
 - Comparado el empaquetado con INAP: se conserva la materialización de dependencias

@@ -14,27 +14,34 @@ packages/
   simulator/    motor puro + guiones de carrera
   data/         DynamoDB: esquema, repositorios y casos de uso (server-only)
   auth/         Cognito del lado del servidor + sesión local
-infra/          AWS CDK v2 (Amplify, DynamoDB, Cognito) y DynamoDB Local
+infra/          AWS CDK v2 (Amplify, DynamoDB, Cognito) y verificación de acceso local
 docs/           documento funcional, arquitectura, ADRs y estado
 ```
 
 ## Requisitos
 
 - Node.js 24 LTS (`.nvmrc`) y pnpm 12 (se descarga solo por `packageManager`).
-- Docker Desktop, para DynamoDB Local.
+- AWS CLI y perfil SSO `qrioso-dev` (cuenta `779926948601`). No requiere Docker.
 
 ## Arrancar en local
 
 ```sh
 pnpm install
-pnpm local:setup   # DynamoDB Local + tablas
+aws sso login --profile qrioso-dev
+pnpm local:setup   # prepara .env.local si falta y verifica cuenta/tablas DEV
 pnpm dev           # web http://localhost:3000 · admin http://localhost:3001
 ```
 
-En local no hace falta AWS: el acceso usa un proveedor local (solo correo; en el
-backoffice eliges el rol). Crea una cuenta en <http://localhost:3000/registro> y juega.
+Las apps corren en tu equipo y usan `despega_dev_core` y `despega_dev_simulation` en
+DynamoDB de `qrioso-dev` (`us-east-1`). `pnpm dev`, `dev:web` y `dev:admin` verifican
+cuenta y tablas antes de arrancar. Se requiere internet y una sesión SSO vigente.
 
-`pnpm local:reset` borra los datos locales y recrea las tablas vacías.
+El acceso conserva el proveedor local (solo correo; en el backoffice eliges el rol),
+limitado a loopback. Crea una cuenta de prueba en <http://localhost:3000/registro>.
+**Las escrituras afectan datos compartidos de DEV.** Los usuarios locales tienen
+identificadores distintos de Cognito; no reutilizan sus sesiones ni sus contraseñas.
+No hay comandos de creación o reset de tablas locales. Los datos antiguos del
+contenedor no se migran ni se borran automáticamente.
 
 ## Validar
 

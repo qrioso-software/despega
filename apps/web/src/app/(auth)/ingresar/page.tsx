@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { LogIn } from 'lucide-react';
 import { safeNextPath } from '@despega/auth';
+import { AuthCard } from '@/components/auth/auth-card';
 import { LocalModeNotice, SignInForm } from '@/components/auth/auth-forms';
 import { AuthConfigError, authMode } from '../auth-mode';
 
@@ -20,24 +22,21 @@ export default async function SignInPage({ searchParams }: PageProps<'/ingresar'
         : undefined;
 
   return (
-    <>
-      <p className="eyebrow">Bienvenida de vuelta</p>
-      <h1 className="mt-2 text-3xl font-bold">Entra a tu simulador</h1>
-      <p className="mt-2 text-muted">Retoma tu semana en PixelForge justo donde la dejaste.</p>
-      <div className="mt-8 grid gap-5">
-        {mode === 'error' ? <AuthConfigError /> : (
-          <>
-            {mode === 'local' && <LocalModeNotice />}
-            {notice && <p role="status" className="rounded-2xl bg-good-soft px-4 py-3 text-sm font-medium text-good-strong">{notice}</p>}
-            <SignInForm mode={mode} next={next} defaultEmail={email} />
-          </>
-        )}
-        <p className="text-center text-sm text-muted">
-          ¿Todavía no tienes cuenta?{' '}
-          <Link href="/registro" className="font-semibold text-accent hover:underline">Crear cuenta</Link>
-        </p>
-      </div>
-    </>
+    <AuthCard
+      icon={LogIn}
+      badge="Hola de nuevo"
+      title="Entra a tu simulador"
+      description="Retoma tu semana en PixelForge justo donde la dejaste."
+      footer={<>¿Todavía no tienes cuenta? <Link href="/registro" className="font-semibold text-accent hover:underline">Crear cuenta</Link></>}
+    >
+      {mode === 'error' ? <AuthConfigError /> : (
+        <>
+          {mode === 'local' && <LocalModeNotice />}
+          {notice && <p role="status" className="rounded-xl border border-good/20 bg-good-soft px-4 py-3 text-sm font-medium text-good-strong">{notice}</p>}
+          <SignInForm mode={mode} next={next} defaultEmail={email} />
+        </>
+      )}
+    </AuthCard>
   );
 }
 

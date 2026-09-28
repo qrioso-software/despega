@@ -1,6 +1,6 @@
 /**
- * Esquema DynamoDB: fuente única para CDK (`infra`), la creación de tablas locales y
- * los repositorios. Cada índice existe por un patrón de acceso documentado en
+ * Esquema DynamoDB: fuente única para CDK (`infra`) y los repositorios.
+ * Cada índice existe por un patrón de acceso documentado en
  * docs/architecture/data-model.md. No se usa Scan.
  */
 

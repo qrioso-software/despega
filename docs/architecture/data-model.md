@@ -1,9 +1,9 @@
 # Modelo de datos (DynamoDB)
 
 Fuente única del esquema: `packages/data/src/schema.ts`. CDK
-(`infra/lib/constructs/database.ts`) y el script de DynamoDB Local
-(`infra/bin/create-local-tables.ts`) lo consumen. Nombres físicos:
-`despega_<stage>_<tabla>` (`local`, `dev`, `prd`).
+(`infra/lib/constructs/database.ts`) y los repositorios lo consumen. Nombres físicos:
+`despega_<stage>_<tabla>` (`dev`, `prd`). Las apps locales comparten las tablas `dev`
+de `qrioso-dev`; no se crean tablas `local` ni se usa DynamoDB Local.
 
 Todas las tablas: clave `pk`/`sk` (string), on-demand, cifrado administrado por AWS.
 En `prd`: PITR de 35 días, protección contra borrado y `RETAIN`.
@@ -15,7 +15,8 @@ En `prd`: PITR de 35 días, protección contra borrado y `RETAIN`.
 | Perfil de estudiante | `STUDENT#<studentId>` | `PROFILE` | `studentId`, `email`, `givenName`, `familyName?`, `grade?`, `school?`, `authProvider`, `createdAt`, `updatedAt` |
 
 `studentId` es el `sub` de Cognito (pool de estudiantes) o `local-<hash del correo>` en
-desarrollo. No se guardan contraseñas ni tokens.
+desarrollo local. Ambos tipos de perfil pueden coexistir en DEV, pero sus IDs y
+sesiones son distintos. No se guardan contraseñas ni tokens.
 
 **Índice `students-by-created-at-index`** (proyección `ALL`)
 `studentsByCreatedPk = "STUDENTS"`, `studentsByCreatedSk = <createdAt>#<studentId>`.

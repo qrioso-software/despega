@@ -21,6 +21,8 @@
   --color-surface: #ffffff;
   --color-mist: var(--despega-mist);
   --color-line: var(--despega-line);
+  --color-line-strong: var(--despega-line-strong);
+  --color-placeholder: var(--despega-placeholder);
 
   /* Verde de la llama: el texto encima va en tinta; como texto, usar `brand-strong`. */
   --color-brand: var(--despega-green);
@@ -40,9 +42,13 @@
   --color-bad-strong: var(--despega-bad-strong);
   --color-bad-soft: var(--despega-bad-soft);
 
-  --radius-card: 1.25rem;
-  --shadow-soft: 0 18px 40px -24px rgb(23 35 59 / 0.35), 0 4px 12px -6px rgb(23 35 59 / 0.12);
-  --shadow-pop: 0 24px 60px -20px rgb(23 35 59 / 0.45);
+  /*
+   * Escala de radios: controles 12 px (`rounded-xl`), tarjetas 16 px (`rounded-2xl`),
+   * paneles grandes 24 px. Un elemento anidado usa un radio menor que su contenedor.
+   */
+  --radius-card: 1rem;
+  --shadow-soft: 0 1px 2px rgb(23 35 59 / 0.05), 0 8px 24px -12px rgb(23 35 59 / 0.18);
+  --shadow-pop: 0 24px 56px -20px rgb(23 35 59 / 0.4), 0 2px 6px rgb(23 35 59 / 0.06);
 
   --animate-float: float 6s ease-in-out infinite;
   --animate-blink-caret: blink-caret 1s step-end infinite;
@@ -95,43 +101,56 @@
 }
 
 @layer components {
+  /* Botones: 44 px por defecto (área táctil), 12 px de radio como los campos. */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     min-height: 2.75rem;
-    padding: 0 1.25rem;
-    border-radius: 999px;
+    padding: 0 1.125rem;
+    border-radius: 0.75rem;
     font-weight: 650;
-    font-size: 0.95rem;
-    transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    font-size: 0.9375rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
     cursor: pointer;
     user-select: none;
   }
   .btn:active { transform: scale(0.98); }
-  .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .btn-sm { min-height: 2.25rem; padding: 0 0.75rem; border-radius: 0.625rem; font-size: 0.875rem; }
+  .btn-lg { min-height: 3rem; padding: 0 1.5rem; font-size: 1rem; }
+  .btn-icon { width: 2.5rem; min-height: 2.5rem; padding: 0; border-radius: 0.75rem; }
 
   .btn-primary {
     background: var(--color-brand);
     color: var(--color-ink);
-    box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--color-brand-strong) 70%, transparent);
+    box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--color-brand-strong) 22%, transparent);
   }
   .btn-primary:hover:not(:disabled) { background: var(--color-brand-hover); }
 
   .btn-accent {
     background: var(--color-accent);
     color: #fff;
-    box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--color-accent-strong) 80%, transparent);
+    box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--color-night) 18%, transparent);
   }
   .btn-accent:hover:not(:disabled) { background: var(--color-accent-strong); }
 
   .btn-ghost {
-    background: transparent;
+    background: var(--color-surface);
     color: var(--color-ink);
-    border: 1.5px solid var(--color-line);
+    border: 1px solid var(--color-line);
   }
-  .btn-ghost:hover:not(:disabled) { background: var(--color-mist); }
+  .btn-ghost:hover:not(:disabled) { background: var(--color-mist); border-color: var(--color-line-strong); }
+
+  /* Botón sin borde para barras y acciones secundarias. */
+  .btn-quiet {
+    background: transparent;
+    color: var(--color-ink-soft);
+  }
+  .btn-quiet:hover:not(:disabled) { background: var(--color-mist); color: var(--color-ink); }
 
   .btn-light {
     background: #fff;
@@ -143,42 +162,90 @@
     background: var(--color-surface);
     border: 1px solid var(--color-line);
     border-radius: var(--radius-card);
-    box-shadow: var(--shadow-soft);
+    box-shadow: 0 1px 2px rgb(23 35 59 / 0.04);
   }
 
   .eyebrow {
     font-size: 0.75rem;
     font-weight: 750;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-accent);
   }
 
+  /* Campos: etiqueta compacta, ícono al inicio y acción opcional al final. */
   .field-label {
     display: block;
-    margin-bottom: 0.4rem;
-    font-size: 0.875rem;
-    font-weight: 650;
-    color: var(--color-ink);
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
   }
+
+  .field-control {
+    position: relative;
+  }
+
+  .field-icon {
+    position: absolute;
+    top: 50%;
+    left: 0.875rem;
+    width: 1.125rem;
+    height: 1.125rem;
+    translate: 0 -50%;
+    color: var(--color-placeholder);
+    pointer-events: none;
+    transition: color 0.15s ease;
+  }
+  .field-control:focus-within .field-icon { color: var(--color-accent); }
 
   .field-input {
     width: 100%;
-    min-height: 2.9rem;
-    padding: 0 0.95rem;
-    border: 1.5px solid var(--color-line);
-    border-radius: 0.85rem;
-    background: #fff;
+    height: 3rem;
+    padding: 0 0.875rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 0.75rem;
+    background: var(--color-surface);
     color: var(--color-ink);
+    /* 16 px: evita el zoom automático de iOS al enfocar. */
     font-size: 1rem;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
+  .field-input:hover:not(:focus):not([readonly]) { border-color: var(--color-placeholder); }
   .field-input:focus {
     outline: none;
     border-color: var(--color-accent);
-    box-shadow: 0 0 0 4px var(--color-accent-soft);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 14%, transparent);
   }
-  .field-input::placeholder { color: var(--despega-placeholder); }
+  .field-input[readonly] { background: var(--color-paper); color: var(--color-ink-soft); }
+  .field-input[aria-invalid='true'] { border-color: var(--color-bad); }
+  .field-input::placeholder { color: var(--color-placeholder); }
+  .field-input.has-icon { padding-left: 2.75rem; }
+  .field-input.has-action { padding-right: 3rem; }
+
+  .field-action {
+    position: absolute;
+    top: 50%;
+    right: 0.375rem;
+    display: grid;
+    width: 2.25rem;
+    height: 2.25rem;
+    place-items: center;
+    translate: 0 -50%;
+    border-radius: 0.625rem;
+    color: var(--color-muted);
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .field-action:hover { background: var(--color-mist); color: var(--color-ink); }
+
+  .field-hint {
+    margin-top: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--color-muted);
+  }
 
   .chip {
     display: inline-flex;
@@ -188,6 +255,43 @@
     border-radius: 999px;
     font-size: 0.75rem;
     font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* Navegación lateral de la app. */
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2.5rem;
+    padding: 0 0.75rem;
+    border-radius: 0.625rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-ink-soft);
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .nav-item:hover { background: var(--color-mist); color: var(--color-ink); }
+  .nav-item[aria-current='page'] { background: var(--color-accent-soft); color: var(--color-accent-strong); }
+
+  /* Menú de cuenta en móvil (popover nativo), anclado bajo la barra superior. */
+  .popover-menu {
+    position: fixed;
+    inset: 4.5rem 1rem auto auto;
+    width: min(18rem, calc(100vw - 2rem));
+    margin: 0;
+  }
+
+  /* Texturas de fondo: grilla sobre `night` y puntos sobre `paper`. */
+  .bg-grid {
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .bg-dots {
+    background-image: radial-gradient(color-mix(in srgb, var(--color-ink) 9%, transparent) 1px, transparent 1px);
+    background-size: 22px 22px;
   }
 }
 

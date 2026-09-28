@@ -1,11 +1,13 @@
 import { listProgressForStudent, type CareerProgressRecord } from '@despega/data';
-import { AFFINITY_LABELS, CAREERS, findModule, progressSnapshot, type Career } from '@despega/simulator';
-import { ArrowRight, Sparkles, TriangleAlert } from 'lucide-react';
+import { CAREERS, findModule, progressSnapshot, type Career } from '@despega/simulator';
+import { ArrowRight, Clock3, Gauge, Radar, TriangleAlert } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
+import { AppShell } from '@/components/app/app-shell';
+import { CareerIcon } from '@/components/careers/career-icon';
 import { PerformanceMeter, SessionTrack } from '@/components/dashboard/career-progress';
-import { AffinityRadar } from '@/components/simulator/affinity-radar';
-import { SiteHeader } from '@/components/site/site-header';
+import { AffinityBars } from '@/components/simulator/affinity-radar';
 import { requireStudent } from '@/lib/auth';
 import { dataConfig } from '@/lib/data';
 
@@ -26,42 +28,60 @@ export default async function StudentHomePage() {
   const upcoming = CAREERS.filter((career) => career.status !== 'available');
 
   return (
-    <>
-      <SiteHeader student={student} />
-      <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-        <p className="eyebrow">Tu espacio</p>
-        <h1 className="mt-2 text-4xl font-bold">Hola, {student.givenName} 👋</h1>
-        <p className="mt-2 text-ink-soft">Elige una carrera y vive su semana. Tu progreso se guarda después de cada escena.</p>
+    <AppShell student={student} crumbs={[{ label: 'Inicio' }]}>
+      <div className="grid gap-10">
+        <header>
+          <h1 className="text-2xl font-bold sm:text-3xl">Hola, {student.givenName}</h1>
+          <p className="mt-1.5 text-ink-soft">Elige una carrera y vive su semana. Tu progreso se guarda después de cada escena.</p>
+        </header>
 
         {unavailable && (
-          <p role="alert" className="mt-6 flex items-start gap-2 rounded-2xl bg-bad-soft px-4 py-3 text-sm text-bad-strong">
+          <p role="alert" className="flex items-start gap-2 rounded-xl border border-bad/20 bg-bad-soft px-4 py-3 text-sm text-bad-strong">
             <TriangleAlert className="mt-0.5 size-4 shrink-0" aria-hidden />
             No pudimos cargar tu progreso en este momento. Tus datos no se perdieron; vuelve a intentar en unos segundos.
           </p>
         )}
 
-        <section className="mt-10 grid gap-6" aria-labelledby="disponibles">
-          <h2 id="disponibles" className="text-2xl font-bold">Carreras disponibles</h2>
+        <section className="grid gap-4" aria-labelledby="disponibles">
+          <SectionHeader id="disponibles" title="Carreras disponibles" />
           {available.map((career) => (
             <CareerCard key={career.id} career={career} record={progressByCareer.get(career.id)} />
           ))}
         </section>
 
-        <section className="mt-14" aria-labelledby="proximamente">
-          <h2 id="proximamente" className="text-2xl font-bold">Próximamente</h2>
-          <p className="mt-1 text-sm text-muted">Cada carrera tendrá su propio desempeño y perfil, para que puedas compararlas.</p>
-          <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <section className="grid gap-4" aria-labelledby="proximamente">
+          <SectionHeader
+            id="proximamente"
+            title="Próximamente"
+            description="Cada carrera tendrá su propio desempeño y perfil, para que puedas compararlas."
+            aside={<span className="chip bg-mist text-muted">{upcoming.length} carreras</span>}
+          />
+          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             {upcoming.map((career) => (
-              <li key={career.id} className="rounded-2xl border border-line bg-surface p-4">
-                <span className="text-2xl" aria-hidden>{career.emoji}</span>
-                <p className="mt-2 font-semibold">{career.name}</p>
-                <p className="text-xs text-muted">{career.area}</p>
+              <li key={career.id} className="flex items-center gap-3 rounded-xl border border-line bg-surface p-3.5">
+                <CareerIcon careerId={career.id} tone="muted" />
+                <div className="min-w-0">
+                  <p className="font-semibold leading-snug text-ink">{career.name}</p>
+                  <p className="text-sm text-muted">{career.area}</p>
+                </div>
               </li>
             ))}
           </ul>
         </section>
-      </main>
-    </>
+      </div>
+    </AppShell>
+  );
+}
+
+function SectionHeader({ id, title, description, aside }: { id: string; title: string; description?: string; aside?: ReactNode }) {
+  return (
+    <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
+      <div>
+        <h2 id={id} className="text-lg font-bold">{title}</h2>
+        {description && <p className="mt-0.5 text-sm text-muted">{description}</p>}
+      </div>
+      {aside}
+    </div>
   );
 }
 
@@ -84,48 +104,75 @@ function CareerCard({ career, record }: { career: Career; record?: CareerProgres
     title: session.title,
     status: index === 0 ? ('available' as const) : ('locked' as const),
   }));
-  const strongest = snapshot?.affinity.ranking
-    .filter((axis) => snapshot.affinity.normalized[axis] > 0)
-    .slice(0, 2)
-    .map((axis) => AFFINITY_LABELS[axis].toLowerCase());
+  const minutes = Math.round(careerModule.sessions.reduce((total, session) => total + session.estimatedMinutes, 0) / careerModule.sessions.length);
 
   return (
     <article className="card overflow-hidden">
-      <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[1.4fr_1fr]">
-        <div>
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="text-4xl" aria-hidden>{career.emoji}</span>
-            <div>
-              <p className="eyebrow">{careerModule.company} · {careerModule.playerRole}</p>
-              <h3 className="text-2xl font-bold">{career.name}: {careerModule.tagline}</h3>
+      <div className="grid xl:grid-cols-[minmax(0,1fr)_22rem]">
+        <div className="p-5 sm:p-6">
+          <div className="flex items-start gap-4">
+            <CareerIcon careerId={career.id} size="lg" />
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                <h3 className="text-xl font-bold">{career.name}</h3>
+                <ProgressChip completed={completed} started={Boolean(snapshot)} done={snapshot?.completedSessions ?? 0} total={careerModule.sessions.length} />
+              </div>
+              <p className="mt-1 text-sm text-muted">{careerModule.tagline} · {careerModule.playerRole}</p>
             </div>
           </div>
-          <p className="mt-4 text-ink-soft">{career.description}</p>
-          <div className="mt-6">
+          <p className="mt-4 max-w-2xl text-ink-soft">{career.description}</p>
+          <div className="mt-5">
             <SessionTrack sessions={sessions} />
           </div>
-          <Link href={href} className="btn btn-primary mt-6 min-h-12 px-6">
-            {cta} <ArrowRight className="size-5" aria-hidden />
-          </Link>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href={href} className="btn btn-primary btn-lg">
+              {cta} <ArrowRight className="size-4" aria-hidden />
+            </Link>
+            {!completed && (
+              <Link href={href} className="btn btn-ghost btn-lg">Ver detalles</Link>
+            )}
+          </div>
         </div>
-        <div className="rounded-3xl bg-mist p-5">
+
+        <div className="border-t border-line bg-paper p-5 sm:p-6 xl:border-l xl:border-t-0">
           {snapshot ? (
-            <>
+            <div className="grid gap-5">
               <PerformanceMeter value={snapshot.performance} />
-              <AffinityRadar values={snapshot.affinity.normalized} unavailable={snapshot.affinity.unavailable} size={260} className="mx-auto mt-2" />
-              {strongest && strongest.length > 0 && (
-                <p className="text-center text-sm text-ink-soft">Tus ejes más fuertes: <strong>{strongest.join(' y ')}</strong>.</p>
-              )}
-            </>
+              <div className="border-t border-line pt-5">
+                <h4 className="mb-3 text-sm font-semibold text-muted">Perfil de afinidad</h4>
+                <AffinityBars values={snapshot.affinity.normalized} unavailable={snapshot.affinity.unavailable} compact />
+              </div>
+            </div>
           ) : (
-            <div className="flex h-full flex-col items-center justify-center gap-3 py-8 text-center">
-              <Sparkles className="size-8 text-accent" aria-hidden />
-              <p className="font-semibold">Aquí aparecerán tu desempeño y tu perfil de afinidad.</p>
-              <p className="text-sm text-muted">Empiezas con 50 puntos. Cada decisión los mueve.</p>
+            <div className="grid gap-4">
+              <h4 className="text-sm font-semibold text-ink">Lo que te espera</h4>
+              <ul className="grid gap-4">
+                <Fact icon={<Clock3 className="size-4" aria-hidden />} title={`${careerModule.sessions.length} sesiones de ~${minutes} min`} text="Puedes pausar entre escenas cuando quieras." />
+                <Fact icon={<Gauge className="size-4" aria-hidden />} title="Desempeño de 0 a 100" text={`Empiezas con ${careerModule.initialPerformance} puntos. Cada decisión los mueve.`} />
+                <Fact icon={<Radar className="size-4" aria-hidden />} title="Perfil de afinidad en 5 ejes" text="Muestra cómo decides; no hay ejes buenos o malos." />
+              </ul>
             </div>
           )}
         </div>
       </div>
     </article>
+  );
+}
+
+function ProgressChip({ completed, started, done, total }: { completed: boolean; started: boolean; done: number; total: number }) {
+  if (completed) return <span className="chip bg-good-soft text-good-strong">Completada</span>;
+  if (started) return <span className="chip bg-accent-soft text-accent-strong">{done} de {total} sesiones</span>;
+  return <span className="chip bg-sun-soft text-sun-strong">Nueva</span>;
+}
+
+function Fact({ icon, title, text }: { icon: ReactNode; title: string; text: string }) {
+  return (
+    <li className="flex items-start gap-3">
+      <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-surface text-accent ring-1 ring-line">{icon}</span>
+      <div>
+        <p className="text-sm font-semibold text-ink">{title}</p>
+        <p className="text-sm text-muted">{text}</p>
+      </div>
+    </li>
   );
 }
